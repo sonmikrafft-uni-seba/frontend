@@ -1,10 +1,9 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   Button,
   Typography,
   Paper,
-  Avatar,
   Grid,
   TextField,
   Link,
@@ -12,8 +11,31 @@ import {
 } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 
-export default function SignUpCard() {
+export default function LoginCard(props) {
   const theme = useTheme();
+
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  useEffect(() => {
+    if (props.hasOwnProperty('error') && props.error != null) {
+      setErrorMessage(props.error.message);
+    }
+  }, [props.error]);
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const onLogin = (e) => {
+    e.preventDefault();
+    props.onLogin(email, password);
+  };
 
   return (
     <Container maxWidth="xs">
@@ -45,6 +67,10 @@ export default function SignUpCard() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={email}
+                  onChange={onChangeEmail}
+                  helperText={errorMessage.includes('mail') ? errorMessage : ''}
+                  error={errorMessage.includes('mail')}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -56,6 +82,12 @@ export default function SignUpCard() {
                   label="Password"
                   name="password1"
                   type="password"
+                  value={password}
+                  onChange={onChangePassword}
+                  helperText={
+                    errorMessage.includes('password') ? errorMessage : ''
+                  }
+                  error={errorMessage.includes('password')}
                 />
               </Grid>
             </Grid>
@@ -66,6 +98,8 @@ export default function SignUpCard() {
                 fullWidth
                 variant="contained"
                 color="primary"
+                onClick={onLogin}
+                disabled={email.trim() === '' || password.trim() === ''}
               >
                 Sign In
               </Button>
