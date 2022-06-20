@@ -27,6 +27,14 @@ export default function SignUpCard(props) {
     }
   }, [props.error]);
 
+  useEffect(() => {
+    if (password != password2 && password.length == password2.length) {
+      setErrorMessage('Passwords are not matching.');
+    } else if (password.length != password2.length) {
+      setErrorMessage('');
+    }
+  }, [password, password2]);
+
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
   };
@@ -134,9 +142,15 @@ export default function SignUpCard(props) {
                 value={password}
                 onChange={onChangePassword}
                 helperText={
-                  errorMessage.includes('password') ? errorMessage : ''
+                  errorMessage.includes('password') ||
+                  errorMessage.includes('Passwords')
+                    ? errorMessage
+                    : ''
                 }
-                error={errorMessage.includes('password')}
+                error={
+                  errorMessage.includes('password') ||
+                  errorMessage.includes('Passwords')
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -151,9 +165,15 @@ export default function SignUpCard(props) {
                 value={password2}
                 onChange={onChangePassword2}
                 helperText={
-                  errorMessage.includes('password') ? errorMessage : ''
+                  errorMessage.includes('password') ||
+                  errorMessage.includes('Passwords')
+                    ? errorMessage
+                    : ''
                 }
-                error={errorMessage.includes('password')}
+                error={
+                  errorMessage.includes('password') ||
+                  errorMessage.includes('Passwords')
+                }
               />
             </Grid>
           </Grid>
