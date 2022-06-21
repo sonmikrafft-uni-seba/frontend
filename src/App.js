@@ -1,11 +1,16 @@
 import React, { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import configureStore from './store/store.js';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { Box, CssBaseline } from '@material-ui/core';
+import theme from './theme';
 import LoginView from './views/LoginView';
 import SignUpView from './views/SignUpView';
 import HomePageView from './views/HomePageView';
 import theme from './theme';
 import { Box, CssBaseline } from '@material-ui/core';
+const store = configureStore();
 
 function App() {
   useEffect(() => {
