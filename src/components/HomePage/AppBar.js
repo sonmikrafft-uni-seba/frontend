@@ -9,7 +9,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-
+import { outerTheme } from './HomePageTheme';
+import { ThemeProvider } from '@mui/material/styles';
 export default function MyAppBar() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -28,66 +29,68 @@ export default function MyAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Box sx={{ mr: 2 }} />
-          <Box sx={{ flexGrow: 1 }} />
-          {auth && (
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <StarIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Upgrade to Premium" />
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <StarIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Place holder" />
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <StarIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Place holder" />
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <StarIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Place holder" />
-                </MenuItem>
-              </Menu>
-            </div>
-          )}
-        </Toolbar>
-      </AppBar>
+      <ThemeProvider theme={outerTheme}>
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <Box sx={{ mr: 2 }} />
+            <Box sx={{ flexGrow: 1 }} />
+            {auth && (
+              <div>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="secondary"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <StarIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Upgrade to Premium" />
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <StarIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Place holder" />
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <StarIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Place holder" />
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <StarIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Place holder" />
+                  </MenuItem>
+                </Menu>
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
+      </ThemeProvider>
     </Box>
   );
 }
