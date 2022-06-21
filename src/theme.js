@@ -11,5 +11,18 @@ export default createTheme({
       main: '#fafafa',
       contrastText: alpha('#000', 0.6),
     },
+    info: {
+      main: '#11cb5f',
+      contrastText: '#fff',
+    },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        colorPrimary: {
+          backgroundColor: 'red',
+        },
+      },
+    },
   },
 });
