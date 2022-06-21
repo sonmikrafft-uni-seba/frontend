@@ -21,6 +21,7 @@ export default function Selector() {
           value={accountID}
           label="Account to visualise"
           onChange={handleChange}
+          color="primary"
         >
           <MenuItem value={0}>All Accounts</MenuItem>
           <MenuItem value={1}>Account 1</MenuItem>

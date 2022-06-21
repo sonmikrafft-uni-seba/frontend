@@ -8,8 +8,7 @@ import theme from './theme';
 import LoginView from './views/LoginView';
 import SignUpView from './views/SignUpView';
 import HomePageView from './views/HomePageView';
-import theme from './theme';
-import { Box, CssBaseline } from '@material-ui/core';
+
 const store = configureStore();
 
 function App() {
