@@ -32,9 +32,9 @@ export default function SideBar() {
       variant="permanent"
       anchor="left"
     >
-      <Box sx={{ pl: 3 }}>
+      <Box sx={{ pl: 3, color: '#ffff' }}>
         <img
-          src={'/images/budgetly.png'}
+          src={'/images/budgetly_dark.png'}
           loading="lazy"
           width="226px"
           height="150px"

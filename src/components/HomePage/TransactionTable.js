@@ -347,7 +347,7 @@ export default function TransactionTable() {
                       <TableCell align="left">{row.account}</TableCell>
                       <TableCell align="left">{row.partner}</TableCell>
                       <TableCell align="left">{row.reference}</TableCell>
-                      <TableCell align="left">{row.amount}</TableCell>
+                      <TableCell align="left">{row.amount + '€'}</TableCell>
                       <TableCell padding="NONE">
                         <Checkbox
                           color="primary"
