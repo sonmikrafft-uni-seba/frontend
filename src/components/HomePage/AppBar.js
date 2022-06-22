@@ -32,7 +32,6 @@ export default function MyAppBar() {
       <ThemeProvider theme={outerTheme}>
         <AppBar position="static" color="primary">
           <Toolbar>
-            <Box sx={{ mr: 2 }} />
             <Box sx={{ flexGrow: 1 }} />
             {auth && (
               <div>

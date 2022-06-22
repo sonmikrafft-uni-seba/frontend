@@ -69,13 +69,13 @@ export default function SideBar() {
                 <Collapse in={xprops.open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     <ListItem button>
-                      <ListItemText primary="Supermarket" />
+                      <ListItemText primary="Supermarket" inset />
                     </ListItem>
                     <ListItem button>
-                      <ListItemText primary="Restaurant" />
+                      <ListItemText primary="Restaurant" inset />
                     </ListItem>
                     <ListItem button>
-                      <ListItemText primary="Lieferando" />
+                      <ListItemText primary="Lieferando" inset />
                     </ListItem>
                   </List>
                 </Collapse>
@@ -95,10 +95,10 @@ export default function SideBar() {
                 <Collapse in={xprops.open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     <ListItem button>
-                      <ListItemText primary="Tennis" />
+                      <ListItemText primary="Tennis" inset />
                     </ListItem>
                     <ListItem button>
-                      <ListItemText primary="Sailing" />
+                      <ListItemText primary="Sailing" inset />
                     </ListItem>
                   </List>
                 </Collapse>
@@ -112,7 +112,7 @@ export default function SideBar() {
             </ListItemButton>
           </ListItem>
         </List>
-        <Box sx={{ px: 6, py: 2, borderTop: 1 }}>
+        <Box sx={{ px: 6, py: 3, borderTop: 1 }}>
           <Button variant="contained" color="secondary" startIcon={<AddIcon />}>
             NEW CATEGORY
           </Button>

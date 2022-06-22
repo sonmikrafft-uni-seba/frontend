@@ -1,11 +1,11 @@
 import { createTheme } from '@mui/material/styles';
-import { blue, grey } from '@mui/material/colors';
+import { grey } from '@mui/material/colors';
 
 export const outerTheme = createTheme({
   palette: {
     primary: {
       main: '#ffffff',
-      contrastText: '#ffffff',
+      contrastText: '#fafafa',
     },
     secondary: {
       main: '#477dac',
@@ -16,4 +16,5 @@ export const outerTheme = createTheme({
       contrastText: grey[50],
     },
   },
+  spacing: 6,
 });
