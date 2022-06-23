@@ -24,7 +24,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginView />} />
               <Route path="/sign-up" element={<SignUpView />} />
-              <Route path="/homepage" element={<HomePageView />} />
+              <Route path="/app" element={<HomePageView />} />
             </Routes>
           </>
         </ThemeProvider>

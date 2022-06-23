@@ -9,7 +9,7 @@ import { Typography } from '@mui/material';
 export default function Selector() {
   const [accountID, setAccountID] = React.useState(0);
   const theme = useTheme();
-  const handleChange = (event) => {
+  const handleSelectID = (event) => {
     setAccountID(event.target.value);
   };
   return (
@@ -26,7 +26,7 @@ export default function Selector() {
           id="account-select"
           value={accountID}
           label="Account to visualise"
-          onChange={handleChange}
+          onChange={handleSelectID}
           sx={{
             '.MuiOutlinedInput-notchedOutline': {
               borderColor: theme.palette.background.contrastText,

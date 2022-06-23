@@ -51,7 +51,16 @@ export default function SideBar() {
         </Box>
         <ListItem key="Overview" disablePadding>
           <ListItemButton>
-            <ListItemIcon>{<DashboardIcon />}</ListItemIcon>
+            <ListItemIcon>
+              {
+                <DashboardIcon
+                  sx={{
+                    color: 'white',
+                    borderRadius: '50%',
+                  }}
+                />
+              }
+            </ListItemIcon>
             <ListItemText primary="Overview" />
           </ListItemButton>
         </ListItem>
@@ -60,7 +69,12 @@ export default function SideBar() {
             <>
               <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
                 <ListItemIcon>
-                  <FolderIcon />
+                  <FolderIcon
+                    sx={{
+                      color: 'white',
+                      borderRadius: '50%',
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText primary="Food" />
                 {xprops.open ? <ExpandLess /> : <ExpandMore />}
@@ -86,7 +100,12 @@ export default function SideBar() {
             <>
               <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
                 <ListItemIcon>
-                  <FolderIcon />
+                  <FolderIcon
+                    sx={{
+                      color: 'white',
+                      borderRadius: '50%',
+                    }}
+                  />
                 </ListItemIcon>
                 <ListItemText primary="Hobby" />
                 {xprops.open ? <ExpandLess /> : <ExpandMore />}
@@ -106,7 +125,9 @@ export default function SideBar() {
         />
         <ListItem key="Uncategorized" disablePadding>
           <ListItemButton>
-            <ListItemIcon>{<ReceiptIcon />}</ListItemIcon>
+            <ListItemIcon>
+              {<ReceiptIcon sx={{ color: 'white', borderRadius: '50%' }} />}
+            </ListItemIcon>
             <ListItemText primary="Uncategorized" />
           </ListItemButton>
         </ListItem>

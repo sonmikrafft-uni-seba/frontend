@@ -9,14 +9,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-export default function MyAppBar() {
+export default function ApplicationBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleMenu = (event) => {
+  const openDropdownMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const closeDropdownMenu = () => {
     setAnchorEl(null);
   };
 
@@ -31,7 +31,7 @@ export default function MyAppBar() {
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleMenu}
+              onClick={openDropdownMenu}
               color="primary"
             >
               <AccountCircle />
@@ -49,27 +49,27 @@ export default function MyAppBar() {
                 horizontal: 'right',
               }}
               open={Boolean(anchorEl)}
-              onClose={handleClose}
+              onClose={closeDropdownMenu}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon>
                 <ListItemText primary="Upgrade to Premium" />
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon>
                 <ListItemText primary="Place holder" />
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon>
                 <ListItemText primary="Place holder" />
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon>
