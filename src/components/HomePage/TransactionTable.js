@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -197,7 +196,6 @@ function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -332,7 +330,7 @@ export default function TransactionTable() {
                       <TableCell align="left">{row.partner}</TableCell>
                       <TableCell align="left">{row.reference}</TableCell>
                       <TableCell align="left">{row.amount + '€'}</TableCell>
-                      <TableCell padding="NONE">
+                      <TableCell padding="none">
                         <Checkbox
                           color="secondary"
                           checked={isItemSelected}

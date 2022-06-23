@@ -8,7 +8,7 @@ export default function VisualizationToggleGroup() {
   };
   return (
     <ToggleButtonGroup
-      color="secondary"
+      color="primary"
       value={alignment}
       exclusive
       onChange={handleChange}

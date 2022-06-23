@@ -11,5 +11,9 @@ export default createTheme({
       main: '#fafafa',
       contrastText: alpha('#000', 0.6),
     },
+    background: {
+      main: '#274E87',
+      contrastText: '#ffffff',
+    },
   },
 });
