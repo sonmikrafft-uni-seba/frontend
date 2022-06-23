@@ -1,112 +1,15 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import { visuallyHidden } from '@mui/utils';
-
-function createData(
-  date,
-  category,
-  account,
-  partner,
-  reference,
-  amount,
-  verified
-) {
-  return {
-    date,
-    category,
-    account,
-    partner,
-    reference,
-    amount,
-    verified,
-  };
-}
-
-const rows = [
-  createData(
-    '30.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    3.99,
-    'true'
-  ),
-  createData(
-    '29.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    3.99,
-    'true'
-  ),
-  createData(
-    '27.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    3.99,
-    'true'
-  ),
-  createData(
-    '25.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    3.99,
-    'true'
-  ),
-  createData(
-    '21.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    13.99,
-    'true'
-  ),
-  createData(
-    '18.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    93.99,
-    'true'
-  ),
-  createData(
-    '12.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    3.99,
-    'true'
-  ),
-  createData(
-    '09.05.2022',
-    'Restaurant',
-    'Sparkasse Giro',
-    'McDonalds',
-    'cheeseburger Hbf',
-    4.99,
-    'true'
-  ),
-];
+import rows from '../../mockModel/mockTransactions';
+import EnhancedTableHead from './EnhancedTableHead';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -124,8 +27,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -138,114 +39,17 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  {
-    id: 'date',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-  },
-  {
-    id: 'category',
-    numeric: false,
-    disablePadding: false,
-    label: 'Category',
-  },
-  {
-    id: 'account',
-    numeric: false,
-    disablePadding: false,
-    label: 'Account',
-  },
-  {
-    id: 'partner',
-    numeric: false,
-    disablePadding: false,
-    label: 'Partner',
-  },
-  {
-    id: 'reference',
-    numeric: false,
-    disablePadding: false,
-    label: 'Reference',
-  },
-  {
-    id: 'amount',
-    numeric: true,
-    disablePadding: false,
-    label: 'Amount',
-  },
-  {
-    id: 'verified',
-    numeric: false,
-    disablePadding: false,
-    label: 'Verified',
-  },
-];
-
-function EnhancedTableHead(props) {
-  const { order, orderBy, onRequestSort } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
 export default function TransactionTable() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('amount');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleClick = (event, name) => {
@@ -296,7 +100,6 @@ export default function TransactionTable() {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
