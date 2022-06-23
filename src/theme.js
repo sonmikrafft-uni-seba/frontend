@@ -1,5 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
-import { alpha } from '@material-ui/core/styles/colorManipulator';
+import { createTheme, alpha } from '@mui/material/styles';
 
 export default createTheme({
   palette: {

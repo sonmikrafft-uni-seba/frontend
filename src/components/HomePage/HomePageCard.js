@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Box } from '@material-ui/core';
+import { Container, Box } from '@mui/material';
 import TransactionTable from './TransactionTable';
 import VisualizationToggleGroup from './ToggleButton';
 import Button from '@mui/material/Button';
