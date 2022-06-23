@@ -14,5 +14,9 @@ export default createTheme({
       main: '#274E87',
       contrastText: '#ffffff',
     },
+    brightBackground: {
+      main: '#ffffff',
+      contrastText: '#274E87',
+    },
   },
 });

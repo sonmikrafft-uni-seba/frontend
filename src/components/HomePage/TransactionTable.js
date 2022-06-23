@@ -135,7 +135,7 @@ export default function TransactionTable() {
                       <TableCell align="left">{row.amount + '€'}</TableCell>
                       <TableCell padding="none">
                         <Checkbox
-                          color="secondary"
+                          color="primary"
                           checked={isItemSelected}
                           inputProps={{
                             'aria-labelledby': labelId,

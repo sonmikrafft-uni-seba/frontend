@@ -17,7 +17,8 @@ import Selector from './Selector';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/material';
-import { useTheme } from '@material-ui/styles';
+
+import { useTheme } from '@mui/material/styles';
 
 export default function SideBar() {
   const theme = useTheme();

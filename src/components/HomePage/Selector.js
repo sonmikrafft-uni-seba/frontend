@@ -4,7 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import * as React from 'react';
 import { Box } from '@mui/material';
-import { useTheme } from '@material-ui/styles';
+import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
 export default function Selector() {
   const [accountID, setAccountID] = React.useState(0);

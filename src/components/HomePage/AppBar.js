@@ -22,7 +22,7 @@ export default function ApplicationBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="background">
+      <AppBar position="static" color="brightBackground">
         <Toolbar>
           <Box sx={{ flexGrow: 1 }} />
           <div>
