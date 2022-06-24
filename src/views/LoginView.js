@@ -1,12 +1,11 @@
 import { Box } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import LoginCard from '../components/LoginCard';
 import { login } from '../store/auth/auth.actions.js';
 
 function LoginView(props) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const authState = useSelector((state) => state.auth);
@@ -18,7 +17,7 @@ function LoginView(props) {
   }, [authState.token]);
 
   const onLogin = (email, password) => {
-    dispatch(login({ email, password }));
+    props.dispatch(login({ email, password }));
   };
 
   return (
@@ -37,4 +36,4 @@ function LoginView(props) {
   );
 }
 
-export default LoginView;
+export default connect()(LoginView);
