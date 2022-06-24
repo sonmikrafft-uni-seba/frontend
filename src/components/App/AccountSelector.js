@@ -6,10 +6,10 @@ import * as React from 'react';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Typography } from '@mui/material';
-export default function Selector() {
+export default function AccountSelector() {
   const [accountID, setAccountID] = React.useState(0);
   const theme = useTheme();
-  const handleSelectID = (event) => {
+  const changeSelectedAccount = (event) => {
     setAccountID(event.target.value);
   };
   return (
@@ -26,7 +26,7 @@ export default function Selector() {
           id="account-select"
           value={accountID}
           label="Account to visualise"
-          onChange={handleSelectID}
+          onChange={changeSelectedAccount}
           sx={{
             '.MuiOutlinedInput-notchedOutline': {
               borderColor: theme.palette.background.contrastText,

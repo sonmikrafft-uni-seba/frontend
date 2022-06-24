@@ -7,7 +7,7 @@ import { Box, CssBaseline } from '@mui/material';
 import theme from './theme';
 import LoginView from './views/LoginView';
 import SignUpView from './views/SignUpView';
-import HomePageView from './views/HomePageView.js';
+import AppView from './views/AppView';
 const store = configureStore();
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginView />} />
               <Route path="/sign-up" element={<SignUpView />} />
-              <Route path="/app" element={<HomePageView />} />
+              <Route path="/app" element={<AppView />} />
             </Routes>
           </>
         </ThemeProvider>

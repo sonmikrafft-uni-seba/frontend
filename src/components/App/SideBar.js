@@ -13,7 +13,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ExpandableItem from './ExpandableItem';
 import Collapse from '@mui/material/Collapse';
-import Selector from './Selector';
+import AccountSelector from './AccountSelector';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/material';
@@ -42,7 +42,7 @@ export default function SideBar() {
         />
       </Box>
       <Box sx={{ p: 2 }}>
-        <Selector />
+        <AccountSelector />
       </Box>
       <List>
         <Box sx={{ p: 2, borderTop: 1, borderBottom: 1 }} bgcolor="#183867">
