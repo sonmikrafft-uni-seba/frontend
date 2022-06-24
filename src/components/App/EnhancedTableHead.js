@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableSortLabel from '@mui/material/TableSortLabel';
+import {
+  Box,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableSortLabel,
+} from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { Box } from '@mui/material';
 
 const headCells = [
   {

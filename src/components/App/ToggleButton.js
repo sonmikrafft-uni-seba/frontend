@@ -1,6 +1,6 @@
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import * as React from 'react';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+
 export default function VisualizationToggleGroup() {
   const [selectedOption, setSelectedOption] = React.useState('table');
   const changeSelectedOption = (event, newOption) => {

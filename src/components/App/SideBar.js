@@ -1,23 +1,26 @@
-import Drawer from '@mui/material/Drawer';
 import * as React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import FolderIcon from '@mui/icons-material/Folder';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import AddIcon from '@mui/icons-material/Add';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import {
+  Folder,
+  Dashboard,
+  Receipt,
+  Add,
+  ExpandLess,
+  ExpandMore,
+} from '@mui/icons-material';
+import {
+  Box,
+  Typography,
+  Button,
+  Collapse,
+  ListItemText,
+  ListItemIcon,
+  ListItemButton,
+  ListItem,
+  List,
+  Drawer,
+} from '@mui/material';
 import ExpandableItem from './ExpandableItem';
-import Collapse from '@mui/material/Collapse';
 import AccountSelector from './AccountSelector';
-import Button from '@mui/material/Button';
-import { Typography } from '@mui/material';
-import { Box } from '@mui/material';
-
 import { useTheme } from '@mui/material/styles';
 
 export default function SideBar() {
@@ -54,7 +57,7 @@ export default function SideBar() {
           <ListItemButton>
             <ListItemIcon>
               {
-                <DashboardIcon
+                <Dashboard
                   sx={{
                     color: 'white',
                     borderRadius: '50%',
@@ -70,7 +73,7 @@ export default function SideBar() {
             <>
               <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
                 <ListItemIcon>
-                  <FolderIcon
+                  <Folder
                     sx={{
                       color: 'white',
                       borderRadius: '50%',
@@ -101,7 +104,7 @@ export default function SideBar() {
             <>
               <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
                 <ListItemIcon>
-                  <FolderIcon
+                  <Folder
                     sx={{
                       color: 'white',
                       borderRadius: '50%',
@@ -127,14 +130,14 @@ export default function SideBar() {
         <ListItem key="Uncategorized" disablePadding>
           <ListItemButton>
             <ListItemIcon>
-              {<ReceiptIcon sx={{ color: 'white', borderRadius: '50%' }} />}
+              {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
             </ListItemIcon>
             <ListItemText primary="Uncategorized" />
           </ListItemButton>
         </ListItem>
       </List>
       <Box sx={{ px: 6, py: 3, borderTop: 1 }}>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        <Button variant="contained" color="primary" startIcon={<Add />}>
           NEW CATEGORY
         </Button>
       </Box>

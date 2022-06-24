@@ -1,14 +1,16 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import StarIcon from '@mui/icons-material/Star';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Menu,
+} from '@mui/material';
+import { Star, AccountCircle } from '@mui/icons-material';
+
 export default function ApplicationBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -53,25 +55,25 @@ export default function ApplicationBar() {
             >
               <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
-                  <StarIcon />
+                  <Star />
                 </ListItemIcon>
                 <ListItemText primary="Upgrade to Premium" />
               </MenuItem>
               <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
-                  <StarIcon />
+                  <Star />
                 </ListItemIcon>
                 <ListItemText primary="Place holder" />
               </MenuItem>
               <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
-                  <StarIcon />
+                  <Star />
                 </ListItemIcon>
                 <ListItemText primary="Place holder" />
               </MenuItem>
               <MenuItem onClick={closeDropdownMenu}>
                 <ListItemIcon>
-                  <StarIcon />
+                  <Star />
                 </ListItemIcon>
                 <ListItemText primary="Place holder" />
               </MenuItem>

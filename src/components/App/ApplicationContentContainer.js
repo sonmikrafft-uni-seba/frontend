@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Container, Box } from '@mui/material';
+import { Container, Box, Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import TransactionTable from './TransactionTable';
 import VisualizationToggleGroup from './ToggleButton';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 
 export default function ApplicationContentContainer() {
   return (
