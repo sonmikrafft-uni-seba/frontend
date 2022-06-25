@@ -7,6 +7,7 @@ import { Box, CssBaseline } from '@material-ui/core';
 import theme from './theme';
 import LoginView from './views/LoginView';
 import SignUpView from './views/SignUpView';
+import TransactionForm from './components/TransactionForm.js';
 const store = configureStore();
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginView />} />
               <Route path="/sign-up" element={<SignUpView />} />
+              <Route path="/add-transaction" element={<TransactionForm />} />
             </Routes>
           </>
         </ThemeProvider>
