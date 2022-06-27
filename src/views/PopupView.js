@@ -5,13 +5,17 @@ import { useTheme } from '@mui/material/styles';
 import PopupContainer from '../components/App/PopupContainer';
 import { closePopup } from '../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../constants';
+import TransactionForm from '../components/TransactionForm.js';
 
 const PopupView = (props) => {
   const theme = useTheme();
   const popupState = useSelector((state) => state.popup);
+  const transactionErrorState = useSelector((state) => state.transaction.error);
+  const userState = useSelector((state) => state.user.user);
 
   // the bool notifySave is passed to PopupContentViews and indicates that a user pressed popup save action
   const [notifySave, setNotifySave] = useState(false);
+  const [saveable, setSaveable] = useState(false);
 
   const onClosePopup = () => {
     props.dispatch(closePopup());
@@ -20,8 +24,15 @@ const PopupView = (props) => {
   const contentSelector = (popupContent) => {
     switch (popupContent) {
       case popupContentType.NEW_TRANSACTION:
-        // return <NewTransactionView notifySave={notifySave}/>
-        return <>Transaction View</>;
+        return (
+          <TransactionForm
+            user={userState}
+            error={transactionErrorState}
+            notifySave={notifySave}
+            setSaveable={setSaveable}
+          />
+        );
+
       case popupContentType.NEW_CATEGORY:
         // return <NewCategoryView notifySave={notifySave}/>
         return <>Category View</>;
@@ -39,6 +50,7 @@ const PopupView = (props) => {
             onClick={() => {
               setNotifySave(true);
             }}
+            disabled={!saveable}
             sx={{ color: theme.palette.primary }}
           >
             SAVE

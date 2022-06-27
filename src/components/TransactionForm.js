@@ -11,15 +11,15 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-} from '@material-ui/core';
-import { useTheme } from '@material-ui/styles';
-
-const categories = ['None', 'Shopping', 'Essen'];
-const accounts = ['Cash', 'Sparkasse'];
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { connect } from 'react-redux';
+import { createTransaction } from '../store/transaction/transaction.actions';
+import { TransactionType } from '../constants';
 
 const eurRegEx = /(^\d*,\d{0,2}$)|(^\d*$)/;
 
-export default function TransactionForm(props) {
+const TransactionForm = (props) => {
   const theme = useTheme();
 
   const [description, setDescription] = React.useState('');
@@ -28,11 +28,24 @@ export default function TransactionForm(props) {
   const [account, setAccount] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
+  const categories = props.user.categoryGroups; // reduce from group to category
+  const accounts = props.user.userBanks; // reduce from banks to accounts
+
   useEffect(() => {
     if (props.hasOwnProperty('error') && props.error != null) {
       setErrorMessage(props.error.message);
     }
   }, [props.error]);
+
+  useEffect(() => {
+    if (props.notifySave) {
+      onSave();
+    }
+  }, [props.notifySave]);
+
+  useEffect(() => {
+    props.setSaveable(amount.trim().length != 0);
+  }, [amount]);
 
   const onChangeDescription = (e) => {
     setDescription(e.target.value);
@@ -55,14 +68,21 @@ export default function TransactionForm(props) {
     setAccount(e.target.value);
   };
 
-  const onSave = (e) => {
-    e.preventDefault();
-    props.onSave(description, amount, category, account);
+  const onSave = () => {
+    props.dispatch(
+      createTransaction({
+        description: description,
+        transactionAmount: amount,
+        transactionType: TransactionType.MANUAL,
+        categoryID: category, // TODO: replace with real id
+        bankAccountID: account, //  TODO: replace with real id
+      })
+    );
   };
 
   return (
     <Container maxWidth="md">
-      <Paper bgcolor={theme.palette.secondary.main}>
+      <Paper bgcolor={theme.palette.secondary.main} elevation={0}>
         <Box
           sx={{
             pl: 4,
@@ -71,12 +91,6 @@ export default function TransactionForm(props) {
             flexDirection: 'column',
           }}
         >
-          <Box sx={{ pb: 2 }}>
-            <Typography variant="h4" color="textSecondary">
-              Add Transaction
-            </Typography>
-          </Box>
-
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={3}>
               <Typography> Description: </Typography>
@@ -91,7 +105,6 @@ export default function TransactionForm(props) {
                 onChange={onChangeDescription}
               />
             </Grid>
-
             <Grid item xs={3}>
               <Typography> Amount of money in €: </Typography>
             </Grid>
@@ -161,20 +174,10 @@ export default function TransactionForm(props) {
               </FormControl>
             </Grid>
           </Grid>
-
-          <Box align="center" sx={{ pt: 5, pb: 5 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              onClick={onSave}
-              disabled={amount.trim() === '' || category.trim() === ''}
-            >
-              Save
-            </Button>
-          </Box>
         </Box>
       </Paper>
     </Container>
   );
-}
+};
+
+export default connect()(TransactionForm);

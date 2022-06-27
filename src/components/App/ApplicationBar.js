@@ -9,10 +9,14 @@ import {
   MenuItem,
   Menu,
 } from '@mui/material';
-import { Star, AccountCircle } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { Star, Logout, AccountCircle } from '@mui/icons-material';
+import { logout } from '../../store/auth/auth.actions';
+import { connect } from 'react-redux';
 
-export default function ApplicationBar() {
+const ApplicationBar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const navigate = useNavigate();
 
   const openDropdownMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,6 +24,12 @@ export default function ApplicationBar() {
 
   const closeDropdownMenu = () => {
     setAnchorEl(null);
+  };
+
+  const onLogout = () => {
+    setAnchorEl(null);
+    props.dispatch(logout({}));
+    navigate('/');
   };
 
   return (
@@ -59,23 +69,11 @@ export default function ApplicationBar() {
                 </ListItemIcon>
                 <ListItemText primary="Upgrade to Premium" />
               </MenuItem>
-              <MenuItem onClick={closeDropdownMenu}>
+              <MenuItem onClick={onLogout}>
                 <ListItemIcon>
-                  <Star />
+                  <Logout />
                 </ListItemIcon>
-                <ListItemText primary="Place holder" />
-              </MenuItem>
-              <MenuItem onClick={closeDropdownMenu}>
-                <ListItemIcon>
-                  <Star />
-                </ListItemIcon>
-                <ListItemText primary="Place holder" />
-              </MenuItem>
-              <MenuItem onClick={closeDropdownMenu}>
-                <ListItemIcon>
-                  <Star />
-                </ListItemIcon>
-                <ListItemText primary="Place holder" />
+                <ListItemText primary="Logout" />
               </MenuItem>
             </Menu>
           </div>
@@ -83,4 +81,6 @@ export default function ApplicationBar() {
       </AppBar>
     </Box>
   );
-}
+};
+
+export default connect()(ApplicationBar);

@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest } from 'redux-saga/effects';
+import { all, call, put, takeLatest, select } from 'redux-saga/effects';
 import {
   ACTION_TYPES,
   createTransactionSuccess,
@@ -6,8 +6,18 @@ import {
 } from './transaction.actions.js';
 import { createTransactionRequest } from '../../services/transaction.service.js';
 
+export const getToken = (state) => state.auth.token;
+export const getUserId = (state) => state.user.user._id;
+
 export function* createTransactionSaga(action) {
-  const response = yield call(createTransactionRequest, action.payload);
+  const token = yield select(getToken);
+  const userId = yield select(getUserId);
+  const response = yield call(
+    createTransactionRequest,
+    token,
+    userId,
+    action.payload
+  );
 
   if (response.hasOwnProperty('error')) {
     yield put(
