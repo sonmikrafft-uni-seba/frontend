@@ -3,8 +3,21 @@ import { Container, Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import TransactionTable from './TransactionTable';
 import VisualizationToggleGroup from './ToggleButton';
+import { connect } from 'react-redux';
+import { openPopup } from '../../store/popup/popup.actions';
+import { popupContentType, popupActionType } from '../../constants';
 
-export default function ApplicationContentContainer() {
+const ApplicationContentContainer = (props) => {
+  const onNewTransaction = () => {
+    props.dispatch(
+      openPopup({
+        title: 'New Transaction',
+        popupContentType: popupContentType.NEW_TRANSACTION,
+        popupActionType: popupActionType.SAVE_OR_CANCEL,
+      })
+    );
+  };
+
   return (
     <Container>
       <Box
@@ -23,7 +36,12 @@ export default function ApplicationContentContainer() {
         >
           <VisualizationToggleGroup />
           <Box sx={{ flexGrow: 1 }} />
-          <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onNewTransaction}
+            startIcon={<AddIcon />}
+          >
             New Transaction
           </Button>
         </Box>
@@ -31,4 +49,6 @@ export default function ApplicationContentContainer() {
       </Box>
     </Container>
   );
-}
+};
+
+export default connect()(ApplicationContentContainer);
