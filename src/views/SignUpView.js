@@ -1,12 +1,11 @@
 import { Box } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import SignUpCard from '../components/SignUpCard';
 import { createUser } from '../store/user/user.actions';
 
 function SignUpView(props) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const userState = useSelector((state) => state.user);
@@ -19,7 +18,7 @@ function SignUpView(props) {
   }, [token]);
 
   const onSignUp = (email, password, firstname, lastname) => {
-    dispatch(createUser({ email, password, firstname, lastname }));
+    props.dispatch(createUser({ email, password, firstname, lastname }));
   };
 
   return (

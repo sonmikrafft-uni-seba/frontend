@@ -22,9 +22,23 @@ import {
 import ExpandableItem from './ExpandableItem';
 import AccountSelector from './AccountSelector';
 import { useTheme } from '@mui/material/styles';
+import { connect } from 'react-redux';
+import { openPopup } from '../../store/popup/popup.actions';
+import { popupActionType, popupContentType } from '../../constants';
 
-export default function SideBar() {
+const SideBar = (props) => {
   const theme = useTheme();
+
+  const onNewCategory = () => {
+    props.dispatch(
+      openPopup({
+        title: 'New Category',
+        popupContentType: popupContentType.NEW_CATEGORY,
+        popupActionType: popupActionType.SAVE_OR_CANCEL,
+      })
+    );
+  };
+
   return (
     <Drawer
       PaperProps={{
@@ -137,10 +151,17 @@ export default function SideBar() {
         </ListItem>
       </List>
       <Box sx={{ px: 6, py: 3, borderTop: 1 }}>
-        <Button variant="contained" color="primary" startIcon={<Add />}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onNewCategory}
+          startIcon={<Add />}
+        >
           NEW CATEGORY
         </Button>
       </Box>
     </Drawer>
   );
-}
+};
+
+export default connect()(SideBar);
