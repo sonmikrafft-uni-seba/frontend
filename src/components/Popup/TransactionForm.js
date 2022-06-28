@@ -28,21 +28,12 @@ const TransactionForm = (props) => {
   const [account, setAccount] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  //const categories = props.user.categoryGroups; // reduce from group to category
-  //const accounts = props.user.userBanks; // reduce from banks to accounts
-  const categories = [
-    {
-      name: 'Uncategorized',
-      budgetType: [],
-      _id: '62bac3be4c7da852f83167ee',
-    },
-  ];
-  const accounts = [
-    {
-      name: 'Cash',
-      _id: '62bac3be4c7da852f83167ec',
-    },
-  ];
+  const categories = props.user.categoryGroups.map(
+    (group) => group.categories
+  )[0];
+  const accounts = props.user.userBanks.map(
+    (userBank) => userBank.bankaccounts
+  )[0];
 
   useEffect(() => {
     if (props.hasOwnProperty('error') && props.error != null) {

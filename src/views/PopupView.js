@@ -19,6 +19,7 @@ const PopupView = (props) => {
 
   const onClosePopup = () => {
     props.dispatch(closePopup());
+    setNotifySave(false);
   };
 
   const contentSelector = (popupContent) => {
