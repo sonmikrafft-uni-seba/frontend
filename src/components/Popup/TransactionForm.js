@@ -14,22 +14,35 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
-import { createTransaction } from '../store/transaction/transaction.actions';
-import { TransactionType } from '../constants';
+import { createTransaction } from '../../store/transaction/transaction.actions';
+import { TransactionType } from '../../constants';
 
-const eurRegEx = /(^\d*,\d{0,2}$)|(^\d*$)/;
+const eurRegEx = /(^\d*.\d{0,2}$)|(^\d*$)/;
 
 const TransactionForm = (props) => {
   const theme = useTheme();
 
   const [description, setDescription] = React.useState('');
-  const [amount, setAmount] = React.useState('0,00');
+  const [amount, setAmount] = React.useState('0.00');
   const [category, setCategory] = React.useState('');
   const [account, setAccount] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const categories = props.user.categoryGroups; // reduce from group to category
-  const accounts = props.user.userBanks; // reduce from banks to accounts
+  //const categories = props.user.categoryGroups; // reduce from group to category
+  //const accounts = props.user.userBanks; // reduce from banks to accounts
+  const categories = [
+    {
+      name: 'Uncategorized',
+      budgetType: [],
+      _id: '62bac3be4c7da852f83167ee',
+    },
+  ];
+  const accounts = [
+    {
+      name: 'Cash',
+      _id: '62bac3be4c7da852f83167ec',
+    },
+  ];
 
   useEffect(() => {
     if (props.hasOwnProperty('error') && props.error != null) {
@@ -44,8 +57,10 @@ const TransactionForm = (props) => {
   }, [props.notifySave]);
 
   useEffect(() => {
-    props.setSaveable(amount.trim().length != 0);
-  }, [amount]);
+    props.setSaveable(
+      amount.trim().length != 0 && amount > 0 && category.trim().length != 0
+    );
+  }, [amount, category]);
 
   const onChangeDescription = (e) => {
     setDescription(e.target.value);
@@ -71,13 +86,14 @@ const TransactionForm = (props) => {
   const onSave = () => {
     props.dispatch(
       createTransaction({
-        description: description,
+        remittanceInformation: description,
         transactionAmount: amount,
         transactionType: TransactionType.MANUAL,
-        categoryID: category, // TODO: replace with real id
-        bankAccountID: account, //  TODO: replace with real id
+        bankAccountID: account.trim().length != 0 ? category : null,
+        categoryID: category.trim().length != 0 ? category : null,
       })
     );
+    props.onClosePopup();
   };
 
   return (
@@ -142,7 +158,7 @@ const TransactionForm = (props) => {
                   onChange={onChangeCategory}
                 >
                   {categories.map((option) => (
-                    <MenuItem value={option}>{option}</MenuItem>
+                    <MenuItem value={option._id}>{option.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -168,7 +184,7 @@ const TransactionForm = (props) => {
                   onChange={onChangeAccount}
                 >
                   {accounts.map((option) => (
-                    <MenuItem value={option}>{option}</MenuItem>
+                    <MenuItem value={option._id}>{option.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>

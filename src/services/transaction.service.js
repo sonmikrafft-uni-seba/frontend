@@ -3,14 +3,13 @@ export const TRANSACTION_ENDPOINT_API = (userId) => {
 };
 
 export const createTransactionRequest = async (token, userId, transaction) => {
-  const payload = JSON.stringify(transaction);
   const response = await fetch(TRANSACTION_ENDPOINT_API(userId), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'jwt ' + token,
     },
-    body: payload,
+    body: JSON.stringify(transaction),
   });
   return await response.json();
 };

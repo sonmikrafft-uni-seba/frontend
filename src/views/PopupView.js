@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import PopupContainer from '../components/App/PopupContainer';
 import { closePopup } from '../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../constants';
-import TransactionForm from '../components/TransactionForm.js';
+import TransactionForm from '../components/Popup/TransactionForm';
 
 const PopupView = (props) => {
   const theme = useTheme();
@@ -30,6 +30,7 @@ const PopupView = (props) => {
             error={transactionErrorState}
             notifySave={notifySave}
             setSaveable={setSaveable}
+            onClosePopup={onClosePopup}
           />
         );
 

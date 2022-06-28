@@ -27,7 +27,7 @@ export function* createTransactionSaga(action) {
       })
     );
   } else {
-    yield put(createTransactionSuccess(response.transaction));
+    yield put(createTransactionSuccess(response));
   }
 }
 

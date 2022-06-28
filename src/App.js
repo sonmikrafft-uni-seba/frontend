@@ -9,7 +9,6 @@ import LoginView from './views/LoginView';
 import SignUpView from './views/SignUpView';
 import LoadingView from './views/LoadingView';
 import AppView from './views/AppView';
-import TransactionForm from './components/TransactionForm.js';
 import { loadState, saveState } from './store/localStorage';
 
 const persistedState = loadState();
