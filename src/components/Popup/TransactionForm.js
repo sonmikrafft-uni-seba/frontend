@@ -80,8 +80,8 @@ const TransactionForm = (props) => {
         remittanceInformation: description,
         transactionAmount: amount,
         transactionType: TransactionType.MANUAL,
-        bankAccountID: account.trim().length != 0 ? category : null,
-        categoryID: category.trim().length != 0 ? category : null,
+        bankAccountID: account.trim().length != 0 ? account : null,
+        categoryID: category,
       })
     );
     props.onClosePopup();
