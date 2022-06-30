@@ -7,8 +7,21 @@ import { Box, CssBaseline } from '@mui/material';
 import theme from './theme';
 import LoginView from './views/LoginView';
 import SignUpView from './views/SignUpView';
+import LoadingView from './views/LoadingView';
 import AppView from './views/AppView';
-const store = configureStore();
+import { loadState, saveState } from './store/localStorage';
+
+const persistedState = loadState();
+const store = configureStore(persistedState);
+
+store.subscribe(() => {
+  saveState({
+    auth: store.getState().auth,
+    user: store.getState().user,
+    popup: store.getState().popup,
+    transaction: store.getState().transaction,
+  });
+});
 
 function App() {
   useEffect(() => {
@@ -22,6 +35,7 @@ function App() {
           <>
             <CssBaseline />
             <Routes>
+              <Route path="/" element={<LoadingView />} />
               <Route path="/login" element={<LoginView />} />
               <Route path="/sign-up" element={<SignUpView />} />
               <Route path="/app" element={<AppView />} />

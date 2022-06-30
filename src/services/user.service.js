@@ -10,3 +10,14 @@ export const createUserRequest = async (user) => {
   });
   return await response.json();
 };
+
+export const getUserRequest = async (token, userId) => {
+  const response = await fetch(USER_ENDPOINT_API + '/' + userId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token,
+    },
+  });
+  return await response.json();
+};
