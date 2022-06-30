@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import PopupContainer from '../components/App/PopupContainer';
 import { closePopup } from '../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../constants';
-
+import NewCategoryView from './NewCategoryView';
 const PopupView = (props) => {
   const theme = useTheme();
   const popupState = useSelector((state) => state.popup);
@@ -23,8 +23,13 @@ const PopupView = (props) => {
         // return <NewTransactionView notifySave={notifySave}/>
         return <>Transaction View</>;
       case popupContentType.NEW_CATEGORY:
-        // return <NewCategoryView notifySave={notifySave}/>
-        return <>Category View</>;
+        return (
+          <NewCategoryView
+            notifySave={notifySave}
+            onClosePopup={onClosePopup}
+          />
+        );
+      // return <>Category View</>;
       default:
         return <>No Content!</>;
     }

@@ -22,7 +22,7 @@ import {
 import ExpandableItem from './ExpandableItem';
 import AccountSelector from './AccountSelector';
 import { useTheme } from '@mui/material/styles';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
 
