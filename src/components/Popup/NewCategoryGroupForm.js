@@ -16,10 +16,17 @@ export default function NewCategoryGroupForm(props) {
   const [categoryGroupName, setCategoryGroupName] = React.useState('');
   const [budgetLimit, setBudgetlimit] = React.useState('');
   const [budgetType, setBudgetType] = React.useState('MONTHLY');
-  // const categories = useSelector((state) => state.user.user.categoryGroups.categories);
-  const mockcategories = ['category 1', 'category 2'];
-  const [includedCategories, setIncludedCategories] = React.useState([]);
+  const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
+  const categories = categoryGroups[0].categories.flat();
+  let categoryNames = categories.map((item) => item.name);
+  categoryNames = categoryNames.filter(function (element) {
+    return element !== 'Uncategorized';
+  });
 
+  const [includedCategoryNames, setIncludedCategoryNames] = React.useState([]);
+  useEffect(() => {
+    props.setSaveable(categoryGroupName.length != 0);
+  }, [categoryGroupName]);
   const onChangeCategoryGroupName = (e) => {
     setCategoryGroupName(e.target.value);
   };
@@ -32,6 +39,12 @@ export default function NewCategoryGroupForm(props) {
   };
 
   const onSave = () => {
+    let includedCategories = [];
+    includedCategoryNames.forEach((name) => {
+      const index = categories.findIndex((category) => category.name === name);
+      includedCategories.push(categories[index]);
+    });
+
     props.onSaveCategoryGroup(
       categoryGroupName,
       budgetLimit,
@@ -124,18 +137,17 @@ export default function NewCategoryGroupForm(props) {
           <Autocomplete
             multiple
             id="category"
-            options={mockcategories}
-            // options={categories}
+            options={categoryNames}
             getOptionLabel={(option) => option}
-            value={includedCategories}
+            value={includedCategoryNames}
             onChange={(event, newValue) => {
-              setIncludedCategories(newValue);
+              setIncludedCategoryNames(newValue);
             }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 variant="standard"
-                label="Included Categories"
+                label="Add categories"
                 placeholder="Add categories"
               />
             )}

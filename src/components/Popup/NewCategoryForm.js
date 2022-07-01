@@ -9,14 +9,22 @@ import {
   FormControl,
   Select,
   Autocomplete,
+  Container,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 export default function NewCategoryForm(props) {
+  const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
   const [categoryName, setCategoryName] = React.useState('');
   const [budgetLimit, setBudgetlimit] = React.useState('');
   const [budgetType, setBudgetType] = React.useState('MONTHLY');
-  const [categoryGroup, setCategoryGroup] = React.useState('Food');
+  const [categoryGroup, setCategoryGroup] = React.useState(
+    useSelector((state) => state.user.user.categoryGroups[0])
+  );
   const [keywords, setKeywords] = React.useState([]);
+  useEffect(() => {
+    props.setSaveable(categoryName.length != 0);
+  }, [categoryName]);
   const onChangeCategoryName = (e) => {
     setCategoryName(e.target.value);
   };
@@ -46,7 +54,7 @@ export default function NewCategoryForm(props) {
     }
   }, [props.notifySave]);
   return (
-    <Grid container py={1} alignItems="flex-start" justifyContent="flex-start">
+    <Grid container py={1} justifyContent="flex-start">
       <Grid item sx={{ py: 1 }} xs={2}>
         <Box
           display="flex"
@@ -119,31 +127,26 @@ export default function NewCategoryForm(props) {
           <Typography>Part of group:</Typography>
         </Box>
       </Grid>
-      <Grid item sx={{ py: 1 }} xs={10}>
-        <Box display="flex" justifyContent="flex-start" alignItems="center">
-          <FormControl>
-            <InputLabel id="category-group-select-label">
-              Choose a category group
-            </InputLabel>
-            <Select
-              labelId="category-group-select-label"
-              id="category-group-select"
-              fullWidth
-              value={categoryGroup}
-              label="Category group"
-              onChange={onChangeCategoryGroup}
-            >
-              <MenuItem value={'Food'}>
-                <Typography>Food</Typography>
-              </MenuItem>
-              <MenuItem value={'Hobby'}>
-                <Typography>Hobby</Typography>
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+      <Grid item sx={{ py: 2 }} xs={3}>
+        <FormControl fullWidth>
+          <InputLabel id="category-group-select-label">
+            Category group
+          </InputLabel>
+          <Select
+            labelId="category-group-select-label"
+            id="category-group-select"
+            label="Category group"
+            value={categoryGroup}
+            onChange={onChangeCategoryGroup}
+          >
+            {categoryGroups.map(function (group) {
+              return <MenuItem value={group.name}> {group.name}</MenuItem>;
+            })}
+          </Select>
+        </FormControl>
       </Grid>
-      <Grid item sx={{ py: 3 }} xs={2}>
+      <Grid item sx={{ py: 1 }} xs={7}></Grid>
+      <Grid item sx={{ py: 1 }} xs={2}>
         <Box
           display="flex"
           justifyContent="flex-start"
@@ -153,7 +156,7 @@ export default function NewCategoryForm(props) {
           <Typography>Add Keyword:</Typography>
         </Box>
       </Grid>
-      <Grid item sx={{ py: 3 }} xs={5}>
+      <Grid item sx={{ py: 1 }} xs={5}>
         <Autocomplete
           multiple
           freeSolo

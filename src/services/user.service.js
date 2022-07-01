@@ -12,6 +12,7 @@ export const createUserRequest = async (user) => {
 };
 
 export const updateUserRequest = async (token, userId, user) => {
+  console.log(user);
   const response = await fetch(USER_ENDPOINT_API + '/' + userId, {
     method: 'PUT',
     headers: {
@@ -19,6 +20,19 @@ export const updateUserRequest = async (token, userId, user) => {
       Authorization: 'jwt ' + token,
     },
     body: JSON.stringify(user),
+  });
+  const responsejson = await response.json();
+  console.log(responsejson);
+  return responsejson;
+};
+
+export const getUserRequest = async (token, userId) => {
+  const response = await fetch(USER_ENDPOINT_API + '/' + userId, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token,
+    },
   });
   return await response.json();
 };

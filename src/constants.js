@@ -6,3 +6,24 @@ export const popupContentType = {
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
 };
+
+export const BudgetType = {
+  MONTHLY: 'MONTHLY',
+  YEARLY: 'YEARLY',
+  NONE: 'NONE',
+};
+
+export const SubscriptionPlan = {
+  FREE: 'FREE',
+  PREMIUM: 'PREMIUM',
+};
+
+export const TransactionCurrency = {
+  EUR: 'EURO',
+};
+
+export const TransactionType = {
+  MANUAL: 'MANUAL',
+  INCOMING: 'INCOMING',
+  OUTGOING: 'OUTGOING',
+};
