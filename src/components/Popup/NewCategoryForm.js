@@ -9,7 +9,6 @@ import {
   FormControl,
   Select,
   Autocomplete,
-  Container,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 
@@ -19,12 +18,14 @@ export default function NewCategoryForm(props) {
   const [budgetLimit, setBudgetlimit] = React.useState('');
   const [budgetType, setBudgetType] = React.useState('MONTHLY');
   const [categoryGroup, setCategoryGroup] = React.useState(
-    useSelector((state) => state.user.user.categoryGroups[0])
+    categoryGroups[0].name
   );
   const [keywords, setKeywords] = React.useState([]);
+  const [formatCorrect, setFormatCorrect] = React.useState(true);
+  const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
 
   useEffect(() => {
-    props.setSaveable(categoryName.length != 0);
+    props.setSaveable(categoryName.length != 0 && formatCorrect);
   }, [categoryName]);
 
   useEffect(() => {
@@ -37,7 +38,12 @@ export default function NewCategoryForm(props) {
     setCategoryName(e.target.value);
   };
   const onChangeBudgetLimit = (e) => {
-    setBudgetlimit(e.target.value);
+    if (e.target.value.match(eurRegEx) || e.target.value.length == 0) {
+      setBudgetlimit(e.target.value);
+      setFormatCorrect(true);
+    } else {
+      setFormatCorrect(false);
+    }
   };
   const onChangeBudgetType = (e) => {
     setBudgetType(e.target.value);
@@ -143,7 +149,12 @@ export default function NewCategoryForm(props) {
             onChange={onChangeCategoryGroup}
           >
             {categoryGroups.map(function (group) {
-              return <MenuItem value={group.name}> {group.name}</MenuItem>;
+              return (
+                <MenuItem value={group.name} key={'category' + group.name}>
+                  {' '}
+                  {group.name}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
@@ -167,7 +178,7 @@ export default function NewCategoryForm(props) {
           options={keywords}
           getOptionLabel={(option) => option}
           value={keywords}
-          onChange={(event, newValue) => {
+          onChange={(_, newValue) => {
             setKeywords(newValue);
           }}
           renderInput={(params) => (

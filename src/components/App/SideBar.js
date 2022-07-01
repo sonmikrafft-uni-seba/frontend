@@ -25,15 +25,18 @@ import { useTheme } from '@mui/material/styles';
 import { connect, useSelector } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
-import { GroupContext } from 'antd/lib/checkbox/Group';
 
 const SideBar = (props) => {
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
+  const noGroup = categoryGroups[0];
+  const assignedCategoryGroups = categoryGroups.filter(
+    (group) => group.name !== 'No Group'
+  );
   const theme = useTheme();
   const onNewCategory = () => {
     props.dispatch(
       openPopup({
-        title: 'New Category',
+        title: 'New Category/ New Category Group',
         popupContentType: popupContentType.NEW_CATEGORY,
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
@@ -83,10 +86,10 @@ const SideBar = (props) => {
             <ListItemText primary="Overview" />
           </ListItemButton>
         </ListItem>
-        {categoryGroups.map(function (group) {
+        {assignedCategoryGroups.map(function (group) {
           return (
             <ExpandableItem
-              key="Expandable"
+              key={'Expandable' + group.name}
               render={(xprops) => (
                 <>
                   <ListItem
@@ -121,14 +124,18 @@ const SideBar = (props) => {
             />
           );
         })}
-        <ListItem key="Uncategorized" disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
-            </ListItemIcon>
-            <ListItemText primary="Uncategorized" />
-          </ListItemButton>
-        </ListItem>
+        {noGroup.categories.map(function (category) {
+          return (
+            <ListItem key={category.name} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
+                </ListItemIcon>
+                <ListItemText primary={category.name} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
       <Box sx={{ px: 6, py: 3, borderTop: 1 }}>
         <Button

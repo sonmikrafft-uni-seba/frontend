@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, Box, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import React from 'react';
+import { Grid, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import NewCategoryForm from '../components/Popup/NewCategoryForm';
 import NewCategoryGroupForm from '../components/Popup/NewCategoryGroupForm';
 import { useSelector, connect } from 'react-redux';
@@ -52,7 +52,6 @@ const NewCategoryView = (props) => {
             }
       ),
     };
-    console.log(userToUpdate);
     props.dispatch(
       updateUser({
         userToUpdate,
@@ -65,7 +64,8 @@ const NewCategoryView = (props) => {
     categoryGroupName,
     budgetLimit,
     budgetType,
-    includedCategories
+    includedCategories,
+    includedCategoryNames
   ) => {
     const categoryGroupToSave = {
       name: categoryGroupName,
@@ -81,8 +81,20 @@ const NewCategoryView = (props) => {
       subscription: subscription,
       password: password,
       userBanks: userBanks,
-      categoryGroups: [...categoryGroups, categoryGroupToSave],
+      categoryGroups: categoryGroups
+        .map((group, i) =>
+          i !== 0
+            ? group
+            : {
+                ...group,
+                categories: group.categories.filter(
+                  (category) => !includedCategoryNames.includes(category.name)
+                ),
+              }
+        )
+        .concat([categoryGroupToSave]),
     };
+    console.log(userToUpdate);
     props.dispatch(
       updateUser({
         userToUpdate,
@@ -90,6 +102,7 @@ const NewCategoryView = (props) => {
     );
     props.onClosePopup();
   };
+
   return (
     <Grid
       container

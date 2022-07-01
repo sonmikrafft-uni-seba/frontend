@@ -16,22 +16,30 @@ export default function NewCategoryGroupForm(props) {
   const [categoryGroupName, setCategoryGroupName] = React.useState('');
   const [budgetLimit, setBudgetlimit] = React.useState('');
   const [budgetType, setBudgetType] = React.useState('MONTHLY');
+  const [formatCorrect, setFormatCorrect] = React.useState(true);
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
   const categories = categoryGroups[0].categories.flat();
+
   let categoryNames = categories.map((item) => item.name);
   categoryNames = categoryNames.filter(function (element) {
     return element !== 'Uncategorized';
   });
 
+  const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
   const [includedCategoryNames, setIncludedCategoryNames] = React.useState([]);
   useEffect(() => {
-    props.setSaveable(categoryGroupName.length != 0);
+    props.setSaveable(categoryGroupName.length != 0 && formatCorrect);
   }, [categoryGroupName]);
   const onChangeCategoryGroupName = (e) => {
     setCategoryGroupName(e.target.value);
   };
   const onChangeBudgetLimit = (e) => {
-    setBudgetlimit(e.target.value);
+    if (e.target.value.match(eurRegEx) || e.target.value.length == 0) {
+      setBudgetlimit(e.target.value);
+      setFormatCorrect(true);
+    } else {
+      setFormatCorrect(false);
+    }
   };
 
   const onChangeBudgetType = (e) => {
@@ -49,7 +57,8 @@ export default function NewCategoryGroupForm(props) {
       categoryGroupName,
       budgetLimit,
       budgetType,
-      includedCategories
+      includedCategories,
+      includedCategoryNames
     );
   };
   useEffect(() => {
