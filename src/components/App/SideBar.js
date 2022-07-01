@@ -25,10 +25,11 @@ import { useTheme } from '@mui/material/styles';
 import { connect, useSelector } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
+import { GroupContext } from 'antd/lib/checkbox/Group';
 
 const SideBar = (props) => {
+  const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
   const theme = useTheme();
-
   const onNewCategory = () => {
     props.dispatch(
       openPopup({
@@ -82,65 +83,44 @@ const SideBar = (props) => {
             <ListItemText primary="Overview" />
           </ListItemButton>
         </ListItem>
-        <ExpandableItem
-          render={(xprops) => (
-            <>
-              <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
-                <ListItemIcon>
-                  <Folder
-                    sx={{
-                      color: 'white',
-                      borderRadius: '50%',
-                    }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Food" />
-                {xprops.open ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button>
-                    <ListItemText primary="Supermarket" inset />
+        {categoryGroups.map(function (group) {
+          return (
+            <ExpandableItem
+              key="Expandable"
+              render={(xprops) => (
+                <>
+                  <ListItem
+                    key={group.name}
+                    button
+                    onClick={() => xprops.setOpen(!xprops.open)}
+                  >
+                    <ListItemIcon>
+                      <Folder
+                        sx={{
+                          color: 'white',
+                          borderRadius: '50%',
+                        }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={group.name} />
+                    {xprops.open ? <ExpandLess /> : <ExpandMore />}
                   </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Restaurant" inset />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Lieferando" inset />
-                  </ListItem>
-                </List>
-              </Collapse>
-            </>
-          )}
-        />
-        <ExpandableItem
-          render={(xprops) => (
-            <>
-              <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
-                <ListItemIcon>
-                  <Folder
-                    sx={{
-                      color: 'white',
-                      borderRadius: '50%',
-                    }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Hobby" />
-                {xprops.open ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button>
-                    <ListItemText primary="Tennis" inset />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Sailing" inset />
-                  </ListItem>
-                </List>
-              </Collapse>
-            </>
-          )}
-        />
+                  <Collapse in={xprops.open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {group.categories.map(function (category) {
+                        return (
+                          <ListItem key={category.name} button>
+                            <ListItemText primary={category.name} inset />
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Collapse>
+                </>
+              )}
+            />
+          );
+        })}
         <ListItem key="Uncategorized" disablePadding>
           <ListItemButton>
             <ListItemIcon>

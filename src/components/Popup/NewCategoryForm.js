@@ -22,9 +22,17 @@ export default function NewCategoryForm(props) {
     useSelector((state) => state.user.user.categoryGroups[0])
   );
   const [keywords, setKeywords] = React.useState([]);
+
   useEffect(() => {
     props.setSaveable(categoryName.length != 0);
   }, [categoryName]);
+
+  useEffect(() => {
+    if (props.notifySave) {
+      onSave();
+    }
+  }, [props.notifySave]);
+
   const onChangeCategoryName = (e) => {
     setCategoryName(e.target.value);
   };
@@ -48,11 +56,6 @@ export default function NewCategoryForm(props) {
     );
   };
 
-  useEffect(() => {
-    if (props.notifySave) {
-      onSave();
-    }
-  }, [props.notifySave]);
   return (
     <Grid container py={1} justifyContent="flex-start">
       <Grid item sx={{ py: 1 }} xs={2}>
