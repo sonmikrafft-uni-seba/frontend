@@ -8,13 +8,20 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { connect } from 'react-redux';
 
-export default function AccountSelector() {
-  const [accountID, setAccountID] = React.useState(0);
+const AccountSelector = (props) => {
+  const [accountID, setAccountID] = React.useState('');
   const theme = useTheme();
+
+  const accounts = props.user.userBanks.map(
+    (userBank) => userBank.bankaccounts
+  )[0];
+
   const changeSelectedAccount = (event) => {
     setAccountID(event.target.value);
   };
+
   return (
     <Box sx={{ mx: 'auto', width: 200 }}>
       <FormControl fullWidth>
@@ -45,17 +52,15 @@ export default function AccountSelector() {
             },
           }}
         >
-          <MenuItem value={0}>
-            <Typography color="white">All Accounts</Typography>
-          </MenuItem>
-          <MenuItem value={1}>
-            <Typography color="white">Sparkasse Giro</Typography>
-          </MenuItem>
-          <MenuItem value={2}>
-            <Typography color="white">Deutsche Bank Giro</Typography>
-          </MenuItem>
+          {accounts.map((option) => (
+            <MenuItem value={option._id}>
+              <Typography color="white">{option.name}</Typography>
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>
   );
-}
+};
+
+export default connect()(AccountSelector);
