@@ -40,7 +40,6 @@ export function* updateUserSaga(action) {
     userId,
     action.payload.userToUpdate
   );
-  console.log(action.payload);
   if (response.hasOwnProperty('error')) {
     yield put(
       updateUserFail({

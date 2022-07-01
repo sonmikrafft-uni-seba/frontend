@@ -12,7 +12,6 @@ export const createUserRequest = async (user) => {
 };
 
 export const updateUserRequest = async (token, userId, user) => {
-  console.log(user);
   const response = await fetch(USER_ENDPOINT_API + '/' + userId, {
     method: 'PUT',
     headers: {
@@ -21,9 +20,7 @@ export const updateUserRequest = async (token, userId, user) => {
     },
     body: JSON.stringify(user),
   });
-  const responsejson = await response.json();
-  console.log(responsejson);
-  return responsejson;
+  return await response.json();
 };
 
 export const getUserRequest = async (token, userId) => {

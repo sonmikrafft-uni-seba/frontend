@@ -17,24 +17,37 @@ export default function NewCategoryGroupForm(props) {
   const [budgetLimit, setBudgetlimit] = React.useState('');
   const [budgetType, setBudgetType] = React.useState('MONTHLY');
   const [formatCorrect, setFormatCorrect] = React.useState(true);
+  const [validGroupName, setValidGroupName] = React.useState(true);
+  const [includedCategoryNames, setIncludedCategoryNames] = React.useState([]);
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
-  const categories = categoryGroups[0].categories.flat();
 
+  // Categories are categories that are currently assigned with "No Group", and the category with name "Uncategorized" is our default category and cannot be reassigned
+  const categories = categoryGroups[0].categories.flat();
   let categoryNames = categories.map((item) => item.name);
   categoryNames = categoryNames.filter(function (element) {
     return element !== 'Uncategorized';
   });
 
+  // This regular expression only allows number with 2 digits
   const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
-  const [includedCategoryNames, setIncludedCategoryNames] = React.useState([]);
+
   useEffect(() => {
-    props.setSaveable(categoryGroupName.length != 0 && formatCorrect);
+    props.setSaveable(
+      categoryGroupName.length != 0 && formatCorrect && validGroupName
+    );
   }, [categoryGroupName]);
+
+  // I violently prevent group being named "No Group" here because it will lead to problems
   const onChangeCategoryGroupName = (e) => {
     setCategoryGroupName(e.target.value);
+    if (e.target.value == 'No Group') {
+      setValidGroupName(false);
+    } else {
+      setValidGroupName(true);
+    }
   };
   const onChangeBudgetLimit = (e) => {
-    if (e.target.value.match(eurRegEx) || e.target.value.length == 0) {
+    if (e.target.value.match(eurRegEx) || e.target.value.trim().length == 0) {
       setBudgetlimit(e.target.value);
       setFormatCorrect(true);
     } else {
@@ -61,6 +74,7 @@ export default function NewCategoryGroupForm(props) {
       includedCategoryNames
     );
   };
+
   useEffect(() => {
     if (props.notifySave) {
       onSave();

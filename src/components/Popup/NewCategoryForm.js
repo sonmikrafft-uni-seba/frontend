@@ -22,10 +22,15 @@ export default function NewCategoryForm(props) {
   );
   const [keywords, setKeywords] = React.useState([]);
   const [formatCorrect, setFormatCorrect] = React.useState(true);
+  const [validCategoryName, setValidCategoryName] = React.useState(true);
+
+  // This regular expression only allows number with 2 digits
   const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
 
   useEffect(() => {
-    props.setSaveable(categoryName.length != 0 && formatCorrect);
+    props.setSaveable(
+      categoryName.length != 0 && formatCorrect && validCategoryName
+    );
   }, [categoryName]);
 
   useEffect(() => {
@@ -34,11 +39,18 @@ export default function NewCategoryForm(props) {
     }
   }, [props.notifySave]);
 
+  // I prohibit category being called "Uncategorized"
   const onChangeCategoryName = (e) => {
     setCategoryName(e.target.value);
+    if (e.target.value == 'Uncategorized') {
+      setValidCategoryName(false);
+    } else {
+      setValidCategoryName(true);
+    }
   };
+
   const onChangeBudgetLimit = (e) => {
-    if (e.target.value.match(eurRegEx) || e.target.value.length == 0) {
+    if (e.target.value.match(eurRegEx) || e.target.value.trim().length == 0) {
       setBudgetlimit(e.target.value);
       setFormatCorrect(true);
     } else {
