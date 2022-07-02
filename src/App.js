@@ -39,6 +39,7 @@ function App() {
               <Route path="/login" element={<LoginView />} />
               <Route path="/sign-up" element={<SignUpView />} />
               <Route path="/app" element={<AppView />} />
+              <Route path="/app/:bankAccount" element={<AppView />} />
             </Routes>
           </>
         </ThemeProvider>

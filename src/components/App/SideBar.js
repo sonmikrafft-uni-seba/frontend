@@ -12,6 +12,7 @@ import {
   Typography,
   Button,
   Collapse,
+  Link,
   ListItemText,
   ListItemIcon,
   ListItemButton,
@@ -25,18 +26,28 @@ import { useTheme } from '@mui/material/styles';
 import { useSelector, connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const SideBar = (props) => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const userState = useSelector((state) => state.user.user);
 
   const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [bankAccount, setBankAccount] = React.useState('');
+  const [categoryGroup, setCategoryGroup] = React.useState('');
+  const [category, setCategory] = React.useState('');
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
 
   const categoryGroups = userState.categoryGroups;
+
+  useEffect(() => {
+    navigate('/app/' + bankAccount);
+  }, [bankAccount]);
 
   const onNewCategory = () => {
     props.dispatch(
@@ -67,8 +78,9 @@ const SideBar = (props) => {
           height="150px"
         />
       </Box>
+      {/* Account Selector */}
       <Box sx={{ p: 2 }}>
-        <AccountSelector user={userState} />
+        <AccountSelector user={userState} setBankAccount={setBankAccount} />
       </Box>
       <List>
         <Box sx={{ p: 2, borderTop: 1, borderBottom: 1 }} bgcolor="#183867">
@@ -77,6 +89,7 @@ const SideBar = (props) => {
           </Typography>
         </Box>
 
+        {/* Overview */}
         <ListItem key="Overview" disablePadding>
           <ListItemButton
             selected={selectedIndex === 0}
@@ -96,8 +109,10 @@ const SideBar = (props) => {
           </ListItemButton>
         </ListItem>
 
+        {/* Category Groups */}
         {categoryGroups.map((option) => (
           <ExpandableItem
+            key={option._id}
             render={(xprops) => (
               <>
                 <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
@@ -115,11 +130,12 @@ const SideBar = (props) => {
                   {xprops.open ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
 
+                {/* Categories */}
                 <Collapse in={xprops.open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {categoryGroups.map((option) =>
                       option.categories.map((category) => (
-                        <ListItem button>
+                        <ListItem button key={category._id}>
                           <ListItemText primary={category.name} inset />
                         </ListItem>
                       ))
@@ -132,6 +148,7 @@ const SideBar = (props) => {
         ))}
       </List>
 
+      {/* NEW CATEGORY button */}
       <Box sx={{ px: 6, py: 3, borderTop: 1 }}>
         <Button
           variant="contained"

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import {
   InputLabel,
   MenuItem,
@@ -9,14 +10,41 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
+/*
+TODO: get selected from url
+*/
 const AccountSelector = (props) => {
-  const [accountID, setAccountID] = React.useState('');
+  const getNameFromID = (id) => {
+    const accounts = props.user.userBanks.map(
+      (userBank) => userBank.bankaccounts
+    )[0];
+    const account = accounts.find((x) => x._id === id);
+    const accountName = account != null ? account.name : 'allAccounts';
+    return accountName;
+  };
+
+  const getIDFromName = (name) => {
+    const accounts = props.user.userBanks.map(
+      (userBank) => userBank.bankaccounts
+    )[0];
+    const account = accounts.find((x) => x.name === name);
+    const accountID = account != null ? account._id : 0;
+    return accountID;
+  };
+
+  const { bankAccount } = useParams();
+  const [accountID, setAccountID] = React.useState(getIDFromName(bankAccount));
   const theme = useTheme();
 
   const accounts = props.user.userBanks.map(
     (userBank) => userBank.bankaccounts
   )[0];
+
+  useEffect(() => {
+    props.setBankAccount(getNameFromID(accountID));
+  }, [accountID]);
 
   const changeSelectedAccount = (event) => {
     setAccountID(event.target.value);
@@ -52,6 +80,9 @@ const AccountSelector = (props) => {
             },
           }}
         >
+          <MenuItem value={0}>
+            <Typography color="white">All Accounts</Typography>
+          </MenuItem>
           {accounts.map((option) => (
             <MenuItem value={option._id}>
               <Typography color="white">{option.name}</Typography>
