@@ -11,14 +11,8 @@ const NewCategoryView = (props) => {
     setSelectedOption(newOption);
   };
 
-  const firstName = useSelector((state) => state.user.user.firstName);
-  const lastName = useSelector((state) => state.user.user.lastName);
-  const email = useSelector((state) => state.user.user.email);
-  const subscription = useSelector((state) => state.user.user.subscriptionPlan);
-  const password = useSelector((state) => state.user.user.password);
-  const userBanks = useSelector((state) => state.user.user.userBanks);
+  const user = useSelector((state) => state.user.user);
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
-
   const onSaveCategory = (
     categoryName,
     budgetLimit,
@@ -28,7 +22,7 @@ const NewCategoryView = (props) => {
   ) => {
     const categoryToSave = {
       name: categoryName,
-      conditionalFilter: keywords ? keywords.join(' AND ') : '',
+      conditionalFilter: keywords ? keywords.join(' OR ') : '',
       budgetType: [budgetType],
       budgetLimit: budgetLimit,
     };
@@ -37,12 +31,7 @@ const NewCategoryView = (props) => {
     );
 
     const userToUpdate = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      subscription: subscription,
-      password: password,
-      userBanks: userBanks,
+      ...user,
       categoryGroups: categoryGroups.map((item, i) =>
         i !== groupIndex
           ? item
@@ -75,26 +64,16 @@ const NewCategoryView = (props) => {
     };
 
     const userToUpdate = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      subscription: subscription,
-      password: password,
-      userBanks: userBanks,
+      ...user,
       categoryGroups: categoryGroups
-        .map((group, i) =>
-          i !== 0
-            ? group
-            : {
-                ...group,
-                categories: group.categories.filter(
-                  (category) => !includedCategoryNames.includes(category.name)
-                ),
-              }
-        )
+        .map((group) => ({
+          ...group,
+          categories: group.categories.filter(
+            (category) => !includedCategoryNames.includes(category.name)
+          ),
+        }))
         .concat([categoryGroupToSave]),
     };
-    console.log(userToUpdate);
     props.dispatch(
       updateUser({
         userToUpdate,

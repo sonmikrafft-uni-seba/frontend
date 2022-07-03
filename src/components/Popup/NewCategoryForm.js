@@ -11,18 +11,23 @@ import {
   Autocomplete,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { BudgetType } from '../../constants';
 
 export default function NewCategoryForm(props) {
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
   const [categoryName, setCategoryName] = React.useState('');
   const [budgetLimit, setBudgetlimit] = React.useState('');
-  const [budgetType, setBudgetType] = React.useState('MONTHLY');
+  const [budgetType, setBudgetType] = React.useState(BudgetType.MONTHLY);
   const [categoryGroup, setCategoryGroup] = React.useState(
     categoryGroups[0].name
   );
   const [keywords, setKeywords] = React.useState([]);
   const [formatCorrect, setFormatCorrect] = React.useState(true);
   const [validCategoryName, setValidCategoryName] = React.useState(true);
+  const existingCategoryNames = categoryGroups
+    .map((group) => group.categories)
+    .flat()
+    .map((category) => category.name);
 
   // This regular expression only allows number with 2 digits
   const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
@@ -42,7 +47,8 @@ export default function NewCategoryForm(props) {
   // I prohibit category being called "Uncategorized"
   const onChangeCategoryName = (e) => {
     setCategoryName(e.target.value);
-    if (e.target.value == 'Uncategorized') {
+    console.log(existingCategoryNames);
+    if (existingCategoryNames.includes(e.target.value)) {
       setValidCategoryName(false);
     } else {
       setValidCategoryName(true);
@@ -129,10 +135,10 @@ export default function NewCategoryForm(props) {
             label="Budget type"
             onChange={onChangeBudgetType}
           >
-            <MenuItem value={'MONTHLY'}>
+            <MenuItem value={BudgetType.MONTHLY}>
               <Typography>Monthly</Typography>
             </MenuItem>
-            <MenuItem value={'YEARLY'}>
+            <MenuItem value={BudgetType.YEARLY}>
               <Typography>Yearly</Typography>
             </MenuItem>
           </Select>

@@ -20,9 +20,12 @@ export default function NewCategoryGroupForm(props) {
   const [validGroupName, setValidGroupName] = React.useState(true);
   const [includedCategoryNames, setIncludedCategoryNames] = React.useState([]);
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
-
-  // Categories are categories that are currently assigned with "No Group", and the category with name "Uncategorized" is our default category and cannot be reassigned
-  const categories = categoryGroups[0].categories.flat();
+  const existingCategoryGroupNames = categoryGroups
+    .map((group) => group.name)
+    .flat();
+  // Reassignment of category from one group to another is allowed
+  // And the category with name "Uncategorized" is our default category and cannot be reassigned
+  const categories = categoryGroups.map((group) => group.categories).flat();
   let categoryNames = categories.map((item) => item.name);
   categoryNames = categoryNames.filter(function (element) {
     return element !== 'Uncategorized';
@@ -37,10 +40,10 @@ export default function NewCategoryGroupForm(props) {
     );
   }, [categoryGroupName]);
 
-  // I violently prevent group being named "No Group" here because it will lead to problems
+  // Prohbit duplicate group names
   const onChangeCategoryGroupName = (e) => {
     setCategoryGroupName(e.target.value);
-    if (e.target.value == 'No Group') {
+    if (existingCategoryGroupNames.includes(e.target.value)) {
       setValidGroupName(false);
     } else {
       setValidGroupName(true);
