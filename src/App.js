@@ -43,6 +43,10 @@ function App() {
                 path="/app/:bankAccountName/:categoryGroupName"
                 element={<AppView />}
               />
+              <Route
+                path="/app/:bankAccountName/:categoryGroupName/:categoryName"
+                element={<AppView />}
+              />
             </Routes>
           </>
         </ThemeProvider>

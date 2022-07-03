@@ -34,35 +34,42 @@ const SideBar = (props) => {
   const theme = useTheme();
   const userState = useSelector((state) => state.user.user);
 
-  const { categoryGroupName } = useParams();
+  const { categoryGroupName, categoryName } = useParams();
   const [selected, setSelected] = React.useState('Overview');
   const [bankAccount, setBankAccount] = React.useState('');
   const [categoryGroup, setCategoryGroup] = React.useState(categoryGroupName);
-  const [category, setCategory] = React.useState('');
+  const [category, setCategory] = React.useState(categoryName);
 
   const handleListItemSelection = (name) => {
     setSelected(name);
   };
 
-  const handleCategoryGroupClick = (event, name) => {
+  const handleCategoryGroupClick = (name) => {
     handleListItemSelection(name);
     setCategoryGroup(name);
+    setCategory('');
   };
 
-  const handleCategoryClick = (event, name) => {
+  const handleCategoryClick = (groupName, name) => {
     handleListItemSelection(name);
+    setCategoryGroup(groupName);
     setCategory(name);
   };
 
   const categoryGroups = userState.categoryGroups;
 
   useEffect(() => {
+    var path = '/app/';
     if (bankAccount !== '' && typeof categoryGroup !== 'undefined') {
-      navigate('/app/' + bankAccount + '/' + categoryGroup);
+      path = path.concat(bankAccount + '/' + categoryGroup);
     } else {
-      navigate('/app/allAccounts/Overview');
+      path = path.concat('allAccounts/Overview');
     }
-  }, [bankAccount, categoryGroup]);
+    if (category !== '' && typeof category !== 'undefined') {
+      path = path.concat('/' + category);
+    }
+    navigate(path);
+  }, [bankAccount, categoryGroup, category]);
 
   const onNewCategory = () => {
     props.dispatch(
@@ -108,7 +115,7 @@ const SideBar = (props) => {
         <ListItem key="Overview" disablePadding>
           <ListItemButton
             selected={selected === 'Overview'}
-            onClick={(event) => handleCategoryGroupClick(event, 'Overview')}
+            onClick={(event) => handleCategoryGroupClick('Overview')}
           >
             <ListItemIcon>
               {
@@ -151,9 +158,7 @@ const SideBar = (props) => {
                   >
                     <ListItemButton
                       selected={selected === option.name}
-                      onClick={(event) =>
-                        handleCategoryGroupClick(event, option.name)
-                      }
+                      onClick={(event) => handleCategoryGroupClick(option.name)}
                     >
                       <ListItemIcon>
                         <Folder
@@ -175,7 +180,7 @@ const SideBar = (props) => {
                           <ListItemButton
                             selected={selected === category.name}
                             onClick={(event) =>
-                              handleCategoryClick(event, category.name)
+                              handleCategoryClick(option.name, category.name)
                             }
                           >
                             <ListItemText primary={category.name} inset />
