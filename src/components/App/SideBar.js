@@ -12,7 +12,7 @@ import {
   Typography,
   Button,
   Collapse,
-  Link,
+  IconButton,
   ListItemText,
   ListItemIcon,
   ListItemButton,
@@ -34,13 +34,23 @@ const SideBar = (props) => {
   const theme = useTheme();
   const userState = useSelector((state) => state.user.user);
 
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selected, setSelected] = React.useState('Overview');
   const [bankAccount, setBankAccount] = React.useState('');
   const [categoryGroup, setCategoryGroup] = React.useState('');
   const [category, setCategory] = React.useState('');
 
-  const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
+  const handleListItemSelection = (name) => {
+    setSelected(name);
+  };
+
+  const handleCategoryGroupClick = (event, name) => {
+    handleListItemSelection(name);
+    setCategoryGroup(name);
+  };
+
+  const handleCategoryClick = (event, name) => {
+    handleListItemSelection(name);
+    setCategory(name);
   };
 
   const categoryGroups = userState.categoryGroups;
@@ -92,8 +102,8 @@ const SideBar = (props) => {
         {/* Overview */}
         <ListItem key="Overview" disablePadding>
           <ListItemButton
-            selected={selectedIndex === 0}
-            onClick={(event) => handleListItemClick(event, 0)}
+            selected={selected === 'Overview'}
+            onClick={(event) => handleCategoryGroupClick(event, 'Overview')}
           >
             <ListItemIcon>
               {
@@ -110,42 +120,69 @@ const SideBar = (props) => {
         </ListItem>
 
         {/* Category Groups */}
-        {categoryGroups.map((option) => (
-          <ExpandableItem
-            key={option._id}
-            render={(xprops) => (
-              <>
-                <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
-                  {' '}
-                  {/* TODO: Add selection*/}
-                  <ListItemIcon>
-                    <Folder
-                      sx={{
-                        color: 'white',
-                        borderRadius: '50%',
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary={option.name} />
-                  {xprops.open ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
+        {categoryGroups
+          .slice(0)
+          .reverse()
+          .map((option) => (
+            <ExpandableItem
+              key={option._id}
+              render={(xprops) => (
+                <>
+                  <ListItem
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="expand">
+                        {xprops.open ? (
+                          <ExpandLess
+                            onClick={() => xprops.setOpen(!xprops.open)}
+                          />
+                        ) : (
+                          <ExpandMore
+                            onClick={() => xprops.setOpen(!xprops.open)}
+                          />
+                        )}
+                      </IconButton>
+                    }
+                    disablePadding
+                  >
+                    <ListItemButton
+                      selected={selected === option.name}
+                      onClick={(event) =>
+                        handleCategoryGroupClick(event, option.name)
+                      }
+                    >
+                      <ListItemIcon>
+                        <Folder
+                          sx={{
+                            color: 'white',
+                            borderRadius: '50%',
+                          }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={option.name} />
+                    </ListItemButton>
+                  </ListItem>
 
-                {/* Categories */}
-                <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    {categoryGroups.map((option) =>
-                      option.categories.map((category) => (
-                        <ListItem button key={category._id}>
-                          <ListItemText primary={category.name} inset />
+                  {/* Categories */}
+                  <Collapse in={xprops.open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {option.categories.map((category) => (
+                        <ListItem button key={category._id} disablePadding>
+                          <ListItemButton
+                            selected={selected === category.name}
+                            onClick={(event) =>
+                              handleCategoryClick(event, category.name)
+                            }
+                          >
+                            <ListItemText primary={category.name} inset />
+                          </ListItemButton>
                         </ListItem>
-                      ))
-                    )}
-                  </List>
-                </Collapse>
-              </>
-            )}
-          />
-        ))}
+                      ))}
+                    </List>
+                  </Collapse>
+                </>
+              )}
+            />
+          ))}
       </List>
 
       {/* NEW CATEGORY button */}
