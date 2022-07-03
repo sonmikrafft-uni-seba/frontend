@@ -29,8 +29,10 @@ const AccountSelector = (props) => {
     return accountID;
   };
 
-  const { bankAccount } = useParams();
-  const [accountID, setAccountID] = React.useState(getIDFromName(bankAccount));
+  const { bankAccountName } = useParams();
+  const [accountID, setAccountID] = React.useState(
+    getIDFromName(bankAccountName)
+  );
   const theme = useTheme();
 
   useEffect(() => {

@@ -39,7 +39,10 @@ function App() {
               <Route path="/login" element={<LoginView />} />
               <Route path="/sign-up" element={<SignUpView />} />
               <Route path="/app" element={<AppView />} />
-              <Route path="/app/:bankAccount" element={<AppView />} />
+              <Route
+                path="/app/:bankAccountName/:categoryGroupName"
+                element={<AppView />}
+              />
             </Routes>
           </>
         </ThemeProvider>

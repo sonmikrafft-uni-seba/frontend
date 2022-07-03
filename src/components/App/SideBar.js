@@ -26,7 +26,7 @@ import { useTheme } from '@mui/material/styles';
 import { useSelector, connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 
 const SideBar = (props) => {
@@ -34,9 +34,10 @@ const SideBar = (props) => {
   const theme = useTheme();
   const userState = useSelector((state) => state.user.user);
 
+  const { categoryGroupName } = useParams();
   const [selected, setSelected] = React.useState('Overview');
   const [bankAccount, setBankAccount] = React.useState('');
-  const [categoryGroup, setCategoryGroup] = React.useState('');
+  const [categoryGroup, setCategoryGroup] = React.useState(categoryGroupName);
   const [category, setCategory] = React.useState('');
 
   const handleListItemSelection = (name) => {
@@ -56,8 +57,12 @@ const SideBar = (props) => {
   const categoryGroups = userState.categoryGroups;
 
   useEffect(() => {
-    navigate('/app/' + bankAccount);
-  }, [bankAccount]);
+    if (bankAccount !== '' && typeof categoryGroup !== 'undefined') {
+      navigate('/app/' + bankAccount + '/' + categoryGroup);
+    } else {
+      navigate('/app/allAccounts/Overview');
+    }
+  }, [bankAccount, categoryGroup]);
 
   const onNewCategory = () => {
     props.dispatch(
