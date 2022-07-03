@@ -11,7 +11,7 @@ import {
   InputLabel,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
-
+import { BudgetType } from '../../constants';
 export default function NewCategoryGroupForm(props) {
   const [categoryGroupName, setCategoryGroupName] = React.useState('');
   const [budgetLimit, setBudgetlimit] = React.useState('');
@@ -23,13 +23,12 @@ export default function NewCategoryGroupForm(props) {
   const existingCategoryGroupNames = categoryGroups
     .map((group) => group.name)
     .flat();
-  // Reassignment of category from one group to another is allowed
-  // And the category with name "Uncategorized" is our default category and cannot be reassigned
   const categories = categoryGroups.map((group) => group.categories).flat();
-  let categoryNames = categories.map((item) => item.name);
-  categoryNames = categoryNames.filter(function (element) {
-    return element !== 'Uncategorized';
-  });
+  let categoryNames = categories
+    .map((item) => item.name)
+    .filter(function (element) {
+      return element !== 'Uncategorized';
+    });
 
   // This regular expression only allows number with 2 digits
   const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
@@ -140,10 +139,10 @@ export default function NewCategoryGroupForm(props) {
               label="Budget type"
               onChange={onChangeBudgetType}
             >
-              <MenuItem value={'MONTHLY'}>
+              <MenuItem value={BudgetType.MONTHLY}>
                 <Typography>Monthly</Typography>
               </MenuItem>
-              <MenuItem value={'YEARLY'}>
+              <MenuItem value={BudgetType.YEARLY}>
                 <Typography>Yearly</Typography>
               </MenuItem>
             </Select>
@@ -166,7 +165,7 @@ export default function NewCategoryGroupForm(props) {
             options={categoryNames}
             getOptionLabel={(option) => option}
             value={includedCategoryNames}
-            onChange={(event, newValue) => {
+            onChange={(_, newValue) => {
               setIncludedCategoryNames(newValue);
             }}
             renderInput={(params) => (
