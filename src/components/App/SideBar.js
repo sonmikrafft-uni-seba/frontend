@@ -55,7 +55,9 @@ const SideBar = (props) => {
   useEffect(() => {
     var path = '/app/';
     if (bankAccount !== '' && typeof categoryGroup !== 'undefined') {
-      path = path.concat(bankAccount.toLowerCase() + '/' + categoryGroup);
+      path = path.concat(
+        bankAccount.toLowerCase() + '/' + categoryGroup.toLowerCase()
+      );
     } else {
       path = path.concat('allaccounts/overview');
     }
@@ -80,7 +82,7 @@ const SideBar = (props) => {
   const onNewCategory = () => {
     props.dispatch(
       openPopup({
-        title: 'New Category',
+        title: 'New Category/ New Category Group',
         popupContentType: popupContentType.NEW_CATEGORY,
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
@@ -126,7 +128,6 @@ const SideBar = (props) => {
             Categories
           </Typography>
         </Box>
-
         {/* Overview */}
         <ListItem key="Overview" disablePadding>
           <ListItemButton
@@ -146,11 +147,11 @@ const SideBar = (props) => {
             <ListItemText primary="Overview" />
           </ListItemButton>
         </ListItem>
-
         {/* Category Groups */}
         {categoryGroups
           .slice(0)
           .reverse()
+          .filter((group) => group.name !== 'No Group')
           .map((option) => (
             <ExpandableItem
               key={option._id}
@@ -209,6 +210,22 @@ const SideBar = (props) => {
               )}
             />
           ))}
+        {/* No Group Categories */}
+        {categoryGroups[0].categories.map((category) => (
+          <ListItem button key={category._id} disablePadding>
+            <ListItemButton
+              selected={selected === category.name.toLowerCase()}
+              onClick={(event) =>
+                handleCategoryClick(categoryGroups[0].name, category.name)
+              }
+            >
+              <ListItemIcon>
+                {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
+              </ListItemIcon>
+              <ListItemText primary={category.name} />
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
 
       {/* NEW CATEGORY button */}
