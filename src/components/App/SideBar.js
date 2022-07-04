@@ -35,25 +35,19 @@ const SideBar = (props) => {
   const userState = useSelector((state) => state.user.user);
 
   const { categoryGroupName, categoryName } = useParams();
-  const [selected, setSelected] = React.useState('Overview');
+  const [selected, setSelected] = React.useState('overview');
   const [bankAccount, setBankAccount] = React.useState('');
   const [categoryGroup, setCategoryGroup] = React.useState(categoryGroupName);
   const [category, setCategory] = React.useState(categoryName);
 
-  const handleListItemSelection = (name) => {
-    setSelected(name);
-  };
-
   const handleCategoryGroupClick = (name) => {
-    handleListItemSelection(name);
-    setCategoryGroup(name);
+    setCategoryGroup(name.toLowerCase());
     setCategory('');
   };
 
   const handleCategoryClick = (groupName, name) => {
-    handleListItemSelection(name);
-    setCategoryGroup(groupName);
-    setCategory(name);
+    setCategoryGroup(groupName.toLowerCase());
+    setCategory(name.toLowerCase());
   };
 
   const categoryGroups = userState.categoryGroups;
@@ -61,15 +55,27 @@ const SideBar = (props) => {
   useEffect(() => {
     var path = '/app/';
     if (bankAccount !== '' && typeof categoryGroup !== 'undefined') {
-      path = path.concat(bankAccount + '/' + categoryGroup);
+      path = path.concat(bankAccount.toLowerCase() + '/' + categoryGroup);
     } else {
-      path = path.concat('allAccounts/Overview');
+      path = path.concat('allaccounts/overview');
     }
     if (category !== '' && typeof category !== 'undefined') {
       path = path.concat('/' + category);
     }
     navigate(path);
   }, [bankAccount, categoryGroup, category]);
+
+  useEffect(() => {
+    if (category !== '' && typeof category !== 'undefined') {
+      setSelected(category);
+    } else {
+      if (typeof categoryGroup !== 'undefined') {
+        setSelected(categoryGroup);
+      } else {
+        setSelected('overview');
+      }
+    }
+  }, [categoryGroup, category]);
 
   const onNewCategory = () => {
     props.dispatch(
@@ -104,7 +110,17 @@ const SideBar = (props) => {
       <Box sx={{ p: 2 }}>
         <AccountSelector user={userState} setBankAccount={setBankAccount} />
       </Box>
-      <List>
+      <List
+        sx={{
+          // selected and (selected + hover) states
+          '&& .Mui-selected, && .Mui-selected:hover': {
+            bgcolor: '#183867',
+            '&, & .MuiListItemIcon-root': {
+              color: theme.palette.background.contrastText,
+            },
+          },
+        }}
+      >
         <Box sx={{ p: 2, borderTop: 1, borderBottom: 1 }} bgcolor="#183867">
           <Typography variant="h6" align="center">
             Categories
@@ -114,8 +130,8 @@ const SideBar = (props) => {
         {/* Overview */}
         <ListItem key="Overview" disablePadding>
           <ListItemButton
-            selected={selected === 'Overview'}
-            onClick={(event) => handleCategoryGroupClick('Overview')}
+            selected={selected === 'overview'}
+            onClick={(event) => handleCategoryGroupClick('overview')}
           >
             <ListItemIcon>
               {
@@ -157,7 +173,7 @@ const SideBar = (props) => {
                     disablePadding
                   >
                     <ListItemButton
-                      selected={selected === option.name}
+                      selected={selected === option.name.toLowerCase()}
                       onClick={(event) => handleCategoryGroupClick(option.name)}
                     >
                       <ListItemIcon>
@@ -178,7 +194,7 @@ const SideBar = (props) => {
                       {option.categories.map((category) => (
                         <ListItem button key={category._id} disablePadding>
                           <ListItemButton
-                            selected={selected === category.name}
+                            selected={selected === category.name.toLowerCase()}
                             onClick={(event) =>
                               handleCategoryClick(option.name, category.name)
                             }

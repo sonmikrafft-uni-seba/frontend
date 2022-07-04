@@ -19,7 +19,7 @@ const AccountSelector = (props) => {
 
   const getNameFromID = (id) => {
     const account = accounts.find((x) => x._id === id);
-    const accountName = account != null ? account.name : 'allAccounts';
+    const accountName = account != null ? account.name : 'allaccounts';
     return accountName;
   };
 
