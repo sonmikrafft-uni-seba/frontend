@@ -5,10 +5,10 @@ import {
   remoteBankingAccountsRequest,
   resetBankingAccountOnboarding,
 } from '../store/banking/banking.actions';
-import BankAccountSelector from '../components/Popup/BankAccountSelector';
 import { updateUser } from '../store/user/user.actions';
-import { BankingOnboardingState, popupActionType } from '../constants';
 import { changePopup } from '../store/popup/popup.actions';
+import BankAccountSelector from '../components/Popup/BankAccountSelector';
+import { BankingOnboardingState, popupActionType } from '../constants';
 
 const BankAccountSelectorView = (props) => {
   const accountOnboarding = useSelector(

@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import { CircularProgress } from '@mui/material';
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Checkbox,
+  CircularProgress,
+} from '@mui/material';
 
 const BankAccountSelector = (props) => {
   const [checked, setChecked] = React.useState([]);
