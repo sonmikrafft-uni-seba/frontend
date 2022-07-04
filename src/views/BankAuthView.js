@@ -20,6 +20,7 @@ const BankAuthView = (props) => {
 
   useEffect(() => {
     if (request.type == ACTION_TYPES.REMOTE_BANKING_LIST_BANK_SUCCESS) {
+      // 1. step: get end user agreement with fixed settings
       props.dispatch(
         remoteBankingEUARequest({
           max_historical_days: 90,
@@ -28,6 +29,7 @@ const BankAuthView = (props) => {
         })
       );
     } else if (request.type == ACTION_TYPES.REMOTE_BANKING_EUA_SUCCESS) {
+      // 2. step: save eua and get requisition object
       props.dispatch(setEuaForOnboarding(request.payload.id));
       props.dispatch(
         remoteBankingAuthRequest({
@@ -38,7 +40,9 @@ const BankAuthView = (props) => {
         })
       );
     } else if (request.type == ACTION_TYPES.REMOTE_BANKING_AUTH_SUCCESS) {
+      // 3. step: save requistion and redirect to bank authentification page
       props.dispatch(setReqForOnboarding(request.payload.id));
+      // set onboarding state to select accounts, so that if user comes back everything is ready for review
       props.dispatch(
         setAccountOnboardingState(BankingOnboardingState.SELECT_ACCOUNTS)
       );
@@ -48,15 +52,13 @@ const BankAuthView = (props) => {
           popupActionType: popupActionType.SAVE_OR_CANCEL,
         })
       );
+
+      // redirect to bank authentification page
       window.location.replace(request.payload.link);
     }
   }, [request.type]);
 
-  if (request.type == ACTION_TYPES.REMOTE_BANKING_AUTH_SUCCESS) {
-    return <>Redirecting...</>;
-  } else {
-    return <CircularProgress />;
-  }
+  return <CircularProgress />;
 };
 
 export default connect()(BankAuthView);

@@ -42,9 +42,10 @@ export const getBankingAccessToken = (state) =>
 export const getReqId = (state) =>
   state.banking.accountOnboarding.requisitionId;
 export const getSelectedBank = () => 'SANDBOXFINANCE_SFIN0000';
+// TODO: uncomment when using real banks
 // (state) => state.banking.accountOnboarding.selectedBank.id;
 
-// get new banking access token from our backend
+// get new nordigen access token from our backend
 export function* getBankingTokenSaga() {
   const token = yield select(getToken);
   const response = yield call(getNewTokenRequest, token);
@@ -56,7 +57,7 @@ export function* getBankingTokenSaga() {
   }
 }
 
-// refresh access token at nordigen
+// get new nordigen refresh access token from our backend
 export function* refreshBankingTokenSaga(action) {
   const response = yield call(refreshTokenRequest, action.payload);
 

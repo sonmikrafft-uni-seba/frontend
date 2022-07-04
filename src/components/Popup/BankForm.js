@@ -12,6 +12,7 @@ import ListItemText from '@mui/material/ListItemText';
 const BankForm = (props) => {
   const [country, setCountry] = useState(props.defaultCountry);
 
+  // change selected country for bank list
   const changeCountry = (event) => {
     setCountry(event.target.value);
     props.changeCountry(event.target.value);

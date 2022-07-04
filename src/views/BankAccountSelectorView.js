@@ -7,7 +7,8 @@ import {
 } from '../store/banking/banking.actions';
 import BankAccountSelector from '../components/Popup/BankAccountSelector';
 import { updateUser } from '../store/user/user.actions';
-import { BankingOnboardingState } from '../constants';
+import { BankingOnboardingState, popupActionType } from '../constants';
+import { changePopup } from '../store/popup/popup.actions';
 
 const BankAccountSelectorView = (props) => {
   const accountOnboarding = useSelector(
@@ -58,7 +59,13 @@ const BankAccountSelectorView = (props) => {
       const newBank = createUserBank(accounts);
       const newUser = { ...user, userBanks: [...user.userBanks, newBank] };
       props.dispatch(updateUser({ userToUpdate: newUser }));
-      props.dispatch(resetBankingAccountOnboarding());
+      props.dispatch(resetBankingAccountOnboarding()); // reset whole process
+      props.dispatch(
+        changePopup({
+          title: 'Bank Accounts',
+          popupActionType: popupActionType.ADD_BANK,
+        })
+      );
     }
   };
 
@@ -71,6 +78,7 @@ const BankAccountSelectorView = (props) => {
       accountOnboarding.accounts.length > 0 &&
       !allAccountsHaveName(accountOnboarding.accounts)
     ) {
+      // request account details for account ids with missing details
       accountOnboarding.accounts.forEach((account) => {
         if (!account.hasOwnProperty('name'))
           props.dispatch(

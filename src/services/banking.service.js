@@ -1,5 +1,6 @@
 export const BANKING_ENDPOINT_API = 'http://localhost:3001/banking';
 
+// get new auth token
 export const getNewTokenRequest = async (token) => {
   const response = await fetch(BANKING_ENDPOINT_API + '/token', {
     method: 'POST',
@@ -11,6 +12,7 @@ export const getNewTokenRequest = async (token) => {
   return await response.json();
 };
 
+// refresh auth token
 export const refreshTokenRequest = async (token) => {
   const response = await fetch(BANKING_ENDPOINT_API + '/token/refresh', {
     method: 'POST',
@@ -24,6 +26,7 @@ export const refreshTokenRequest = async (token) => {
   return await response.json();
 };
 
+// get banklist for country code
 export const getBankListForCountryRequest = async (
   token,
   bankingToken,
@@ -40,6 +43,7 @@ export const getBankListForCountryRequest = async (
   return await response.json();
 };
 
+// get eua
 export const getEndUserAgreementRequest = async (
   token,
   bankingToken,
@@ -62,6 +66,7 @@ export const getEndUserAgreementRequest = async (
   return await response.json();
 };
 
+// create requisition
 export const getBankAuthFlowRequest = async (
   token,
   bankingToken,
@@ -84,6 +89,7 @@ export const getBankAuthFlowRequest = async (
   return await response.json();
 };
 
+// get requisition details
 export const getRequisitionDetails = async (
   token,
   bankingToken,
@@ -105,6 +111,7 @@ export const getRequisitionDetails = async (
   return await response.json();
 };
 
+// get bank account details
 export const getBankAccountDetails = async (
   token,
   bankingToken,
@@ -126,6 +133,7 @@ export const getBankAccountDetails = async (
   return await response.json();
 };
 
+// get bank account transactions
 export const getBankAccountTransactions = async (
   token,
   bankingToken,

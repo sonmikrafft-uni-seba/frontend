@@ -14,14 +14,17 @@ const BankAccountSelector = (props) => {
     return accounts.every((account) => account.hasOwnProperty('name'));
   };
 
+  // filter account list by selected ids
   const filterAccountsById = (accounts) => {
     return accounts.filter((account) => checked.includes(account.id));
   };
 
+  // trigger save bank accounts
   useEffect(() => {
     props.addAccounts(filterAccountsById(props.accounts));
   }, [props.notifySave]);
 
+  // make popup saveable or not depending on if a account is selected
   useEffect(() => {
     if (checked.length == 0) {
       props.setSaveable(false);
@@ -30,7 +33,7 @@ const BankAccountSelector = (props) => {
     }
   }, [checked]);
 
-  // toggle items
+  // select and unselect item
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];

@@ -13,8 +13,10 @@ import {
   remoteBankingListBankRequest,
 } from '../store/banking/banking.actions';
 import { parseJwt } from '../utils';
+import { CircularProgress } from '@mui/material';
 
 const BankAccountView = (props) => {
+  // state to manage on which page we are in onboarding process
   const accountOnboardingState = useSelector(
     (state) => state.banking.accountOnboarding.state
   );
@@ -47,21 +49,19 @@ const BankAccountView = (props) => {
     switch (accountOnboardingState) {
       case BankingOnboardingState.BANK_LIST:
         // pull banks for default country
-        // switch view
-        // change actions
         props.dispatch(remoteBankingListBankRequest('DE'));
+        // switch view
         props.dispatch(
           setAccountOnboardingState(BankingOnboardingState.SELECT_BANK)
         );
+        // change actions
+
         props.dispatch(
           changePopup({
             title: 'Select Bank',
             popupActionType: popupActionType.EMPTY,
           })
         );
-        props.setNotifySave(false);
-        return;
-      case BankingOnboardingState.SELECT_ACCOUNTS:
         props.setNotifySave(false);
         return;
       default:
@@ -72,13 +72,13 @@ const BankAccountView = (props) => {
 
   const renderContent = (contentMode) => {
     switch (contentMode) {
-      case BankingOnboardingState.BANK_LIST:
+      case BankingOnboardingState.BANK_LIST: // list of all bank accounts of user
         return <BankAccountList />;
-      case BankingOnboardingState.SELECT_BANK:
+      case BankingOnboardingState.SELECT_BANK: // list of all banks available
         return <BankFormView defaultCountry={defaultCountry} />;
-      case BankingOnboardingState.AUTH_BANK:
+      case BankingOnboardingState.AUTH_BANK: // auth process for selected bank
         return <BankAuthView />;
-      case BankingOnboardingState.SELECT_ACCOUNTS:
+      case BankingOnboardingState.SELECT_ACCOUNTS: // select accounts of authenticated bank account
         return (
           <BankAccountSelectorView
             setSaveable={props.setSaveable}
@@ -86,7 +86,7 @@ const BankAccountView = (props) => {
           />
         );
       default:
-        return <>Broken -.-</>;
+        return <CircularProgress />;
     }
   };
 
