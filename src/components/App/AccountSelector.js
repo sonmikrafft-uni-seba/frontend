@@ -13,9 +13,9 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 const AccountSelector = (props) => {
-  const accounts = props.user.userBanks.map(
-    (userBank) => userBank.bankaccounts
-  )[0];
+  const accounts = props.user.userBanks
+    .map((userBank) => userBank.bankaccounts)
+    .flat();
 
   const getNameFromID = (id) => {
     const account = accounts.find((x) => x._id === id);
