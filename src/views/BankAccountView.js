@@ -13,14 +13,14 @@ import {
   remoteBankingListBankRequest,
 } from '../store/banking/banking.actions';
 import { parseJwt } from '../utils';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Box } from '@mui/material';
 
 const BankAccountView = (props) => {
   // state to manage on which page we are in onboarding process
   const accountOnboardingState = useSelector(
     (state) => state.banking.accountOnboarding.state
   );
-
+  const userBanks = useSelector((state) => state.user.user.userBanks);
   const accessToken = useSelector((state) => state.banking.request.accessToken);
   const refreshToken = useSelector(
     (state) => state.banking.request.refreshToken
@@ -73,7 +73,7 @@ const BankAccountView = (props) => {
   const renderContent = (contentMode) => {
     switch (contentMode) {
       case BankingOnboardingState.BANK_LIST: // list of all bank accounts of user
-        return <BankAccountList />;
+        return <BankAccountList userBanks={userBanks} />;
       case BankingOnboardingState.SELECT_BANK: // list of all banks available
         return <BankFormView defaultCountry={defaultCountry} />;
       case BankingOnboardingState.AUTH_BANK: // auth process for selected bank
@@ -86,7 +86,20 @@ const BankAccountView = (props) => {
           />
         );
       default:
-        return <CircularProgress />;
+        return (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              display: 'flex',
+              padding: '50px',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        );
     }
   };
 

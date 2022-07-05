@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { CircularProgress } from '@mui/material';
+import React from 'react';
+import { CircularProgress, Box } from '@mui/material';
 import BankForm from '../components/Popup/BankForm';
 import { BankingOnboardingState } from '../constants';
 import { connect, useSelector } from 'react-redux';
@@ -35,7 +35,20 @@ const BankFormView = (props) => {
       />
     );
   } else {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          padding: '50px',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 };
 

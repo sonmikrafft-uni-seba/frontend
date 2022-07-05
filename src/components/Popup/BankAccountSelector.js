@@ -6,6 +6,7 @@ import {
   ListItemText,
   Checkbox,
   CircularProgress,
+  Box,
 } from '@mui/material';
 
 const BankAccountSelector = (props) => {
@@ -79,7 +80,20 @@ const BankAccountSelector = (props) => {
       </List>
     );
   } else {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          padding: '50px',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 };
 

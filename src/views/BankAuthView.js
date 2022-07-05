@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Box } from '@mui/material';
 import {
   ACTION_TYPES,
   remoteBankingAuthRequest,
@@ -58,7 +58,20 @@ const BankAuthView = (props) => {
     }
   }, [request.type]);
 
-  return <CircularProgress />;
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        padding: '50px',
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
 };
 
 export default connect()(BankAuthView);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   InputLabel,
@@ -9,19 +9,77 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  CircularProgress,
 } from '@mui/material';
 
 const BankForm = (props) => {
   const [country, setCountry] = useState(props.defaultCountry);
+  const [loading, setLoading] = useState(false);
 
   // change selected country for bank list
   const changeCountry = (event) => {
+    setLoading(true);
     setCountry(event.target.value);
     props.changeCountry(event.target.value);
   };
 
   const selectBank = (bank) => {
     props.selectBank(bank);
+  };
+
+  useEffect(() => {
+    setLoading(false);
+  }, [props.banks]);
+
+  const renderContent = (loading) => {
+    if (loading) {
+      return (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+            padding: '50px',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    } else {
+      return (
+        <Box
+          sx={{
+            width: '100%',
+            height: '350',
+            bgcolor: 'background.paper',
+          }}
+        >
+          <List sx={{ maxHeight: '100%', overflow: 'auto' }}>
+            {props.banks.map((bank) => {
+              return (
+                <ListItem key={bank.id} component="div" disablePadding>
+                  <ListItemButton
+                    onClick={() => {
+                      selectBank({
+                        id: bank.id,
+                        name: bank.name,
+                        logo: bank.logo,
+                      });
+                    }}
+                  >
+                    <ListItemText primary={bank.name} />
+                    <img src={bank.logo} style={{ height: '150px' }} />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+          ;
+        </Box>
+      );
+    }
   };
 
   return (
@@ -43,34 +101,7 @@ const BankForm = (props) => {
           <MenuItem value={'ES'}>Spain</MenuItem>
         </Select>
       </FormControl>
-      <Box
-        sx={{
-          width: '100%',
-          height: '350',
-          bgcolor: 'background.paper',
-        }}
-      >
-        <List style={{ maxHeight: '100%', overflow: 'auto' }}>
-          {props.banks.map((bank) => {
-            return (
-              <ListItem key={bank.id} component="div" disablePadding>
-                <ListItemButton
-                  onClick={() => {
-                    selectBank({
-                      id: bank.id,
-                      name: bank.name,
-                      logo: bank.logo,
-                    });
-                  }}
-                >
-                  <ListItemText primary={bank.name} />
-                  <img src={bank.logo} style={{ height: '150px' }} />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
-        </List>
-      </Box>
+      {renderContent(loading)}
     </>
   );
 };
