@@ -11,6 +11,7 @@ import {
   remoteBankingTokenRequest,
   remoteBankingRefreshTokenRequest,
   remoteBankingListBankRequest,
+  resetBankingAccountOnboarding,
 } from '../store/banking/banking.actions';
 import { parseJwt } from '../utils';
 import { CircularProgress, Box } from '@mui/material';
@@ -20,6 +21,8 @@ const BankAccountView = (props) => {
   const accountOnboardingState = useSelector(
     (state) => state.banking.accountOnboarding.state
   );
+
+  const popupVisibleState = useSelector((state) => state.popup.visible);
   const userBanks = useSelector((state) => state.user.user.userBanks);
   const accessToken = useSelector((state) => state.banking.request.accessToken);
   const refreshToken = useSelector(
@@ -28,19 +31,31 @@ const BankAccountView = (props) => {
 
   const defaultCountry = 'DE';
 
-  // if accessToken not set, request a new one
-  if (!accessToken) {
-    props.dispatch(remoteBankingTokenRequest());
-  }
+  useEffect(() => {
+    // if accessToken not set, request a new one
+    if (!accessToken) {
+      props.dispatch(remoteBankingTokenRequest());
+    }
 
-  // token expires or is expired, ask for refresh
-  if (
-    refreshToken != null &&
-    new Date(parseJwt(refreshToken).exp) >
-      new Date().setHours(new Date().getHours - 1)
-  ) {
-    props.dispatch(remoteBankingRefreshTokenRequest(refreshToken));
-  }
+    // timestamp of when the token should be updated
+    let accessTokenLimit = new Date();
+    accessTokenLimit.setHours(new Date().getHours() - 1);
+
+    // timestamp of when the access token expires
+    let accessTokenExp = new Date(parseJwt(accessToken).exp * 1000);
+
+    // token expires or is expired, ask for refresh
+    if (refreshToken != null && accessTokenExp < accessTokenLimit) {
+      props.dispatch(remoteBankingRefreshTokenRequest(refreshToken));
+    }
+  }, [accessToken, refreshToken]);
+
+  // reset onboarding flow if popup is closed
+  useEffect(() => {
+    if (!popupVisibleState) {
+      props.dispatch(resetBankingAccountOnboarding());
+    }
+  }, [popupVisibleState]);
 
   // handle popup page switch
   useEffect(() => {

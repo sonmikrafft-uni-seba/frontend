@@ -209,6 +209,13 @@ export const banking = (state = initialState, action) => {
     case ACTION_TYPES.RESET_BANKING_ACCOUNT_ONBOARDING:
       return {
         ...state,
+        request: {
+          accessToken: state.request.accessToken,
+          refreshToken: state.request.refreshToken,
+          error: null,
+          payload: null,
+          type: null,
+        },
         accountOnboarding: {
           state: BankingOnboardingState.BANK_LIST,
           selectedBank: {

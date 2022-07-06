@@ -9,12 +9,14 @@ import { updateUser } from '../store/user/user.actions';
 import { changePopup } from '../store/popup/popup.actions';
 import BankAccountSelector from '../components/Popup/BankAccountSelector';
 import { BankingOnboardingState, popupActionType } from '../constants';
+import { useSearchParams } from 'react-router-dom';
 
 const BankAccountSelectorView = (props) => {
   const accountOnboarding = useSelector(
     (state) => state.banking.accountOnboarding
   );
   const user = useSelector((state) => state.user.user);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // ensure that all accounts have not just ids
   const allAccountsHaveName = (accounts) => {
@@ -68,6 +70,19 @@ const BankAccountSelectorView = (props) => {
       );
     }
   };
+
+  // remove ref param from url after redirection from nordigen
+  useEffect(() => {
+    const param = searchParams.get('ref');
+
+    if (param) {
+      // delete query param
+      searchParams.delete('ref');
+
+      // update state after
+      setSearchParams(searchParams);
+    }
+  }, []);
 
   useEffect(() => {
     // request accounts if their ids are not present
