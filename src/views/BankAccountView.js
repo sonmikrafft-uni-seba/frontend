@@ -35,6 +35,7 @@ const BankAccountView = (props) => {
     // if accessToken not set, request a new one
     if (!accessToken) {
       props.dispatch(remoteBankingTokenRequest());
+      return;
     }
 
     // timestamp of when the token should be updated
