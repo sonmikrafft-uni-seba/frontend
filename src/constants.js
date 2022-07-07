@@ -5,6 +5,7 @@ export const popupContentType = {
 };
 
 export const baseUrl = 'http://localhost:3000';
+export const allAccountsConstant = 'allaccounts';
 
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
