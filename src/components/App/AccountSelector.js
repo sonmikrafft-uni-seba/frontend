@@ -9,38 +9,19 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useSelector, connect } from 'react-redux';
+import { allAccountsConstant } from '../../constants.js';
+import { setBankAccount } from '../../store/app/app.actions.js';
 
 const AccountSelector = (props) => {
   const accounts = props.user.userBanks
     .map((userBank) => userBank.bankaccounts)
     .flat();
-
-  const getNameFromID = (id) => {
-    const account = accounts.find((x) => x._id === id);
-    const accountName = account != null ? account.name : 'allaccounts';
-    return accountName;
-  };
-
-  const getIDFromName = (name) => {
-    const account = accounts.find((x) => x.name === name);
-    const accountID = account != null ? account._id : 0;
-    return accountID;
-  };
-
-  const { bankAccountName } = useParams();
-  const [accountID, setAccountID] = React.useState(
-    getIDFromName(bankAccountName)
-  );
+  const selectedAccount = useSelector((state) => state.app.selectedAccount);
   const theme = useTheme();
 
-  useEffect(() => {
-    props.setBankAccount(getNameFromID(accountID));
-  }, [accountID]);
-
   const changeSelectedAccount = (event) => {
-    setAccountID(event.target.value);
+    props.dispatch(setBankAccount(event.target.value));
   };
 
   return (
@@ -55,7 +36,7 @@ const AccountSelector = (props) => {
         <Select
           labelId="account-select-label"
           id="account-select"
-          value={accountID}
+          value={selectedAccount}
           label="Account to visualise"
           onChange={changeSelectedAccount}
           sx={{
@@ -73,12 +54,12 @@ const AccountSelector = (props) => {
             },
           }}
         >
-          <MenuItem value={0}>
+          <MenuItem key={allAccountsConstant} value={allAccountsConstant}>
             <Typography color="white">All Accounts</Typography>
           </MenuItem>
-          {accounts.map((option) => (
-            <MenuItem value={option._id}>
-              <Typography color="white">{option.name}</Typography>
+          {accounts.map((account) => (
+            <MenuItem key={account._id} value={account._id}>
+              <Typography color="white">{account.name}</Typography>
             </MenuItem>
           ))}
         </Select>

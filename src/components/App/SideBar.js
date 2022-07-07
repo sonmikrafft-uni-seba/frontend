@@ -33,10 +33,10 @@ const SideBar = (props) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const userState = useSelector((state) => state.user.user);
+  const categoryGroups = userState.categoryGroups;
 
   const { categoryGroupName, categoryName } = useParams();
   const [selected, setSelected] = React.useState('overview');
-  const [bankAccount, setBankAccount] = React.useState('');
   const [categoryGroup, setCategoryGroup] = React.useState(categoryGroupName);
   const [category, setCategory] = React.useState(categoryName);
 
@@ -50,33 +50,30 @@ const SideBar = (props) => {
     setCategory(name.toLowerCase());
   };
 
-  const categoryGroups = userState.categoryGroups;
-
   useEffect(() => {
     var path = '/app/';
-    if (bankAccount !== '' && typeof categoryGroup !== 'undefined') {
-      path = path.concat(
-        bankAccount.toLowerCase() + '/' + categoryGroup.toLowerCase()
-      );
-    } else {
-      path = path.concat('allaccounts/overview');
-    }
+
+    // change url to either /overview or the selected category group
+    path = path.concat(
+      typeof categoryGroup !== 'undefined'
+        ? categoryGroup.toLowerCase()
+        : 'overview'
+    );
+
+    // add category to url
     if (category !== '' && typeof category !== 'undefined') {
       path = path.concat('/' + category);
-    }
-    navigate(path);
-  }, [bankAccount, categoryGroup, category]);
-
-  useEffect(() => {
-    if (category !== '' && typeof category !== 'undefined') {
+      // select category in sidebar
       setSelected(category);
+    } else if (typeof categoryGroup !== 'undefined') {
+      // select category in sidebar
+      setSelected(categoryGroup);
     } else {
-      if (typeof categoryGroup !== 'undefined') {
-        setSelected(categoryGroup);
-      } else {
-        setSelected('overview');
-      }
+      // fall back to overview
+      setSelected('overview');
     }
+
+    navigate(path);
   }, [categoryGroup, category]);
 
   const onNewCategory = () => {
@@ -110,7 +107,7 @@ const SideBar = (props) => {
       </Box>
       {/* Account Selector */}
       <Box sx={{ p: 2 }}>
-        <AccountSelector user={userState} setBankAccount={setBankAccount} />
+        <AccountSelector user={userState} />
       </Box>
       <List
         sx={{
