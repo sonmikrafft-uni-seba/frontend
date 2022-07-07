@@ -22,17 +22,21 @@ import {
 import ExpandableItem from './ExpandableItem';
 import AccountSelector from './AccountSelector';
 import { useTheme } from '@mui/material/styles';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
 
 const SideBar = (props) => {
+  const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
+  const noGroup = categoryGroups[0];
+  const assignedCategoryGroups = categoryGroups.filter(
+    (group) => group.name !== 'No Group'
+  );
   const theme = useTheme();
-
   const onNewCategory = () => {
     props.dispatch(
       openPopup({
-        title: 'New Category',
+        title: 'New Category/ New Category Group',
         popupContentType: popupContentType.NEW_CATEGORY,
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
@@ -82,73 +86,56 @@ const SideBar = (props) => {
             <ListItemText primary="Overview" />
           </ListItemButton>
         </ListItem>
-        <ExpandableItem
-          render={(xprops) => (
-            <>
-              <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
+        {assignedCategoryGroups.map(function (group) {
+          return (
+            <ExpandableItem
+              key={'Expandable' + group.name}
+              render={(xprops) => (
+                <>
+                  <ListItem
+                    key={group.name}
+                    button
+                    onClick={() => xprops.setOpen(!xprops.open)}
+                  >
+                    <ListItemIcon>
+                      <Folder
+                        sx={{
+                          color: 'white',
+                          borderRadius: '50%',
+                        }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={group.name} />
+                    {xprops.open ? <ExpandLess /> : <ExpandMore />}
+                  </ListItem>
+                  <Collapse in={xprops.open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {group.categories.map(function (category) {
+                        return (
+                          <ListItem key={category.name} button>
+                            <ListItemText primary={category.name} inset />
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  </Collapse>
+                </>
+              )}
+            />
+          );
+        })}
+        {noGroup.categories.map(function (category) {
+          return (
+            <ListItem key={category.name} disablePadding>
+              <ListItemButton>
                 <ListItemIcon>
-                  <Folder
-                    sx={{
-                      color: 'white',
-                      borderRadius: '50%',
-                    }}
-                  />
+                  {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
                 </ListItemIcon>
-                <ListItemText primary="Food" />
-                {xprops.open ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button>
-                    <ListItemText primary="Supermarket" inset />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Restaurant" inset />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Lieferando" inset />
-                  </ListItem>
-                </List>
-              </Collapse>
-            </>
-          )}
-        />
-        <ExpandableItem
-          render={(xprops) => (
-            <>
-              <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
-                <ListItemIcon>
-                  <Folder
-                    sx={{
-                      color: 'white',
-                      borderRadius: '50%',
-                    }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Hobby" />
-                {xprops.open ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button>
-                    <ListItemText primary="Tennis" inset />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Sailing" inset />
-                  </ListItem>
-                </List>
-              </Collapse>
-            </>
-          )}
-        />
-        <ListItem key="Uncategorized" disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
-            </ListItemIcon>
-            <ListItemText primary="Uncategorized" />
-          </ListItemButton>
-        </ListItem>
+                <ListItemText primary={category.name} />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </List>
       <Box sx={{ px: 6, py: 3, borderTop: 1 }}>
         <Button
