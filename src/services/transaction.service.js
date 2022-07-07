@@ -13,3 +13,14 @@ export const createTransactionRequest = async (token, userId, transaction) => {
   });
   return await response.json();
 };
+
+export const getTransactionRequest = async (token, userId) => {
+  const response = await fetch(TRANSACTION_ENDPOINT_API(userId), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token, 
+    },
+  });
+  return await response.json();
+};

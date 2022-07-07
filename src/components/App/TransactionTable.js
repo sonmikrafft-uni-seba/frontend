@@ -10,17 +10,24 @@ import {
   Paper,
   Checkbox,
 } from '@mui/material';
-import rows from '../../mockModel/mockTransactions';
 import EnhancedTableHead from './EnhancedTableHead';
 import { descendingComparator, getComparator, stableSort } from '../../utils';
+import { getTransactionRequest } from '../../services/transaction.service';
 
-export default function TransactionTable() {
+export default async function TransactionTable() {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('amount');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+  //const transactions = getTransactionRequest;
+  var rows = [];
+  
+  /*for (var i = 0; i < transactions; i++) {
+    rows.push.apply(rows, transactions[i]);
+  }*/
+ 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
