@@ -20,6 +20,7 @@ store.subscribe(() => {
     user: store.getState().user,
     popup: store.getState().popup,
     transaction: store.getState().transaction,
+    app: store.getState().app,
   });
 });
 
@@ -39,6 +40,11 @@ function App() {
               <Route path="/login" element={<LoginView />} />
               <Route path="/sign-up" element={<SignUpView />} />
               <Route path="/app" element={<AppView />} />
+              <Route path="/app/:categoryGroupName" element={<AppView />} />
+              <Route
+                path="/app/:categoryGroupName/:categoryName"
+                element={<AppView />}
+              />
             </Routes>
           </>
         </ThemeProvider>

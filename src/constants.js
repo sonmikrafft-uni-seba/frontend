@@ -3,6 +3,8 @@ export const popupContentType = {
   NEW_CATEGORY: 'NEW_CATEGORY',
 };
 
+export const allAccountsConstant = 'allaccounts';
+
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
 };
