@@ -3,6 +3,7 @@ import { user } from './user/user.reducers.js';
 import { auth } from './auth/auth.reducers.js';
 import { transaction } from './transaction/transaction.reducer.js';
 import { popup } from './popup/popup.reducers.js';
+import { banking } from './banking/banking.reducers.js';
 import { app } from './app/app.reducers.js';
 
 export const rootReducer = combineReducers({
@@ -10,5 +11,6 @@ export const rootReducer = combineReducers({
   auth: auth,
   transaction: transaction,
   popup: popup,
+  banking: banking,
   app: app,
 });

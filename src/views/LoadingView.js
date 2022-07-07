@@ -26,7 +26,16 @@ const LoadingView = (props) => {
   }, [token, user]);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        padding: '50px',
+      }}
+    >
       <CircularProgress />
     </Box>
   );

@@ -20,6 +20,7 @@ store.subscribe(() => {
     user: store.getState().user,
     popup: store.getState().popup,
     transaction: store.getState().transaction,
+    banking: store.getState().banking,
     app: store.getState().app,
   });
 });

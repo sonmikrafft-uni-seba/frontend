@@ -3,10 +3,10 @@ import {
   ACTION_TYPES,
   createUserSuccess,
   createUserFail,
-  updateUserSuccess,
   updateUserFail,
   getUserSuccess,
   getUserFail,
+  updateUserSuccess,
 } from './user.actions.js';
 import {
   createUserRequest,
