@@ -14,7 +14,6 @@ import {
   createUserRequest,
   updateUserRequest,
   getUserRequest,
-  updateUserRequest,
 } from '../../services/user.service.js';
 import { loginSuccess } from '../auth/auth.actions.js';
 
