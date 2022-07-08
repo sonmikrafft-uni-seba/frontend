@@ -12,6 +12,7 @@ import {
   Typography,
   Button,
   Collapse,
+  IconButton,
   ListItemText,
   ListItemIcon,
   ListItemButton,
@@ -22,17 +23,63 @@ import {
 import ExpandableItem from './ExpandableItem';
 import AccountSelector from './AccountSelector';
 import { useTheme } from '@mui/material/styles';
-import { connect } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const SideBar = (props) => {
+  const navigate = useNavigate();
   const theme = useTheme();
+  const userState = useSelector((state) => state.user.user);
+  const categoryGroups = userState.categoryGroups;
+
+  const { categoryGroupName, categoryName } = useParams();
+  const [selected, setSelected] = React.useState('overview');
+  const [categoryGroup, setCategoryGroup] = React.useState(categoryGroupName);
+  const [category, setCategory] = React.useState(categoryName);
+
+  const handleCategoryGroupClick = (name) => {
+    setCategoryGroup(name.toLowerCase());
+    setCategory('');
+  };
+
+  const handleCategoryClick = (groupName, name) => {
+    setCategoryGroup(groupName.toLowerCase());
+    setCategory(name.toLowerCase());
+  };
+
+  useEffect(() => {
+    var path = '/app/';
+
+    // change url to either /overview or the selected category group
+    path = path.concat(
+      typeof categoryGroup !== 'undefined'
+        ? categoryGroup.toLowerCase()
+        : 'overview'
+    );
+
+    // add category to url
+    if (category !== '' && typeof category !== 'undefined') {
+      path = path.concat('/' + category);
+      // select category in sidebar
+      setSelected(category);
+    } else if (typeof categoryGroup !== 'undefined') {
+      // select category in sidebar
+      setSelected(categoryGroup);
+    } else {
+      // fall back to overview
+      setSelected('overview');
+    }
+
+    navigate(path);
+  }, [categoryGroup, category]);
 
   const onNewCategory = () => {
     props.dispatch(
       openPopup({
-        title: 'New Category',
+        title: 'New Category/ New Category Group',
         popupContentType: popupContentType.NEW_CATEGORY,
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
@@ -58,17 +105,32 @@ const SideBar = (props) => {
           height="150px"
         />
       </Box>
+      {/* Account Selector */}
       <Box sx={{ p: 2 }}>
-        <AccountSelector />
+        <AccountSelector user={userState} />
       </Box>
-      <List>
+      <List
+        sx={{
+          // selected and (selected + hover) states
+          '&& .Mui-selected, && .Mui-selected:hover': {
+            bgcolor: '#183867',
+            '&, & .MuiListItemIcon-root': {
+              color: theme.palette.background.contrastText,
+            },
+          },
+        }}
+      >
         <Box sx={{ p: 2, borderTop: 1, borderBottom: 1 }} bgcolor="#183867">
           <Typography variant="h6" align="center">
             Categories
           </Typography>
         </Box>
+        {/* Overview */}
         <ListItem key="Overview" disablePadding>
-          <ListItemButton>
+          <ListItemButton
+            selected={selected === 'overview'}
+            onClick={(event) => handleCategoryGroupClick('overview')}
+          >
             <ListItemIcon>
               {
                 <Dashboard
@@ -82,74 +144,88 @@ const SideBar = (props) => {
             <ListItemText primary="Overview" />
           </ListItemButton>
         </ListItem>
-        <ExpandableItem
-          render={(xprops) => (
-            <>
-              <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
-                <ListItemIcon>
-                  <Folder
-                    sx={{
-                      color: 'white',
-                      borderRadius: '50%',
-                    }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Food" />
-                {xprops.open ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button>
-                    <ListItemText primary="Supermarket" inset />
+        {/* Category Groups */}
+        {categoryGroups
+          .slice(0)
+          .reverse()
+          .filter((group) => group.name !== 'No Group')
+          .map((option) => (
+            <ExpandableItem
+              key={option._id}
+              render={(xprops) => (
+                <>
+                  <ListItem
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="expand">
+                        {xprops.open ? (
+                          <ExpandLess
+                            onClick={() => xprops.setOpen(!xprops.open)}
+                          />
+                        ) : (
+                          <ExpandMore
+                            onClick={() => xprops.setOpen(!xprops.open)}
+                          />
+                        )}
+                      </IconButton>
+                    }
+                    disablePadding
+                  >
+                    <ListItemButton
+                      selected={selected === option.name.toLowerCase()}
+                      onClick={(event) => handleCategoryGroupClick(option.name)}
+                    >
+                      <ListItemIcon>
+                        <Folder
+                          sx={{
+                            color: 'white',
+                            borderRadius: '50%',
+                          }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={option.name} />
+                    </ListItemButton>
                   </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Restaurant" inset />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Lieferando" inset />
-                  </ListItem>
-                </List>
-              </Collapse>
-            </>
-          )}
-        />
-        <ExpandableItem
-          render={(xprops) => (
-            <>
-              <ListItem button onClick={() => xprops.setOpen(!xprops.open)}>
-                <ListItemIcon>
-                  <Folder
-                    sx={{
-                      color: 'white',
-                      borderRadius: '50%',
-                    }}
-                  />
-                </ListItemIcon>
-                <ListItemText primary="Hobby" />
-                {xprops.open ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={xprops.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <ListItem button>
-                    <ListItemText primary="Tennis" inset />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="Sailing" inset />
-                  </ListItem>
-                </List>
-              </Collapse>
-            </>
-          )}
-        />
-        <ListItem key="Uncategorized" disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
-            </ListItemIcon>
-            <ListItemText primary="Uncategorized" />
-          </ListItemButton>
-        </ListItem>
+
+                  {/* Categories */}
+                  <Collapse in={xprops.open} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {option.categories.map((category) => (
+                        <ListItem button key={category._id} disablePadding>
+                          <ListItemButton
+                            selected={selected === category.name.toLowerCase()}
+                            onClick={(event) =>
+                              handleCategoryClick(option.name, category.name)
+                            }
+                          >
+                            <ListItemText primary={category.name} inset />
+                          </ListItemButton>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Collapse>
+                </>
+              )}
+            />
+          ))}
+        {/* No Group Categories */}
+        {categoryGroups[0].categories.map((category) => (
+          <ListItem button key={category._id} disablePadding>
+            <ListItemButton
+              selected={selected === category.name.toLowerCase()}
+              onClick={(event) =>
+                handleCategoryClick(categoryGroups[0].name, category.name)
+              }
+            >
+              <ListItemIcon>
+                {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
+              </ListItemIcon>
+              <ListItemText primary={category.name} />
+            </ListItemButton>
+          </ListItem>
+        ))}
       </List>
+
+      {/* NEW CATEGORY button */}
       <Box sx={{ px: 6, py: 3, borderTop: 1 }}>
         <Button
           variant="contained"

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
   Container,
-  Button,
   Typography,
   Paper,
   Grid,
@@ -34,7 +33,6 @@ const TransactionForm = (props) => {
   const accounts = props.user.userBanks.map(
     (userBank) => userBank.bankaccounts
   )[0];
-
   useEffect(() => {
     if (props.hasOwnProperty('error') && props.error != null) {
       setErrorMessage(props.error.message);

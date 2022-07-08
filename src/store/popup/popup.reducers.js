@@ -19,6 +19,15 @@ export const popup = (state = initialState, action) => {
       };
     case ACTION_TYPES.CLOSE_POPUP:
       return { ...state, visible: false };
+    case ACTION_TYPES.CHANGE_POPUP:
+      return {
+        ...state,
+        title: action.payload.title || state.title,
+        popupContentType:
+          action.payload.popupContentType || state.popupContentType,
+        popupActionType:
+          action.payload.popupActionType || state.popupActionType,
+      };
     default:
       return state;
   }
