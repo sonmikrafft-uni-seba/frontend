@@ -9,7 +9,9 @@ export const allAccountsConstant = 'allaccounts';
 
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
+  YES_OR_NO: 'YES_OR_NO',
   ADD_BANK: 'ADD_BANK',
+  CONFIRM: 'CONFIRM',
   EMPTY: 'EMPTY',
 };
 
