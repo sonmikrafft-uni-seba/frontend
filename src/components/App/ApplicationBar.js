@@ -12,6 +12,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Star, Logout, AccountCircle } from '@mui/icons-material';
 import { logout } from '../../store/auth/auth.actions';
+import { openPopup } from '../../store/popup/popup.actions.js';
+import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
 
 const ApplicationBar = (props) => {
@@ -68,6 +70,22 @@ const ApplicationBar = (props) => {
                   <Star />
                 </ListItemIcon>
                 <ListItemText primary="Upgrade to Premium" />
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  props.dispatch(
+                    openPopup({
+                      title: 'Bank Accounts',
+                      popupContentType: popupContentType.BANK_MANAGEMENT,
+                      popupActionType: popupActionType.ADD_BANK,
+                    })
+                  );
+                }}
+              >
+                <ListItemIcon>
+                  <Star />
+                </ListItemIcon>
+                <ListItemText primary="Manage Bank Accounts" />
               </MenuItem>
               <MenuItem onClick={onLogout}>
                 <ListItemIcon>

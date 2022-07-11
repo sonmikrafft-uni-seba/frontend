@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import {
   InputLabel,
   MenuItem,
@@ -8,13 +9,21 @@ import {
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useSelector, connect } from 'react-redux';
+import { allAccountsConstant } from '../../constants.js';
+import { setBankAccount } from '../../store/app/app.actions.js';
 
-export default function AccountSelector() {
-  const [accountID, setAccountID] = React.useState(0);
+const AccountSelector = (props) => {
+  const accounts = props.user.userBanks
+    .map((userBank) => userBank.bankaccounts)
+    .flat();
+  const selectedAccount = useSelector((state) => state.app.selectedAccount);
   const theme = useTheme();
+
   const changeSelectedAccount = (event) => {
-    setAccountID(event.target.value);
+    props.dispatch(setBankAccount(event.target.value));
   };
+
   return (
     <Box sx={{ mx: 'auto', width: 200 }}>
       <FormControl fullWidth>
@@ -27,7 +36,7 @@ export default function AccountSelector() {
         <Select
           labelId="account-select-label"
           id="account-select"
-          value={accountID}
+          value={selectedAccount}
           label="Account to visualise"
           onChange={changeSelectedAccount}
           sx={{
@@ -45,17 +54,18 @@ export default function AccountSelector() {
             },
           }}
         >
-          <MenuItem value={0}>
+          <MenuItem key={allAccountsConstant} value={allAccountsConstant}>
             <Typography color="white">All Accounts</Typography>
           </MenuItem>
-          <MenuItem value={1}>
-            <Typography color="white">Sparkasse Giro</Typography>
-          </MenuItem>
-          <MenuItem value={2}>
-            <Typography color="white">Deutsche Bank Giro</Typography>
-          </MenuItem>
+          {accounts.map((account) => (
+            <MenuItem key={account._id} value={account._id}>
+              <Typography color="white">{account.name}</Typography>
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>
   );
-}
+};
+
+export default connect()(AccountSelector);
