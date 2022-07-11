@@ -45,7 +45,10 @@ const ApplicationContentContainer = (props) => {
             New Transaction
           </Button>
         </Box>
-        <TransactionTable />
+        <TransactionTable
+          updateTransaction={props.updateTransaction}
+          transactions={props.transactions}
+        />
       </Box>
     </Container>
   );

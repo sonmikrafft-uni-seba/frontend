@@ -12,22 +12,14 @@ import {
 } from '@mui/material';
 import EnhancedTableHead from './EnhancedTableHead';
 import { descendingComparator, getComparator, stableSort } from '../../utils';
-import { getTransactionRequest } from '../../services/transaction.service';
 
-export default async function TransactionTable() {
+const TransactionTable = (props) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('amount');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  //const transactions = getTransactionRequest;
-  var rows = [];
-  
-  /*for (var i = 0; i < transactions; i++) {
-    rows.push.apply(rows, transactions[i]);
-  }*/
- 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -65,9 +57,15 @@ export default async function TransactionTable() {
 
   const isSelected = (date) => selected.indexOf(date) !== -1;
 
+  const changeVerified = (row) => {
+    props.updateTransaction({ ...row, verified: !row.verified });
+  };
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - props.transactions.length)
+      : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -83,23 +81,23 @@ export default async function TransactionTable() {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.transactions.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(props.transactions, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.date);
+                  const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  const date = new Date(row.valueDate);
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.date)}
+                      onClick={(event) => handleClick(event, row._id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row._id}
                       selected={isItemSelected}
                     >
                       <TableCell
@@ -108,17 +106,31 @@ export default async function TransactionTable() {
                         scope="row"
                         padding="normal"
                       >
-                        {row.date}
+                        {date.getDate() +
+                          '.' +
+                          date.getMonth() +
+                          '.' +
+                          date.getFullYear()}
                       </TableCell>
                       <TableCell align="left">{row.category}</TableCell>
                       <TableCell align="left">{row.account}</TableCell>
-                      <TableCell align="left">{row.partner}</TableCell>
-                      <TableCell align="left">{row.reference}</TableCell>
-                      <TableCell align="left">{row.amount + '€'}</TableCell>
+                      <TableCell align="left">
+                        {row.partner ? row.partner : 'Manual'}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row.remittanceInformation}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row.transactionAmount +
+                          (row.transactionCurrency[0] == 'EURO' ? '€' : '$')}
+                      </TableCell>
                       <TableCell padding="none">
                         <Checkbox
                           color="primary"
-                          checked={isItemSelected}
+                          checked={row.verified}
+                          onChange={() => {
+                            changeVerified(row);
+                          }}
                           inputProps={{
                             'aria-labelledby': labelId,
                           }}
@@ -142,7 +154,7 @@ export default async function TransactionTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={props.transactions.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -151,4 +163,6 @@ export default async function TransactionTable() {
       </Paper>
     </Box>
   );
-}
+};
+
+export default TransactionTable;
