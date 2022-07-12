@@ -6,6 +6,8 @@ import {
   Add,
   ExpandLess,
   ExpandMore,
+  Delete,
+  Edit,
 } from '@mui/icons-material';
 import {
   Box,
@@ -28,6 +30,8 @@ import { openPopup } from '../../store/popup/popup.actions';
 import { popupActionType, popupContentType } from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
+import EditDeleteCategory from './EditDeleteCategory';
+import EditDeleteCategoryGroup from './EditDeleteCategoryGroup';
 
 const SideBar = (props) => {
   const navigate = useNavigate();
@@ -48,6 +52,17 @@ const SideBar = (props) => {
   const handleCategoryClick = (groupName, name) => {
     setCategoryGroup(groupName.toLowerCase());
     setCategory(name.toLowerCase());
+  };
+
+  const resetCategoryGroup = () => {
+    setSelected('overview');
+    setCategoryGroup('overview');
+  };
+
+  const resetCategory = (groupName) => {
+    setSelected(groupName.toLowerCase());
+    setCategoryGroup(groupName.toLowerCase());
+    setCategory('');
   };
 
   useEffect(() => {
@@ -156,17 +171,23 @@ const SideBar = (props) => {
                 <>
                   <ListItem
                     secondaryAction={
-                      <IconButton edge="end" aria-label="expand">
-                        {xprops.open ? (
-                          <ExpandLess
-                            onClick={() => xprops.setOpen(!xprops.open)}
-                          />
-                        ) : (
-                          <ExpandMore
-                            onClick={() => xprops.setOpen(!xprops.open)}
-                          />
-                        )}
-                      </IconButton>
+                      <>
+                        <EditDeleteCategoryGroup
+                          groupID={option._id}
+                          resetCategoryGroup={resetCategoryGroup}
+                        />
+                        <IconButton edge="end" aria-label="expand">
+                          {xprops.open ? (
+                            <ExpandLess
+                              onClick={() => xprops.setOpen(!xprops.open)}
+                            />
+                          ) : (
+                            <ExpandMore
+                              onClick={() => xprops.setOpen(!xprops.open)}
+                            />
+                          )}
+                        </IconButton>
+                      </>
                     }
                     disablePadding
                   >
@@ -190,7 +211,19 @@ const SideBar = (props) => {
                   <Collapse in={xprops.open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                       {option.categories.map((category) => (
-                        <ListItem button key={category._id} disablePadding>
+                        <ListItem
+                          button
+                          key={category._id}
+                          secondaryAction={
+                            <EditDeleteCategory
+                              category={category}
+                              groupID={option._id}
+                              groupName={option.name}
+                              resetCategory={resetCategory}
+                            />
+                          }
+                          disablePadding
+                        >
                           <ListItemButton
                             selected={selected === category.name.toLowerCase()}
                             onClick={(event) =>
@@ -209,7 +242,21 @@ const SideBar = (props) => {
           ))}
         {/* No Group Categories */}
         {categoryGroups[0].categories.map((category) => (
-          <ListItem button key={category._id} disablePadding>
+          <ListItem
+            button
+            key={category._id}
+            secondaryAction={
+              <>
+                <IconButton edge="end" aria-label="edit">
+                  <Edit />
+                </IconButton>
+                <IconButton edge="end" aria-label="delete">
+                  <Delete />
+                </IconButton>
+              </>
+            }
+            disablePadding
+          >
             <ListItemButton
               selected={selected === category.name.toLowerCase()}
               onClick={(event) =>
