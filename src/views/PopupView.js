@@ -41,6 +41,7 @@ const PopupView = (props) => {
         return (
           <NewCategoryView
             notifySave={notifySave}
+            setNotifySave={setNotifySave}
             onClosePopup={onClosePopup}
             setSaveable={setSaveable}
           />

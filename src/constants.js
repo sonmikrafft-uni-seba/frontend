@@ -6,6 +6,7 @@ export const popupContentType = {
 
 export const baseUrl = 'http://localhost:3000';
 export const allAccountsConstant = 'allaccounts';
+export const defaultCategoryName = 'Uncategorized';
 
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
@@ -35,6 +36,7 @@ export const SubscriptionPlan = {
 
 export const TransactionCurrency = {
   EUR: 'EURO',
+  DOL: 'DOLLAR',
 };
 
 export const TransactionType = {

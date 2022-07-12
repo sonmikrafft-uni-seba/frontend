@@ -15,6 +15,7 @@ import { logout } from '../../store/auth/auth.actions';
 import { openPopup } from '../../store/popup/popup.actions.js';
 import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
+import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
 
 const ApplicationBar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -86,6 +87,16 @@ const ApplicationBar = (props) => {
                   <Star />
                 </ListItemIcon>
                 <ListItemText primary="Manage Bank Accounts" />
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  props.dispatch(transactionsPullBanking());
+                }}
+              >
+                <ListItemIcon>
+                  <Star />
+                </ListItemIcon>
+                <ListItemText primary="Pull Accounts" />
               </MenuItem>
               <MenuItem onClick={onLogout}>
                 <ListItemIcon>

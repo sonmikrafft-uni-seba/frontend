@@ -47,7 +47,6 @@ export default function NewCategoryForm(props) {
   // I prohibit category being called "Uncategorized"
   const onChangeCategoryName = (e) => {
     setCategoryName(e.target.value);
-    console.log(existingCategoryNames);
     if (existingCategoryNames.includes(e.target.value)) {
       setValidCategoryName(false);
     } else {

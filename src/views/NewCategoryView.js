@@ -8,10 +8,15 @@ import CategoryGroupConfirmation from '../components/Popup/CategoryGroupConfirma
 import { changePopup } from '../store/popup/popup.actions';
 import { popupActionType } from '../constants';
 import CategoryConfirmation from '../components/Popup/CategoryConfirmation';
+import { transactionsReassign } from '../store/transaction/transaction.actions';
 
 const NewCategoryView = (props) => {
   const [selectedOption, setSelectedOption] = React.useState('category');
   const [isConfirmation, setIsConfirmation] = React.useState(false);
+  const [newCategoryIdentification, setNewCategoryIdentification] =
+    React.useState('');
+  const user = useSelector((state) => state.user.user);
+  const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
 
   const changeSelectedOption = (_, newOption) => {
     setSelectedOption(newOption);
@@ -51,8 +56,19 @@ const NewCategoryView = (props) => {
     }
   }, [selectedOption, isConfirmation]);
 
-  const user = useSelector((state) => state.user.user);
-  const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
+  useEffect(() => {
+    if (props.notifySave && isConfirmation) {
+      const categoryId = categoryGroups
+        .find((group) => group.name == newCategoryIdentification.groupName)
+        .categories.find(
+          (category) => category.name == newCategoryIdentification.categoryName
+        )._id;
+
+      props.dispatch(transactionsReassign({ categoryId: categoryId }));
+      props.onClosePopup();
+    }
+  }, [props.notifySave]);
+
   const onSaveCategory = (
     categoryName,
     budgetLimit,
@@ -86,7 +102,13 @@ const NewCategoryView = (props) => {
         userToUpdate,
       })
     );
+
     setIsConfirmation(true);
+    props.setNotifySave(false);
+    setNewCategoryIdentification({
+      groupName: categoryGroup,
+      categoryName: categoryName,
+    });
   };
 
   const onSaveCategoryGroup = (
