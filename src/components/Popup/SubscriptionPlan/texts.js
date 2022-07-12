@@ -22,7 +22,8 @@ export const FreeSubscriptionText = {
     },
     {
       title: 'Banner Ads',
-      description: '... we will need to show you ads',
+      description:
+        '... we will need to show you ads to support the utilization of our app',
       avatarNumber: 3,
     },
   ],

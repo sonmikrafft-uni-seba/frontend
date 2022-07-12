@@ -1,16 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Button, Grid, Box } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
 import SubscriptionPlanCard from './SubscriptionPlanCard.js';
 import { PremiumSubscriptionText } from './texts.js';
+import {
+  cancelSubscription,
+  removePaymentIntent,
+} from '../../../store/subscription/subscription.actions';
+import { changePopup } from '../../../store/popup/popup.actions';
+import { popupContentType, popupActionType } from '../../../constants.js';
 
-const PlanComparison = () => {
-  const theme = useTheme();
+const PlanCancellation = (props) => {
+  const subscriptionToCancel = props.user.activeSubscriptionId;
 
   const onCancel = () => {
-    console.log('Subscription is being cancelled...');
+    props.dispatch(cancelSubscription(subscriptionToCancel));
+    props.dispatch(removePaymentIntent());
   };
+
+  useEffect(() => {
+    if (props.subscription.cancelledSubscriptionId) {
+      props.dispatch(
+        changePopup({
+          title: 'Cancel confirmation',
+          popupContentType: popupContentType.CANCEL_SUBSCRIPTION_CONFIRMATION,
+          popupActionType: popupActionType.EMPTY,
+        })
+      );
+    }
+  }, [props.subscription.cancelledSubscriptionId]);
 
   return (
     <Container
@@ -26,8 +44,6 @@ const PlanComparison = () => {
         description="Thank you for choosing Budgetly Premium!"
         isPremium={true}
       />
-
-      {/* this button will be replaced by popup button? */}
       <Box sx={{ pt: 2 }}>
         <Button
           type="submit"
@@ -43,4 +59,4 @@ const PlanComparison = () => {
   );
 };
 
-export default connect()(PlanComparison);
+export default connect()(PlanCancellation);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   Box,
@@ -10,24 +10,33 @@ import {
 import { CheckCircle } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
+import { getUser } from '../../../store/user/user.actions';
+import { parseJwt, formatMoney } from '../../../utils';
 
-const PremiumSubscriptionConfirmation = () => {
+const PremiumSubscriptionConfirmation = (props) => {
   const theme = useTheme();
+  const paymentIntent = props.subscription.paymentIntent;
+  const paidAmount = formatMoney(paymentIntent.amount);
+
+  const [intervalID, setIntervalID] = React.useState();
+  useEffect(() => {
+    if (props.user.subscriptionPlan[0] == 'FREE') {
+      let letIntervalID = setInterval(() => {
+        const tokenObj = parseJwt(props.auth.token);
+        props.dispatch(getUser(tokenObj._id));
+      }, 3000);
+      setIntervalID(letIntervalID);
+    } else {
+      clearInterval(intervalID);
+    }
+  }, [props.user.subscriptionPlan[0]]);
 
   const subscriptionOrders = [
     {
       duration: '1 month',
-      cost: 2.99,
+      cost: paidAmount,
     },
   ];
-
-  const [subcriptionDuration, setSubscriptionDuration] = React.useState(
-    subscriptionOrders[0].duration
-  );
-
-  const handleChange = (event) => {
-    setSubscriptionDuration(event.target.value);
-  };
 
   return (
     <Container
@@ -53,21 +62,13 @@ const PremiumSubscriptionConfirmation = () => {
         <Typography variant="subtitle1" color="#9e9e9e">
           Questions? Suggestions? Feedback?
         </Typography>
-        <Typography
-          variant="subtitle1"
-          color={theme.palette.primary.main}
-          sx={{ textDecoration: 'underline' }}
-        >
-          Shoot us an email.
-        </Typography>
+        <a href="mailto:budgetly@gmail.com">Shoot us an Email</a>
       </Box>
       <TextField
         id="select-subscription-duration"
-        select
         label="Order Review"
-        value={subcriptionDuration}
-        onChange={handleChange}
-        helperText="Please select the duration for the subscription"
+        select
+        helperText=""
         fullWidth
         size="small"
       >

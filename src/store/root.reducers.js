@@ -5,6 +5,7 @@ import { transaction } from './transaction/transaction.reducer.js';
 import { popup } from './popup/popup.reducers.js';
 import { banking } from './banking/banking.reducers.js';
 import { app } from './app/app.reducers.js';
+import { subscription } from './subscription/subscription.reducers.js';
 
 export const rootReducer = combineReducers({
   user: user,
@@ -13,4 +14,5 @@ export const rootReducer = combineReducers({
   popup: popup,
   banking: banking,
   app: app,
+  subscription: subscription,
 });

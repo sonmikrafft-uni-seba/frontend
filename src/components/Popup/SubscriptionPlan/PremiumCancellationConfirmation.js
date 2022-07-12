@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Box, Typography } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
+import { timeConverter } from '../../../utils';
 
-const PremiumSubscriptionCancellation = () => {
+const PremiumSubscriptionCancellation = (props) => {
   const theme = useTheme();
-
-  const cancellationDate = 'Sept 30, 2022';
+  const cancellationDate = timeConverter(props.subscription.cancel_after);
 
   return (
     <Container
@@ -33,13 +33,7 @@ const PremiumSubscriptionCancellation = () => {
         <Typography variant="subtitle1" color="#9e9e9e">
           Questions? Suggestions? Feedback?
         </Typography>
-        <Typography
-          variant="subtitle1"
-          color={theme.palette.primary.main}
-          sx={{ textDecoration: 'underline' }}
-        >
-          Shoot us an email.
-        </Typography>
+        <a href="mailto:budgetly@gmail.com">Shoot us an Email</a>
       </Box>
     </Container>
   );

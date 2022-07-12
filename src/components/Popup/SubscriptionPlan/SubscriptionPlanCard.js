@@ -70,7 +70,7 @@ const SubscriptionPlanCard = (props) => {
 
         <List>
           {features.map((feature) => (
-            <ListItem>
+            <ListItem key={feature.title}>
               <SubscriptionFeature feature={feature} />
             </ListItem>
           ))}
