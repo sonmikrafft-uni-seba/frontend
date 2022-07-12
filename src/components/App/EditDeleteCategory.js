@@ -30,7 +30,7 @@ const EditDeleteCategory = (props) => {
         userToUpdate,
       })
     );
-    props.resetCategory(props.groupName);
+    props.resetCategory(category.name, props.groupName);
   };
 
   return (

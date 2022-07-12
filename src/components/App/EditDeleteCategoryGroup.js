@@ -14,7 +14,7 @@ const EditDeleteCategoryGroup = (props) => {
     const userToUpdate = {
       ...user,
       categoryGroups: categoryGroups.filter(
-        (group) => group._id !== props.groupID
+        (group) => group._id !== props.group._id
       ),
     };
     props.dispatch(
@@ -22,7 +22,7 @@ const EditDeleteCategoryGroup = (props) => {
         userToUpdate,
       })
     );
-    props.resetCategoryGroup();
+    props.resetCategoryGroup(props.group.name);
   };
 
   return (

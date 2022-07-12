@@ -54,15 +54,22 @@ const SideBar = (props) => {
     setCategory(name.toLowerCase());
   };
 
-  const resetCategoryGroup = () => {
-    setSelected('overview');
-    setCategoryGroup('overview');
+  const resetCategoryGroup = (groupName) => {
+    if (selected === groupName.toLowerCase()) {
+      setSelected('overview');
+      setCategoryGroup('overview');
+    }
   };
 
-  const resetCategory = (groupName) => {
-    setSelected(groupName.toLowerCase());
-    setCategoryGroup(groupName.toLowerCase());
-    setCategory('');
+  const resetCategory = (catName, groupName) => {
+    if (groupName === 'No Group') {
+      groupName = 'overview';
+    }
+    if (selected === catName.toLowerCase()) {
+      setSelected(groupName.toLowerCase());
+      setCategoryGroup(groupName.toLowerCase());
+      setCategory('');
+    }
   };
 
   useEffect(() => {
@@ -173,7 +180,7 @@ const SideBar = (props) => {
                     secondaryAction={
                       <>
                         <EditDeleteCategoryGroup
-                          groupID={option._id}
+                          group={option}
                           resetCategoryGroup={resetCategoryGroup}
                         />
                         <IconButton edge="end" aria-label="expand">
@@ -241,35 +248,38 @@ const SideBar = (props) => {
             />
           ))}
         {/* No Group Categories */}
-        {categoryGroups[0].categories.map((category) => (
-          <ListItem
-            button
-            key={category._id}
-            secondaryAction={
-              <>
-                <IconButton edge="end" aria-label="edit">
-                  <Edit />
-                </IconButton>
-                <IconButton edge="end" aria-label="delete">
-                  <Delete />
-                </IconButton>
-              </>
-            }
-            disablePadding
-          >
-            <ListItemButton
-              selected={selected === category.name.toLowerCase()}
-              onClick={(event) =>
-                handleCategoryClick(categoryGroups[0].name, category.name)
+        {categoryGroups[0].categories
+          .slice(0)
+          .reverse()
+          .map((category) => (
+            <ListItem
+              button
+              key={category._id}
+              secondaryAction={
+                category.name !== 'Uncategorized' && (
+                  <EditDeleteCategory
+                    category={category}
+                    groupID={categoryGroups[0]._id}
+                    groupName={categoryGroups[0].name}
+                    resetCategory={resetCategory}
+                  />
+                )
               }
+              disablePadding
             >
-              <ListItemIcon>
-                {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
-              </ListItemIcon>
-              <ListItemText primary={category.name} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+              <ListItemButton
+                selected={selected === category.name.toLowerCase()}
+                onClick={(event) =>
+                  handleCategoryClick(categoryGroups[0].name, category.name)
+                }
+              >
+                <ListItemIcon>
+                  {<Receipt sx={{ color: 'white', borderRadius: '50%' }} />}
+                </ListItemIcon>
+                <ListItemText primary={category.name} />
+              </ListItemButton>
+            </ListItem>
+          ))}
       </List>
 
       {/* NEW CATEGORY button */}
