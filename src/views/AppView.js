@@ -93,7 +93,7 @@ const AppView = (props) => {
   };
 
   useEffect(() => {
-    if (transactions.length === 0 || !transactionsLoaded) {
+    if (transactions.length === 0 && !transactionsLoaded) {
       props.dispatch(loadTransactions());
       setTransactionsLoaded(true);
     }
