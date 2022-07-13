@@ -156,16 +156,12 @@ const SideBar = (props) => {
                 <>
                   <ListItem
                     secondaryAction={
-                      <IconButton edge="end" aria-label="expand">
-                        {xprops.open ? (
-                          <ExpandLess
-                            onClick={() => xprops.setOpen(!xprops.open)}
-                          />
-                        ) : (
-                          <ExpandMore
-                            onClick={() => xprops.setOpen(!xprops.open)}
-                          />
-                        )}
+                      <IconButton
+                        edge="end"
+                        onClick={() => xprops.setOpen(!xprops.open)}
+                        aria-label="expand"
+                      >
+                        {xprops.open ? <ExpandLess /> : <ExpandMore />}
                       </IconButton>
                     }
                     disablePadding

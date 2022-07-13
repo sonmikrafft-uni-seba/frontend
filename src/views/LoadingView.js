@@ -21,7 +21,7 @@ const LoadingView = (props) => {
 
   useEffect(() => {
     if (token && user) {
-      navigate('/app');
+      navigate('/app/overview');
     }
   }, [token, user]);
 

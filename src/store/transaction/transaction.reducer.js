@@ -13,7 +13,34 @@ export const transaction = (state = initialState, action) => {
     case ACTION_TYPES.TRANSACTION_CREATE_FAIL:
       return {
         ...state,
-        transactions: null,
+        error: action.payload,
+      };
+    case ACTION_TYPES.TRANSACTION_UPDATE_SUCCESS:
+      const newTransactionList = state.transactions.map((transaction) => {
+        if (transaction._id == action.payload._id) {
+          transaction = action.payload;
+        }
+        return transaction;
+      });
+      return {
+        ...state,
+        transactions: [...newTransactionList],
+        error: null,
+      };
+    case ACTION_TYPES.TRANSACTION_UPDATE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case ACTION_TYPES.TRANSACTIONS_LOAD_SUCCESS:
+      return {
+        ...state,
+        transactions: [...state.transactions, ...action.payload],
+        error: null,
+      };
+    case ACTION_TYPES.TRANSACTIONS_LOAD_FAIL:
+      return {
+        ...state,
         error: action.payload,
       };
     default:
