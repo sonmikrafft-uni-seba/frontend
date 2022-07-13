@@ -6,7 +6,7 @@ import { popup } from './popup/popup.reducers.js';
 import { banking } from './banking/banking.reducers.js';
 import { app } from './app/app.reducers.js';
 
-export const rootReducer = combineReducers({
+export const appReducer = combineReducers({
   user: user,
   auth: auth,
   transaction: transaction,
@@ -14,3 +14,13 @@ export const rootReducer = combineReducers({
   banking: banking,
   app: app,
 });
+
+export const rootReducer = (state, action) => {
+  console.log('I was here');
+  if (action.type === 'USER_LOGOUT') {
+    localStorage.clear();
+    return appReducer(undefined, action);
+  }
+
+  return appReducer(state, action);
+};

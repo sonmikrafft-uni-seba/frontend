@@ -26,21 +26,23 @@ const AppView = (props) => {
 
   const enhanceTransactionInformation = (transactions) => {
     const findCategoryName = (categoryId) => {
-      return user.categoryGroups
+      const category = user.categoryGroups
         .map((group) => group.categories)
         .flat()
-        .filter((category) => {
+        .find((category) => {
           return category._id == categoryId;
-        })[0].name;
+        });
+      return category.name;
     };
 
     const findAccountName = (accountId) => {
-      return user.userBanks
+      const account = user.userBanks
         .map((bank) => bank.bankaccounts)
         .flat()
-        .filter((account) => {
+        .find((account) => {
           return account._id == accountId;
-        })[0].name;
+        });
+      return typeof account !== 'undefined' ? account.name : 'No Account';
     };
     return transactions.map((transaction) => {
       return {
@@ -91,7 +93,7 @@ const AppView = (props) => {
   };
 
   useEffect(() => {
-    if (transactions.length == 0 && !transactionsLoaded) {
+    if (transactions.length === 0 || !transactionsLoaded) {
       props.dispatch(loadTransactions());
       setTransactionsLoaded(true);
     }
