@@ -16,6 +16,7 @@ export const ACTION_TYPES = {
   SUBSCRIPTION_GET_CONFIG_REQUEST_SUCCESS:
     'SUBSCRIPTION_GET_CONFIG_REQUEST_SUCCESS',
   SUBSCRIPTION_GET_CONFIG_REQUEST_FAIL: 'SUBSCRIPTION_GET_CONFIG_REQUEST_FAIL',
+  RESET: 'RESET',
 };
 
 export const createSubscription = createAction(
@@ -55,3 +56,5 @@ export const getConfigSuccess = createAction(
 export const getConfigFail = createAction(
   ACTION_TYPES.SUBSCRIPTION_GET_CONFIG_REQUEST_FAIL
 );
+
+export const reset = createAction(ACTION_TYPES.RESET);

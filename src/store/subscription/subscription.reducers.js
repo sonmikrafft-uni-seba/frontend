@@ -59,6 +59,8 @@ export const subscription = (state = initialState, action) => {
         ...state,
         error: action.payload,
       };
+    case ACTION_TYPES.RESET:
+      return initialState;
     default:
       return state;
   }
