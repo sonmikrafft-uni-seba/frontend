@@ -57,7 +57,8 @@ export const categoryIdSelection = (categories, remittanceInformation) => {
 
 export const transactionsToUpdateWithNewCategory = (
   categories,
-  transactions
+  transactions,
+  defaultCategoryId = null
 ) => {
   let transactionsToUpdate = [];
   transactions.forEach((transaction) => {
@@ -65,12 +66,11 @@ export const transactionsToUpdateWithNewCategory = (
       categories,
       transaction.remittanceInformation
     );
-
     // if categoryId is new push it to update list
     if (newCategoryId != null && newCategoryId != transaction.categoryID) {
       transactionsToUpdate.push({
         ...transaction,
-        categoryID: newCategoryId,
+        categoryID: newCategoryId ? newCategoryId : defaultCategoryId,
       });
     }
   });
@@ -78,11 +78,7 @@ export const transactionsToUpdateWithNewCategory = (
   return transactionsToUpdate;
 };
 
-export const bankingTransactionToDBtransaction = (
-  transactionList,
-  userId,
-  defaultCategoryId
-) => {
+export const bankingTransactionToDBtransaction = (transactionList, userId) => {
   const list = transactionList.map((account) => {
     return account.transactions.map((transaction) => {
       const partner = transaction.hasOwnProperty('debtorName')
@@ -105,7 +101,7 @@ export const bankingTransactionToDBtransaction = (
         remittanceInformation: transaction.remittanceInformationUnstructured,
         userID: userId,
         bankAccountID: account.bankAccountId,
-        categoryID: defaultCategoryId,
+        categoryID: null,
         valueDate: new Date(transaction.valueDate).toISOString(),
         transactionId: transaction.transactionId,
       };

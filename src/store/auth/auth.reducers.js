@@ -8,8 +8,6 @@ export const auth = (state = initialState, action) => {
       return { ...state, token: action.payload, error: null };
     case ACTION_TYPES.LOGIN_FAIL:
       return { ...state, token: null, error: action.payload };
-    case ACTION_TYPES.LOGOUT:
-      return { ...state, token: null, error: null };
     default:
       return state;
   }

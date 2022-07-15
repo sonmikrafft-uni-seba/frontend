@@ -11,11 +11,11 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Star, Logout, AccountCircle } from '@mui/icons-material';
-import { logout } from '../../store/auth/auth.actions';
 import { openPopup } from '../../store/popup/popup.actions.js';
 import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
 import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
+import { logoutUser } from '../../store/root.actions';
 
 const ApplicationBar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -31,7 +31,7 @@ const ApplicationBar = (props) => {
 
   const onLogout = () => {
     setAnchorEl(null);
-    props.dispatch(logout({}));
+    props.dispatch(logoutUser());
     navigate('/');
   };
 

@@ -165,7 +165,6 @@ export const getBankAccountTransactions = async (
 export const getAllTransactions = async (
   token,
   userId,
-  defaultCategoryId,
   bankingToken,
   banks
 ) => {
@@ -193,16 +192,15 @@ export const getAllTransactions = async (
     })
   );
 
+  // 1 because cash account
+  if (transactionList.length <= 1) return transactionList;
+
   transactionList = transactionList
     .filter((bank) => bank)
     .reduce((p, n) => {
       return p.concat(n);
     });
 
-  transactionList = bankingTransactionToDBtransaction(
-    transactionList,
-    userId,
-    defaultCategoryId
-  );
+  transactionList = bankingTransactionToDBtransaction(transactionList, userId);
   return transactionList;
 };

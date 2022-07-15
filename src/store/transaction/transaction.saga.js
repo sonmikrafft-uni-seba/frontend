@@ -1,4 +1,11 @@
-import { all, call, put, takeLatest, select } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  put,
+  takeLatest,
+  select,
+  takeEvery,
+} from 'redux-saga/effects';
 import {
   ACTION_TYPES,
   createTransactionSuccess,
@@ -8,10 +15,17 @@ import {
   transactionsCreateMany,
   transactionsCreateManySuccess,
   transactionsCreateManyFail,
+  updateTransactionSuccess,
+  updateTransactionFail,
+  loadTransactionsFail,
+  loadTransactionsSuccess,
 } from './transaction.actions.js';
 import {
   createManyTransactionsRequest,
   updateManyTransactionRequest,
+  createTransactionRequest,
+  updateTransactionRequest,
+  getTransactionsRequest,
 } from '../../services/transaction.service.js';
 import { getAllTransactions } from '../../services/banking.service.js';
 import { transactionsToUpdateWithNewCategory } from '../../utils.js';
@@ -68,6 +82,28 @@ export function* createManyTransactionsSaga(action) {
   }
 }
 
+export function* updateTransactionSaga(action) {
+  const token = yield select(getToken);
+  const userId = yield select(getUserId);
+  const response = yield call(
+    updateTransactionRequest,
+    token,
+    userId,
+    action.payload
+  );
+
+  if (response.hasOwnProperty('error')) {
+    yield put(
+      updateTransactionFail({
+        error: response.error,
+        message: response.message,
+      })
+    );
+  } else {
+    yield put(updateTransactionSuccess(response));
+  }
+}
+
 export function* reassignTransactionsSaga(action) {
   const token = yield select(getToken);
   const user = yield select(getUser);
@@ -112,6 +148,23 @@ export function* reassignTransactionsSaga(action) {
   }
 }
 
+export function* loadTransactionsSaga(action) {
+  const token = yield select(getToken);
+  const userId = yield select(getUserId);
+  const response = yield call(getTransactionsRequest, token, userId);
+
+  if (response.hasOwnProperty('error')) {
+    yield put(
+      loadTransactionsFail({
+        error: response.error,
+        message: response.message,
+      })
+    );
+  } else {
+    yield put(loadTransactionsSuccess(response));
+  }
+}
+
 export function* transactionsPullBankingSaga(action) {
   const token = yield select(getToken);
   const bankingToken = yield select(getBankingAccessToken);
@@ -128,7 +181,6 @@ export function* transactionsPullBankingSaga(action) {
     getAllTransactions,
     token,
     user._id,
-    defaultCategoryId,
     bankingToken,
     user.userBanks
   );
@@ -146,7 +198,8 @@ export function* transactionsPullBankingSaga(action) {
 
   const newTransactionsWithCategories = transactionsToUpdateWithNewCategory(
     categories,
-    newTransactions
+    newTransactions,
+    defaultCategoryId
   );
 
   yield put(transactionsCreateMany(newTransactionsWithCategories));
@@ -159,7 +212,7 @@ export default function* root() {
       ACTION_TYPES.TRANSACTIONS_REASSIGN_REQUEST,
       reassignTransactionsSaga
     ),
-    takeLatest(
+    takeEvery(
       ACTION_TYPES.TRANSACTIONS_PULL_BANKING_REQUEST,
       transactionsPullBankingSaga
     ),
@@ -167,5 +220,7 @@ export default function* root() {
       ACTION_TYPES.TRANSACTIONS_CREATE_MANY_REQUEST,
       createManyTransactionsSaga
     ),
+    takeLatest(ACTION_TYPES.TRANSACTIONS_LOAD_REQUEST, loadTransactionsSaga),
+    takeLatest(ACTION_TYPES.TRANSACTION_UPDATE_REQUEST, updateTransactionSaga),
   ]);
 }

@@ -5,8 +5,9 @@ import { transaction } from './transaction/transaction.reducer.js';
 import { popup } from './popup/popup.reducers.js';
 import { banking } from './banking/banking.reducers.js';
 import { app } from './app/app.reducers.js';
+import { ACTION_TYPES } from './root.actions.js';
 
-export const rootReducer = combineReducers({
+export const appReducer = combineReducers({
   user: user,
   auth: auth,
   transaction: transaction,
@@ -14,3 +15,12 @@ export const rootReducer = combineReducers({
   banking: banking,
   app: app,
 });
+
+export const rootReducer = (state, action) => {
+  if (action.type === ACTION_TYPES.USER_LOGOUT) {
+    localStorage.clear();
+    return appReducer(undefined, action);
+  }
+
+  return appReducer(state, action);
+};

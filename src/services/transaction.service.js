@@ -30,6 +30,20 @@ export const createManyTransactionsRequest = async (
   return await response.json();
 };
 
+export const updateTransactionRequest = async (token, userId, transaction) => {
+  const endpoint = TRANSACTION_ENDPOINT_API(userId) + `/${transaction._id}`;
+  delete transaction._id;
+  const response = await fetch(endpoint, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token,
+    },
+    body: JSON.stringify(transaction),
+  });
+  return await response.json();
+};
+
 export const updateManyTransactionRequest = async (
   token,
   userId,
@@ -42,6 +56,17 @@ export const updateManyTransactionRequest = async (
       Authorization: 'jwt ' + token,
     },
     body: JSON.stringify(transactions),
+  });
+  return await response.json();
+};
+
+export const getTransactionsRequest = async (token, userId) => {
+  const response = await fetch(TRANSACTION_ENDPOINT_API(userId), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token,
+    },
   });
   return await response.json();
 };

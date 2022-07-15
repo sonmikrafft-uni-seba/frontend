@@ -26,8 +26,25 @@ export const transaction = (state = initialState, action) => {
         ...state,
         error: action.payload,
       };
-    case ACTION_TYPES.TRANSACTIONS_REASSIGN_SUCCESS:
+    case ACTION_TYPES.TRANSACTION_UPDATE_SUCCESS:
       const newTransactionList = state.transactions.map((transaction) => {
+        if (transaction._id == action.payload._id) {
+          transaction = action.payload;
+        }
+        return transaction;
+      });
+      return {
+        ...state,
+        transactions: [...newTransactionList],
+        error: null,
+      };
+    case ACTION_TYPES.TRANSACTION_UPDATE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case ACTION_TYPES.TRANSACTIONS_REASSIGN_SUCCESS:
+      const newTransactions = state.transactions.map((transaction) => {
         if (!Array.isArray(action.payload)) return transaction;
 
         // search for new version of transaction id
@@ -42,13 +59,23 @@ export const transaction = (state = initialState, action) => {
       });
       return {
         ...state,
-        transactions: [...newTransactionList],
+        transactions: [...newTransactions],
         error: null,
       };
     case ACTION_TYPES.TRANSACTIONS_REASSIGN_FAIL:
       return {
         ...state,
         transactions: state.transactions,
+      };
+    case ACTION_TYPES.TRANSACTIONS_LOAD_SUCCESS:
+      return {
+        ...state,
+        transactions: [...state.transactions, ...action.payload],
+        error: null,
+      };
+    case ACTION_TYPES.TRANSACTIONS_LOAD_FAIL:
+      return {
+        ...state,
         error: action.payload,
       };
     default:

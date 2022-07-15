@@ -51,7 +51,7 @@ const LoadingView = (props) => {
   useEffect(() => {
     if (token && user && accessToken && refreshToken) {
       props.dispatch(transactionsPullBanking());
-      navigate('/app');
+      navigate('/app/overview');
     }
   }, [token, user, accessToken, refreshToken]);
 

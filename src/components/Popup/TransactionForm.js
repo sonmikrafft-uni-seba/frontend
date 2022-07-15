@@ -14,25 +14,34 @@ import {
 import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
 import { createTransaction } from '../../store/transaction/transaction.actions';
-import { TransactionType } from '../../constants';
+import {
+  defaultAccountName,
+  defaultCategoryName,
+  TransactionType,
+} from '../../constants';
 
 const eurRegEx = /(^\d*.\d{0,2}$)|(^\d*$)/;
 
 const TransactionForm = (props) => {
   const theme = useTheme();
 
+  const categories = props.user.categoryGroups
+    .map((group) => group.categories)
+    .flat();
+  const accounts = props.user.userBanks
+    .map((userBank) => userBank.bankaccounts)
+    .flat();
+
   const [description, setDescription] = React.useState('');
   const [amount, setAmount] = React.useState('0.00');
-  const [category, setCategory] = React.useState('');
-  const [account, setAccount] = React.useState('');
+  const [category, setCategory] = React.useState(
+    categories.find((category) => category.name == defaultCategoryName)._id
+  );
+  const [account, setAccount] = React.useState(
+    accounts.find((account) => account.name == defaultAccountName)._id
+  );
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const categories = props.user.categoryGroups.map(
-    (group) => group.categories
-  )[0];
-  const accounts = props.user.userBanks.map(
-    (userBank) => userBank.bankaccounts
-  )[0];
   useEffect(() => {
     if (props.hasOwnProperty('error') && props.error != null) {
       setErrorMessage(props.error.message);
@@ -75,6 +84,7 @@ const TransactionForm = (props) => {
   const onSave = () => {
     props.dispatch(
       createTransaction({
+        valueDate: new Date().toISOString(),
         remittanceInformation: description,
         transactionAmount: amount,
         transactionType: TransactionType.MANUAL,
@@ -98,7 +108,7 @@ const TransactionForm = (props) => {
         >
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={3}>
-              <Typography> Description: </Typography>
+              <Typography> Reference: </Typography>
             </Grid>
             <Grid item xs={9}>
               <TextField
@@ -147,7 +157,9 @@ const TransactionForm = (props) => {
                   onChange={onChangeCategory}
                 >
                   {categories.map((option) => (
-                    <MenuItem value={option._id}>{option.name}</MenuItem>
+                    <MenuItem key={option._id} value={option._id}>
+                      {option.name}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -173,7 +185,9 @@ const TransactionForm = (props) => {
                   onChange={onChangeAccount}
                 >
                   {accounts.map((option) => (
-                    <MenuItem value={option._id}>{option.name}</MenuItem>
+                    <MenuItem key={option._id} value={option._id}>
+                      {option.name}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>

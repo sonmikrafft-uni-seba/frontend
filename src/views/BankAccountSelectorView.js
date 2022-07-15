@@ -10,7 +10,6 @@ import { changePopup } from '../store/popup/popup.actions';
 import BankAccountSelector from '../components/Popup/BankAccountSelector';
 import { BankingOnboardingState, popupActionType } from '../constants';
 import { useSearchParams } from 'react-router-dom';
-import { transactionsPullBanking } from '../store/transaction/transaction.actions';
 
 const BankAccountSelectorView = (props) => {
   const accountOnboarding = useSelector(
@@ -69,7 +68,6 @@ const BankAccountSelectorView = (props) => {
           popupActionType: popupActionType.ADD_BANK,
         })
       );
-      props.dispatch(transactionsPullBanking());
     }
   };
 
