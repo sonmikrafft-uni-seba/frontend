@@ -6,8 +6,6 @@ import {
   Add,
   ExpandLess,
   ExpandMore,
-  Delete,
-  Edit,
 } from '@mui/icons-material';
 import {
   Box,
@@ -183,16 +181,12 @@ const SideBar = (props) => {
                           group={option}
                           resetCategoryGroup={resetCategoryGroup}
                         />
-                        <IconButton edge="end" aria-label="expand">
-                          {xprops.open ? (
-                            <ExpandLess
-                              onClick={() => xprops.setOpen(!xprops.open)}
-                            />
-                          ) : (
-                            <ExpandMore
-                              onClick={() => xprops.setOpen(!xprops.open)}
-                            />
-                          )}
+                        <IconButton
+                          edge="end"
+                          onClick={() => xprops.setOpen(!xprops.open)}
+                          aria-label="expand"
+                        >
+                          {xprops.open ? <ExpandLess /> : <ExpandMore />}
                         </IconButton>
                       </>
                     }

@@ -27,12 +27,12 @@ const TransactionForm = (props) => {
   const [account, setAccount] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const categories = props.user.categoryGroups.map(
-    (group) => group.categories
-  )[0];
-  const accounts = props.user.userBanks.map(
-    (userBank) => userBank.bankaccounts
-  )[0];
+  const categories = props.user.categoryGroups
+    .map((group) => group.categories)
+    .flat();
+  const accounts = props.user.userBanks
+    .map((userBank) => userBank.bankaccounts)
+    .flat();
   useEffect(() => {
     if (props.hasOwnProperty('error') && props.error != null) {
       setErrorMessage(props.error.message);
@@ -75,6 +75,7 @@ const TransactionForm = (props) => {
   const onSave = () => {
     props.dispatch(
       createTransaction({
+        valueDate: new Date().toISOString(),
         remittanceInformation: description,
         transactionAmount: amount,
         transactionType: TransactionType.MANUAL,
@@ -147,7 +148,9 @@ const TransactionForm = (props) => {
                   onChange={onChangeCategory}
                 >
                   {categories.map((option) => (
-                    <MenuItem value={option._id}>{option.name}</MenuItem>
+                    <MenuItem key={option._id} value={option._id}>
+                      {option.name}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -173,7 +176,9 @@ const TransactionForm = (props) => {
                   onChange={onChangeAccount}
                 >
                   {accounts.map((option) => (
-                    <MenuItem value={option._id}>{option.name}</MenuItem>
+                    <MenuItem key={option._id} value={option._id}>
+                      {option.name}
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>
