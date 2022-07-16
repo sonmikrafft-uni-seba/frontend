@@ -38,3 +38,16 @@ export const getTransactionsRequest = async (token, userId) => {
   });
   return await response.json();
 };
+
+export const deleteTransactionRequest = async (token, userId, transaction) => {
+  const endpoint = TRANSACTION_ENDPOINT_API(userId) + `/${transaction._id}`;
+  const response = await fetch(endpoint, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token,
+    },
+    body: JSON.stringify(transaction),
+  });
+  return await response.json();
+};

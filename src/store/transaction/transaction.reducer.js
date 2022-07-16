@@ -43,6 +43,21 @@ export const transaction = (state = initialState, action) => {
         ...state,
         error: action.payload,
       };
+    case ACTION_TYPES.TRANSACTION_DELETE_SUCCESS:
+      return {
+        ...state,
+        transactions: [
+          ...state.transactions.filter(
+            (transaction) => transaction._id !== action.payload._id
+          ),
+        ],
+        error: null,
+      };
+    case ACTION_TYPES.TRANSACTION_DELETE_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
     default:
       return state;
   }

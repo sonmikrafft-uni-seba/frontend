@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import EnhancedTableHead from './EnhancedTableHead';
 import { descendingComparator, getComparator, stableSort } from '../../utils';
+import EditDeleteTransaction from './EditDeleteTransaction.js';
 
 const TransactionTable = (props) => {
   const [order, setOrder] = React.useState('asc');
@@ -135,6 +136,9 @@ const TransactionTable = (props) => {
                             'aria-labelledby': labelId,
                           }}
                         />
+                      </TableCell>
+                      <TableCell>
+                        <EditDeleteTransaction transaction={row} />
                       </TableCell>
                     </TableRow>
                   );

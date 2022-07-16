@@ -7,11 +7,14 @@ import {
   updateTransactionFail,
   loadTransactionsFail,
   loadTransactionsSuccess,
+  deleteTransactionSuccess,
+  deleteTransactionFail,
 } from './transaction.actions.js';
 import {
   createTransactionRequest,
   updateTransactionRequest,
   getTransactionsRequest,
+  deleteTransactionRequest,
 } from '../../services/transaction.service.js';
 
 export const getToken = (state) => state.auth.token;
@@ -78,10 +81,33 @@ export function* loadTransactionsSaga(action) {
   }
 }
 
+export function* deleteTransactionSaga(action) {
+  const token = yield select(getToken);
+  const userId = yield select(getUserId);
+  const response = yield call(
+    deleteTransactionRequest,
+    token,
+    userId,
+    action.payload
+  );
+
+  if (response.hasOwnProperty('error')) {
+    yield put(
+      deleteTransactionFail({
+        error: response.error,
+        message: response.message,
+      })
+    );
+  } else {
+    yield put(deleteTransactionSuccess(response));
+  }
+}
+
 export default function* root() {
   yield all([
     takeLatest(ACTION_TYPES.TRANSACTION_CREATE_REQUEST, createTransactionSaga),
     takeLatest(ACTION_TYPES.TRANSACTIONS_LOAD_REQUEST, loadTransactionsSaga),
     takeLatest(ACTION_TYPES.TRANSACTION_UPDATE_REQUEST, updateTransactionSaga),
+    takeLatest(ACTION_TYPES.TRANSACTION_DELETE_REQUEST, deleteTransactionSaga),
   ]);
 }

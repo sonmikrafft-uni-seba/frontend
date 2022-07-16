@@ -51,6 +51,12 @@ const headCells = [
     disablePadding: false,
     label: 'Verified',
   },
+  {
+    id: 'actions',
+    numeric: false,
+    disablePadding: false,
+    label: '',
+  },
 ];
 
 export default function EnhancedTableHead(props) {
