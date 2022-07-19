@@ -34,6 +34,19 @@ const PopupView = (props) => {
             notifySave={notifySave}
             setSaveable={setSaveable}
             onClosePopup={onClosePopup}
+            contentObject={null}
+          />
+        );
+
+      case popupContentType.EDIT_TRANSACTION:
+        return (
+          <TransactionForm
+            user={userState}
+            error={transactionErrorState}
+            notifySave={notifySave}
+            setSaveable={setSaveable}
+            onClosePopup={onClosePopup}
+            contentObject={popupState.popupContentObject}
           />
         );
 
