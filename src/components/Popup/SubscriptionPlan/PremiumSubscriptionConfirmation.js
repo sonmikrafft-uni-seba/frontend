@@ -67,16 +67,17 @@ const PremiumSubscriptionConfirmation = (props) => {
       <TextField
         id="select-subscription-duration"
         label="Order Review"
+        value="1 Month"
         select
         helperText=""
         fullWidth
         size="small"
       >
         {subscriptionOrders.map((option) => (
-          <MenuItem key={option.duration} value={option.duration}>
-            <ListItemText>{option.duration}</ListItemText>
+          <MenuItem key={option.duration} value="1 Month">
+            <ListItemText>{'1 Month'}</ListItemText>
             <Typography variant="body2" color="text.secondary">
-              € {option.cost}
+              € {paidAmount}
             </Typography>
           </MenuItem>
         ))}
