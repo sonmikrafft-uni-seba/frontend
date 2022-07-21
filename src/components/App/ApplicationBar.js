@@ -22,7 +22,6 @@ import {
 } from '@mui/icons-material';
 import { logout } from '../../store/auth/auth.actions';
 import { openPopup } from '../../store/popup/popup.actions.js';
-import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
 import { reset } from '../../store/subscription/subscription.actions';
 const ApplicationBar = (props) => {
