@@ -11,4 +11,3 @@ export const ACTION_TYPES = {
 };
 
 export const logoutUser = createAction(ACTION_TYPES.USER_LOGOUT);
-export * from './subscription/subscription.actions.js';

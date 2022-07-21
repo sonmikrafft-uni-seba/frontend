@@ -22,7 +22,6 @@ store.subscribe(() => {
     transaction: store.getState().transaction,
     banking: store.getState().banking,
     app: store.getState().app,
-    subscription: store.getState().subscription,
   });
 });
 

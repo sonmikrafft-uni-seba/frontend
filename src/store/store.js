@@ -4,10 +4,7 @@ import { rootReducer } from './root.reducers.js';
 import rootSaga from './root.saga.js';
 
 const sagaMiddleware = createSagaMiddleware();
-const middleware = [
-  ...getDefaultMiddleware({ thunk: false, serializableCheck: false }),
-  sagaMiddleware,
-];
+const middleware = [...getDefaultMiddleware({ thunk: false }), sagaMiddleware];
 
 export default (persistedState) => {
   const store = configureStore({
