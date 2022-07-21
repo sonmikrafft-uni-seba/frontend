@@ -10,4 +10,3 @@ export const ACTION_TYPES = {
 export const login = createAction(ACTION_TYPES.LOGIN);
 export const loginSuccess = createAction(ACTION_TYPES.LOGIN_SUCCESS);
 export const loginFail = createAction(ACTION_TYPES.LOGIN_FAIL);
-export const logout = createAction(ACTION_TYPES.LOGOUT);

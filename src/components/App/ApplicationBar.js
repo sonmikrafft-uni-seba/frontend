@@ -17,11 +17,13 @@ import {
   AccountCircle,
   SettingsOutlined,
 } from '@mui/icons-material';
-import { logout } from '../../store/auth/auth.actions';
 import { openPopup } from '../../store/popup/popup.actions.js';
 import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
 import { reset } from '../../store/subscription/subscription.actions';
+
+import { logoutUser } from '../../store/root.actions';
+
 const ApplicationBar = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
@@ -47,7 +49,7 @@ const ApplicationBar = (props) => {
   const onLogout = () => {
     setAnchorEl(null);
     props.dispatch(reset());
-    props.dispatch(logout({}));
+    props.dispatch(logoutUser());
     navigate('/');
   };
 
