@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -8,13 +8,20 @@ import {
   ListItemText,
   MenuItem,
   Menu,
+  Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Star, Logout, AccountCircle } from '@mui/icons-material';
+import {
+  Star,
+  Logout,
+  AccountCircle,
+  SettingsOutlined,
+} from '@mui/icons-material';
 import { openPopup } from '../../store/popup/popup.actions.js';
 import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
 import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
+import { reset } from '../../store/subscription/subscription.actions';
 import { logoutUser } from '../../store/root.actions';
 
 const ApplicationBar = (props) => {
@@ -29,8 +36,19 @@ const ApplicationBar = (props) => {
     setAnchorEl(null);
   };
 
+  const openManageAccounts = () => {
+    props.dispatch(
+      openPopup({
+        title: 'Bank Accounts',
+        popupContentType: popupContentType.BANK_MANAGEMENT,
+        popupActionType: popupActionType.ADD_BANK,
+      })
+    );
+  };
+
   const onLogout = () => {
     setAnchorEl(null);
+    props.dispatch(reset());
     props.dispatch(logoutUser());
     navigate('/');
   };
@@ -41,6 +59,15 @@ const ApplicationBar = (props) => {
         <Toolbar>
           <Box sx={{ flexGrow: 1 }} />
           <div>
+            {props.isPremium && (
+              <Button
+                color="primary"
+                onClick={openManageAccounts}
+                startIcon={<SettingsOutlined />}
+              >
+                Manage Bank Accounts
+              </Button>
+            )}
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -66,38 +93,41 @@ const ApplicationBar = (props) => {
               open={Boolean(anchorEl)}
               onClose={closeDropdownMenu}
             >
-              <MenuItem onClick={closeDropdownMenu}>
-                <ListItemIcon>
-                  <Star />
-                </ListItemIcon>
-                <ListItemText primary="Upgrade to Premium" />
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  props.dispatch(
-                    openPopup({
-                      title: 'Bank Accounts',
-                      popupContentType: popupContentType.BANK_MANAGEMENT,
-                      popupActionType: popupActionType.ADD_BANK,
-                    })
-                  );
-                }}
-              >
-                <ListItemIcon>
-                  <Star />
-                </ListItemIcon>
-                <ListItemText primary="Manage Bank Accounts" />
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  props.dispatch(transactionsPullBanking());
-                }}
-              >
-                <ListItemIcon>
-                  <Star />
-                </ListItemIcon>
-                <ListItemText primary="Pull Accounts" />
-              </MenuItem>
+              {props.isPremium ? (
+                <MenuItem
+                  onClick={() => {
+                    props.dispatch(
+                      openPopup({
+                        title: 'Premium Plan',
+                        popupContentType: popupContentType.CANCEL_SUBSCRIPTION,
+                        popupActionType: popupActionType.EMPTY,
+                      })
+                    );
+                  }}
+                >
+                  <ListItemIcon>
+                    <Star />
+                  </ListItemIcon>
+                  <ListItemText primary="My Budgetly Premium" />
+                </MenuItem>
+              ) : (
+                <MenuItem
+                  onClick={() => {
+                    props.dispatch(
+                      openPopup({
+                        title: 'Overview of Premium features',
+                        popupContentType: popupContentType.PREMIUM_SUBSCRIPTION,
+                        popupActionType: popupActionType.EMPTY,
+                      })
+                    );
+                  }}
+                >
+                  <ListItemIcon>
+                    <Star />
+                  </ListItemIcon>
+                  <ListItemText primary="Upgrade to Premium" />
+                </MenuItem>
+              )}
               <MenuItem onClick={onLogout}>
                 <ListItemIcon>
                   <Logout />

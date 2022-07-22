@@ -112,3 +112,30 @@ export const bankingTransactionToDBtransaction = (transactionList, userId) => {
     return p.concat(n);
   });
 };
+
+export const timeConverter = (UNIX_timestamp) => {
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var formattedDate = month + ' ' + date + ', ' + year;
+  return formattedDate;
+};
+
+export const formatMoney = (money) => {
+  return ((money * 1.0) / 100).toFixed(2);
+};
