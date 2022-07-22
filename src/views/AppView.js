@@ -18,6 +18,7 @@ const AppView = (props) => {
   const user = useSelector((state) => state.user.user);
   const { categoryGroupName, categoryName } = useParams();
 
+  const isPremium = user.subscriptionPlan[0] === 'PREMIUM';
   const [transactionsLoaded, setTransactionsLoaded] = useState(false);
 
   const updateATransaction = (transaction) => {
@@ -102,7 +103,7 @@ const AppView = (props) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PopupView />
-      <ApplicationBar />
+      <ApplicationBar isPremium={isPremium} />
       <SideBar />
       <ApplicationContentContainer
         updateTransaction={updateATransaction}

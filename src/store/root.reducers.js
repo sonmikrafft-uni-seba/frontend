@@ -5,6 +5,7 @@ import { transaction } from './transaction/transaction.reducer.js';
 import { popup } from './popup/popup.reducers.js';
 import { banking } from './banking/banking.reducers.js';
 import { app } from './app/app.reducers.js';
+import { subscription } from './subscription/subscription.reducers.js';
 import { ACTION_TYPES } from './root.actions.js';
 
 export const appReducer = combineReducers({
@@ -14,6 +15,7 @@ export const appReducer = combineReducers({
   popup: popup,
   banking: banking,
   app: app,
+  subscription: subscription,
 });
 
 export const rootReducer = (state, action) => {
