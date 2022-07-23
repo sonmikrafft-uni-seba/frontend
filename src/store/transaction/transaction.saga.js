@@ -202,7 +202,9 @@ export function* transactionsPullBankingSaga(action) {
     defaultCategoryId
   );
 
-  yield put(transactionsCreateMany(newTransactionsWithCategories));
+  if (newTransactionsWithCategories.length > 0) {
+    yield put(transactionsCreateMany(newTransactionsWithCategories));
+  }
 }
 
 export default function* root() {

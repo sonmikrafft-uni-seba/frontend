@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { Container, Box, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import CachedIcon from '@mui/icons-material/Cached';
 import TransactionTable from './TransactionTable';
-import VisualizationToggleGroup from './ToggleButton';
 import { connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
 import { popupContentType, popupActionType } from '../../constants';
+import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
+import BalanceIndicator from './BalanceIndicator';
+import VisualisationToggle from './VisualisationToggle';
+import Charts from './Charts.js';
 
 const ApplicationContentContainer = (props) => {
   const onNewTransaction = () => {
@@ -18,12 +22,16 @@ const ApplicationContentContainer = (props) => {
     );
   };
 
+  const onFetchRemoteTransactions = () => {
+    props.dispatch(transactionsPullBanking());
+  };
+
   return (
     <Container>
       <Box
         sx={{
-          pl: 40,
           display: 'flex',
+          pl: 30,
           flexDirection: 'column',
         }}
       >
@@ -34,8 +42,7 @@ const ApplicationContentContainer = (props) => {
             flexDirection: 'row',
           }}
         >
-          <VisualizationToggleGroup />
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1 }}></Box>
           <Button
             variant="contained"
             color="primary"
@@ -44,7 +51,18 @@ const ApplicationContentContainer = (props) => {
           >
             New Transaction
           </Button>
+          <Button
+            sx={{ marginLeft: '2px' }}
+            onClick={onFetchRemoteTransactions}
+          >
+            <CachedIcon />
+          </Button>
         </Box>
+        <Charts
+          context={props.viewedBudget}
+          transactions={props.transactions}
+          viewedBudget={props.viewedBudget}
+        />
         <TransactionTable
           updateTransaction={props.updateTransaction}
           transactions={props.transactions}

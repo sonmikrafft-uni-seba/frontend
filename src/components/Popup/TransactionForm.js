@@ -20,7 +20,7 @@ import {
   TransactionType,
 } from '../../constants';
 
-const eurRegEx = /(^\d*.\d{0,2}$)|(^\d*$)/;
+const eurRegEx = /(^-?\d*.\d{0,2}$)|(^-?\d*$)/;
 
 const TransactionForm = (props) => {
   const theme = useTheme();
@@ -56,7 +56,7 @@ const TransactionForm = (props) => {
 
   useEffect(() => {
     props.setSaveable(
-      amount.trim().length != 0 && amount > 0 && category.trim().length != 0
+      amount.trim().length != 0 && amount != 0 && category.trim().length != 0
     );
   }, [amount, category]);
 

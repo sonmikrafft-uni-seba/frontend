@@ -56,6 +56,40 @@ const AppView = (props) => {
     });
   };
 
+  const viewedBudget = () => {
+    if (categoryGroupName == 'overview') {
+      return { group: null, category: null };
+    }
+
+    const categoryGroup = user.categoryGroups.filter((group) => {
+      return group.name.toLowerCase() == categoryGroupName;
+    })[0];
+
+    if (!categoryName) {
+      return categoryGroup.budgetLimit
+        ? {
+            period: categoryGroup.budgetType[0],
+            limit: categoryGroup.budgetLimit,
+            group: categoryGroup,
+            category: null,
+          }
+        : { group: categoryGroup, category: null };
+    }
+
+    const category = categoryGroup.categories.filter((category) => {
+      return category.name.toLowerCase() == categoryName;
+    })[0];
+
+    return category.budgetLimit
+      ? {
+          period: category.budgetType[0],
+          limit: category.budgetLimit,
+          group: categoryGroup,
+          category: category,
+        }
+      : { group: categoryGroup, category: category };
+  };
+
   const filterTransactions = (transactions) => {
     // filter by bankAccount
     if (bankAccountFilter != allAccountsConstant) {
@@ -115,6 +149,7 @@ const AppView = (props) => {
       <ApplicationBar isPremium={isPremium} />
       <SideBar />
       <ApplicationContentContainer
+        viewedBudget={viewedBudget}
         updateTransaction={updateATransaction}
         transactions={enhanceTransactionInformation(
           filterTransactions(transactions)

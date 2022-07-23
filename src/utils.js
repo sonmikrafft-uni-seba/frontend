@@ -61,13 +61,21 @@ export const transactionsToUpdateWithNewCategory = (
   defaultCategoryId = null
 ) => {
   let transactionsToUpdate = [];
+
   transactions.forEach((transaction) => {
+    if (!transaction) {
+      return;
+    }
+
     const newCategoryId = categoryIdSelection(
       categories,
       transaction.remittanceInformation
     );
     // if categoryId is new push it to update list
-    if (newCategoryId != null && newCategoryId != transaction.categoryID) {
+    if (
+      transaction.categoryID == null ||
+      (newCategoryId != null && newCategoryId != transaction.categoryID)
+    ) {
       transactionsToUpdate.push({
         ...transaction,
         categoryID: newCategoryId ? newCategoryId : defaultCategoryId,
