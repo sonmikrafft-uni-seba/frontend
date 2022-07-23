@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { deleteTransaction } from '../../store/transaction/transaction.actions';
 import { openPopup } from '../../store/popup/popup.actions';
+import { openSnackbar } from '../../store/snackbar/snackbar.actions';
 import { popupActionType, popupContentType } from '../../constants';
 
 const EditDeleteTransaction = (props) => {
@@ -16,11 +17,22 @@ const EditDeleteTransaction = (props) => {
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
     );
-    props.dispatch;
   };
 
   const deleteTransactionInList = () => {
     props.dispatch(deleteTransaction(props.transaction));
+    const addRemittanceInfo =
+      props.transaction.remittanceInformation.length > 0
+        ? '"' + props.transaction.remittanceInformation + '"'
+        : '';
+    props.dispatch(
+      openSnackbar({
+        message:
+          'Your transaction ' +
+          addRemittanceInfo +
+          ' has been successfully deleted.',
+      })
+    );
   };
 
   return (

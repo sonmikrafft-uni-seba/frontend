@@ -11,6 +11,7 @@ import {
   updateTransaction,
 } from '../store/transaction/transaction.actions';
 import { allAccountsConstant } from '../constants';
+import SnackbarView from './SnackbarView';
 
 const AppView = (props) => {
   const transactions = useSelector((state) => state.transaction.transactions);
@@ -102,6 +103,7 @@ const AppView = (props) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PopupView />
+      <SnackbarView />
       <ApplicationBar />
       <SideBar />
       <ApplicationContentContainer

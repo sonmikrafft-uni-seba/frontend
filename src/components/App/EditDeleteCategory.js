@@ -3,6 +3,7 @@ import { IconButton } from '@mui/material';
 import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { updateUser } from '../../store/user/user.actions';
+import { openSnackbar } from '../../store/snackbar/snackbar.actions';
 
 const EditDeleteCategory = (props) => {
   const user = useSelector((state) => state.user.user);
@@ -31,6 +32,15 @@ const EditDeleteCategory = (props) => {
       })
     );
     props.resetCategory(category.name, props.groupName);
+
+    props.dispatch(
+      openSnackbar({
+        message:
+          'Your category "' +
+          category.name +
+          '" has been successfully deleted.',
+      })
+    );
   };
 
   return (

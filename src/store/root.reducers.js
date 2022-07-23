@@ -6,12 +6,14 @@ import { popup } from './popup/popup.reducers.js';
 import { banking } from './banking/banking.reducers.js';
 import { app } from './app/app.reducers.js';
 import { ACTION_TYPES } from './root.actions.js';
+import { snackbar } from './snackbar/snackbar.reducers.js';
 
 export const appReducer = combineReducers({
   user: user,
   auth: auth,
   transaction: transaction,
   popup: popup,
+  snackbar: snackbar,
   banking: banking,
   app: app,
 });
