@@ -11,10 +11,14 @@ export const popupContentType = {
 
 export const baseUrl = 'http://localhost:3000';
 export const allAccountsConstant = 'allaccounts';
+export const defaultCategoryName = 'Uncategorized';
+export const defaultAccountName = 'Cash';
 
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
+  YES_OR_NO: 'YES_OR_NO',
   ADD_BANK: 'ADD_BANK',
+  CONFIRM: 'CONFIRM',
   EMPTY: 'EMPTY',
 };
 
@@ -38,6 +42,7 @@ export const SubscriptionPlan = {
 
 export const TransactionCurrency = {
   EUR: 'EURO',
+  DOL: 'DOLLAR',
 };
 
 export const TransactionType = {

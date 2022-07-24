@@ -34,6 +34,12 @@ const headCells = [
     label: 'Partner',
   },
   {
+    id: 'type',
+    numeric: false,
+    disablePadding: false,
+    label: 'Type',
+  },
+  {
     id: 'reference',
     numeric: false,
     disablePadding: false,

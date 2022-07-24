@@ -20,8 +20,8 @@ import {
 import { openPopup } from '../../store/popup/popup.actions.js';
 import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
+import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
 import { reset } from '../../store/subscription/subscription.actions';
-
 import { logoutUser } from '../../store/root.actions';
 
 const ApplicationBar = (props) => {

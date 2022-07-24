@@ -20,10 +20,23 @@ const TransactionTable = (props) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+  const mapProperties = (orderBy) => {
+    switch (orderBy) {
+      case 'date':
+        return 'valueDate';
+      case 'partner':
+        return 'transactionPartnerName';
+      case 'reference':
+        return 'remittanceInformation';
+      default:
+        return orderBy;
+    }
+  };
+
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
+    const isAsc = orderBy === mapProperties(property) && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+    setOrderBy(mapProperties(property));
   };
 
   const handleClick = (event, name) => {
@@ -115,12 +128,23 @@ const TransactionTable = (props) => {
                       <TableCell align="left">{row.category}</TableCell>
                       <TableCell align="left">{row.account}</TableCell>
                       <TableCell align="left">
-                        {row.partner ? row.partner : 'Manual'}
+                        {row.transactionPartnerName &&
+                        row.transactionPartnerName != 'Unknown'
+                          ? row.transactionPartnerName
+                          : '-'}
                       </TableCell>
+                      <TableCell padding="none">{row.type}</TableCell>
                       <TableCell align="left">
                         {row.remittanceInformation}
                       </TableCell>
-                      <TableCell align="left">
+                      <TableCell
+                        align="left"
+                        sx={
+                          row.transactionAmount < 0
+                            ? { color: 'red' }
+                            : { color: 'green' }
+                        }
+                      >
                         {row.transactionAmount +
                           (row.transactionCurrency[0] == 'EURO' ? '€' : '$')}
                       </TableCell>

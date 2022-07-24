@@ -10,6 +10,7 @@ import {
   Avatar,
   Divider,
 } from '@mui/material';
+import { TransactionCurrency } from '../../constants';
 
 const BankAccountList = (props) => {
   return (
@@ -60,10 +61,14 @@ const BankAccountList = (props) => {
                       const accountDetails =
                         account.metaData.iban != '-'
                           ? `IBAN: ${account.metaData.iban}   CURRENCY: ${account.metaData.currency}`
-                          : `CURRENCY: ${account.metaData.currency}`;
+                          : `CURRENCY: ${
+                              account.metaData.currency == 'EUR'
+                                ? TransactionCurrency.EUR
+                                : account.metaData.currency
+                            }`;
 
                       return (
-                        <>
+                        <ListItem key={account._id}>
                           <Divider />
                           <ListItemButton
                             sx={{ justifyContent: 'space-between' }}
@@ -77,7 +82,7 @@ const BankAccountList = (props) => {
                               primary={account.metaData.owner}
                             ></ListItemText>
                           </ListItemButton>
-                        </>
+                        </ListItem>
                       );
                     })}
                   </List>

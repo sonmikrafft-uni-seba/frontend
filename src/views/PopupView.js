@@ -45,6 +45,7 @@ const PopupView = (props) => {
         return (
           <NewCategoryView
             notifySave={notifySave}
+            setNotifySave={setNotifySave}
             onClosePopup={onClosePopup}
             setSaveable={setSaveable}
           />
@@ -123,6 +124,25 @@ const PopupView = (props) => {
             CANCEL
           </Button>,
         ];
+      case popupActionType.YES_OR_NO:
+        return [
+          <Button
+            key="yes-no-button"
+            onClick={() => {
+              setNotifySave(true);
+            }}
+            sx={{ color: theme.palette.primary }}
+          >
+            YES
+          </Button>,
+          <Button
+            key="close-button"
+            onClick={onClosePopup}
+            sx={{ color: theme.palette.primary }}
+          >
+            NO
+          </Button>,
+        ];
       case popupActionType.ADD_BANK:
         return [
           <Button
@@ -133,6 +153,16 @@ const PopupView = (props) => {
             sx={{ color: theme.palette.primary }}
           >
             Add Bank Account
+          </Button>,
+        ];
+      case popupActionType.CONFIRM:
+        return [
+          <Button
+            key="confirm-button"
+            onClick={onClosePopup}
+            sx={{ color: theme.palette.primary }}
+          >
+            OK
           </Button>,
         ];
       case popupActionType.EMPTY:
