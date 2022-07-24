@@ -3,14 +3,23 @@ export const popupContentType = {
   EDIT_TRANSACTION: 'EDIT_TRANSACTION',
   NEW_CATEGORY: 'NEW_CATEGORY',
   BANK_MANAGEMENT: 'BANK_MANAGEMENT',
+  PREMIUM_SUBSCRIPTION: 'PREMIUM_SUBSCRIPTION',
+  STRIPE_CARD_ELEMENT: 'STRIPE_CARD_ELEMENT',
+  PREMIUM_SUBSCRIPTION_CONFIRMATION: 'PREMIUM_SUBSCRIPTION_CONFIRMATION',
+  CANCEL_SUBSCRIPTION: 'CANCEL_SUBSCRIPTION',
+  CANCEL_SUBSCRIPTION_CONFIRMATION: 'CANCEL_SUBSCRIPTION_CONFIRMATION',
 };
 
 export const baseUrl = 'http://localhost:3000';
 export const allAccountsConstant = 'allaccounts';
+export const defaultCategoryName = 'Uncategorized';
+export const defaultAccountName = 'Cash';
 
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
+  YES_OR_NO: 'YES_OR_NO',
   ADD_BANK: 'ADD_BANK',
+  CONFIRM: 'CONFIRM',
   EMPTY: 'EMPTY',
 };
 
@@ -34,6 +43,7 @@ export const SubscriptionPlan = {
 
 export const TransactionCurrency = {
   EUR: 'EURO',
+  DOL: 'DOLLAR',
 };
 
 export const TransactionType = {

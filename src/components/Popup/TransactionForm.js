@@ -17,9 +17,13 @@ import {
   createTransaction,
   updateTransaction,
 } from '../../store/transaction/transaction.actions';
-import { TransactionType } from '../../constants';
 
 const eurRegEx = /(^\d*\.{0,1}\d{0,2}$)/;
+import {
+  defaultAccountName,
+  defaultCategoryName,
+  TransactionType,
+} from '../../constants';
 
 const TransactionForm = (props) => {
   const theme = useTheme();
@@ -37,17 +41,17 @@ const TransactionForm = (props) => {
     EDIT ? props.contentObject.remittanceInformation : ''
   );
   const [amount, setAmount] = React.useState(
-    EDIT ? '' + props.contentObject.transactionAmount : '0.00'
+    EDIT ? '' + props.contentObject.transactionAmount : ''
   );
   const [category, setCategory] = React.useState(
     EDIT
       ? props.contentObject.categoryID
-      : categories.find((cat) => cat.name === 'Uncategorized')._id
+      : categories.find((cat) => cat.name === defaultCategoryName)._id
   );
   const [account, setAccount] = React.useState(
     EDIT
       ? props.contentObject.bankAccountID
-      : accounts.find((acc) => acc.name === 'Cash')._id
+      : accounts.find((acc) => acc.name === defaultAccountName)._id
   );
   const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -64,8 +68,10 @@ const TransactionForm = (props) => {
   }, [props.notifySave]);
 
   useEffect(() => {
-    props.setSaveable(amount.trim().length > 0 && amount > 0);
-  }, [amount]);
+    props.setSaveable(
+      amount.trim().length != 0 && amount != 0 && category.trim().length != 0
+    );
+  }, [amount, category]);
 
   const onChangeDescription = (e) => {
     setDescription(e.target.value);
@@ -128,7 +134,7 @@ const TransactionForm = (props) => {
         >
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={3}>
-              <Typography> Description: </Typography>
+              <Typography> Reference: </Typography>
             </Grid>
             <Grid item xs={9}>
               <TextField

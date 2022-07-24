@@ -8,17 +8,21 @@ import { popupActionType, popupContentType } from '../constants';
 import NewCategoryView from './NewCategoryView';
 import TransactionForm from '../components/Popup/TransactionForm';
 import BankAccountView from './BankAccountView';
-
+import PlanComparison from '../components/Popup/SubscriptionPlan/PlanComparison';
+import PlanCancellation from '../components/Popup/SubscriptionPlan/PlanCancellation';
+import StripeCardContainer from '../components/Popup/SubscriptionPlan/StripeCardContainer';
+import PremiumSubscriptionConfirmation from '../components/Popup/SubscriptionPlan/PremiumSubscriptionConfirmation';
+import PremiumSubscriptionCancellation from '../components/Popup/SubscriptionPlan/PremiumCancellationConfirmation';
 const PopupView = (props) => {
   const theme = useTheme();
   const popupState = useSelector((state) => state.popup);
   const transactionErrorState = useSelector((state) => state.transaction.error);
   const userState = useSelector((state) => state.user.user);
-
+  const subscriptionState = useSelector((state) => state.subscription);
+  const authState = useSelector((state) => state.auth);
   // the bool notifySave is passed to PopupContentViews and indicates that a user pressed popup save action
   const [notifySave, setNotifySave] = useState(false);
   const [saveable, setSaveable] = useState(false);
-
   const onClosePopup = () => {
     props.dispatch(closePopup());
     setNotifySave(false);
@@ -54,6 +58,7 @@ const PopupView = (props) => {
         return (
           <NewCategoryView
             notifySave={notifySave}
+            setNotifySave={setNotifySave}
             onClosePopup={onClosePopup}
             setSaveable={setSaveable}
           />
@@ -66,6 +71,43 @@ const PopupView = (props) => {
             setNotifySave={setNotifySave}
             setSaveable={setSaveable}
             onClosePopup={onClosePopup}
+          />
+        );
+      case popupContentType.PREMIUM_SUBSCRIPTION:
+        return (
+          <PlanComparison
+            subscription={subscriptionState}
+            onClosePopup={onClosePopup}
+          />
+        );
+
+      case popupContentType.STRIPE_CARD_ELEMENT:
+        return <StripeCardContainer subscription={subscriptionState} />;
+      case popupContentType.PREMIUM_SUBSCRIPTION_CONFIRMATION:
+        return (
+          <PremiumSubscriptionConfirmation
+            subscription={subscriptionState}
+            user={userState}
+            auth={authState}
+            popup={popupState}
+            onClosePopup={onClosePopup}
+          />
+        );
+      case popupContentType.CANCEL_SUBSCRIPTION:
+        return (
+          <PlanCancellation
+            subscription={subscriptionState}
+            onClosePopup={onClosePopup}
+            user={userState}
+          />
+        );
+      case popupContentType.CANCEL_SUBSCRIPTION_CONFIRMATION:
+        return (
+          <PremiumSubscriptionCancellation
+            subscription={subscriptionState}
+            onClosePopup={onClosePopup}
+            user={userState}
+            auth={authState}
           />
         );
       default:
@@ -95,6 +137,25 @@ const PopupView = (props) => {
             CANCEL
           </Button>,
         ];
+      case popupActionType.YES_OR_NO:
+        return [
+          <Button
+            key="yes-no-button"
+            onClick={() => {
+              setNotifySave(true);
+            }}
+            sx={{ color: theme.palette.primary }}
+          >
+            YES
+          </Button>,
+          <Button
+            key="close-button"
+            onClick={onClosePopup}
+            sx={{ color: theme.palette.primary }}
+          >
+            NO
+          </Button>,
+        ];
       case popupActionType.ADD_BANK:
         return [
           <Button
@@ -105,6 +166,16 @@ const PopupView = (props) => {
             sx={{ color: theme.palette.primary }}
           >
             Add Bank Account
+          </Button>,
+        ];
+      case popupActionType.CONFIRM:
+        return [
+          <Button
+            key="confirm-button"
+            onClick={onClosePopup}
+            sx={{ color: theme.palette.primary }}
+          >
+            OK
           </Button>,
         ];
       case popupActionType.EMPTY:

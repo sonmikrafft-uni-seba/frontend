@@ -1,3 +1,5 @@
+import { KeyboardReturnTwoTone } from '@mui/icons-material';
+import { bankingTransactionToDBtransaction } from '../utils.js';
 export const BANKING_ENDPOINT_API = 'http://localhost:3001/banking';
 
 // get new auth token
@@ -158,4 +160,47 @@ export const getBankAccountTransactions = async (
     }
   );
   return await response.json();
+};
+
+export const getAllTransactions = async (
+  token,
+  userId,
+  bankingToken,
+  banks
+) => {
+  let transactionList = await Promise.all(
+    banks.map(async (bank) => {
+      if (bank.name == 'Budgetly') {
+        return;
+      }
+
+      const institutionID = 'SANDBOXFINANCE_SFIN0000'; // TODO: replace with bank.institutionID if you want to use real bank
+      return await Promise.all(
+        bank.bankaccounts.map(async (account) => {
+          let transactions = await getBankAccountTransactions(
+            token,
+            bankingToken,
+            institutionID,
+            account.accesstoken
+          );
+          return {
+            transactions: transactions.transactions.booked,
+            bankAccountId: account._id,
+          };
+        })
+      );
+    })
+  );
+
+  // 1 because cash account
+  if (transactionList.length <= 1) return transactionList;
+
+  transactionList = transactionList
+    .filter((bank) => bank)
+    .reduce((p, n) => {
+      return p.concat(n);
+    });
+
+  transactionList = bankingTransactionToDBtransaction(transactionList, userId);
+  return transactionList;
 };
