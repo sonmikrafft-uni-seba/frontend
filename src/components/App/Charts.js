@@ -223,12 +223,11 @@ const Charts = (props) => {
       ],
     };
 
-    if (props.transactions.length > 0)
-      return (
-        <Item sx={{ width: '100%', maxHeight: '200px' }}>
-          <Bar options={options} data={data} />;
-        </Item>
-      );
+    return (
+      <Item sx={{ width: '100%', maxHeight: '200px' }}>
+        <Bar options={options} data={data} />;
+      </Item>
+    );
   };
 
   return (
@@ -253,7 +252,7 @@ const Charts = (props) => {
           />
         </Box>
         <Divider />
-        {charts && (
+        {charts && props.transactions.length != 0 && (
           <Stack direction="row" spacing={2}>
             {context.category != null && renderCategoryCharts()}
             {context.category == null &&
