@@ -3,14 +3,28 @@ import { IconButton } from '@mui/material';
 import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { updateUser } from '../../store/user/user.actions';
+import { openPopup } from '../../store/popup/popup.actions';
 import { openSnackbar } from '../../store/snackbar/snackbar.actions';
 import { transactionsReassign } from '../../store/transaction/transaction.actions';
+import { popupActionType, popupContentType } from '../../constants';
 
 const EditDeleteCategoryGroup = (props) => {
   const user = useSelector((state) => state.user.user);
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
+  const deletedGroup = categoryGroups.find(
+    (group) => group._id == props.group._id
+  );
 
-  const editCategoryGroup = () => {};
+  const editCategoryGroup = () => {
+    props.dispatch(
+      openPopup({
+        title: 'Edit Category/ Category Group',
+        popupContentType: popupContentType.EDIT_CATEGORY,
+        popupContentObject: deletedGroup,
+        popupActionType: popupActionType.SAVE_OR_CANCEL,
+      })
+    );
+  };
 
   const deleteCategoryGroup = () => {
     const userToUpdate = {

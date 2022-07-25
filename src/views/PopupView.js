@@ -61,8 +61,21 @@ const PopupView = (props) => {
             setNotifySave={setNotifySave}
             onClosePopup={onClosePopup}
             setSaveable={setSaveable}
+            contentObject={null}
           />
         );
+
+      case popupContentType.EDIT_CATEGORY:
+        return (
+          <NewCategoryView
+            notifySave={notifySave}
+            setNotifySave={setNotifySave}
+            onClosePopup={onClosePopup}
+            setSaveable={setSaveable}
+            contentObject={popupState.popupContentObject}
+          />
+        );
+
       case popupContentType.BANK_MANAGEMENT:
         return (
           <BankAccountView

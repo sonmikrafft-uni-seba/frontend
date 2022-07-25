@@ -15,13 +15,30 @@ import { BudgetType } from '../../constants';
 
 export default function NewCategoryForm(props) {
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
-  const [categoryName, setCategoryName] = React.useState('');
-  const [budgetLimit, setBudgetlimit] = React.useState('');
-  const [budgetType, setBudgetType] = React.useState(BudgetType.MONTHLY);
-  const [categoryGroup, setCategoryGroup] = React.useState(
-    categoryGroups[0].name
+
+  const EDIT = props.category != null;
+
+  const [categoryName, setCategoryName] = React.useState(
+    EDIT ? props.category.name : ''
   );
-  const [keywords, setKeywords] = React.useState([]);
+  const [budgetLimit, setBudgetlimit] = React.useState(
+    EDIT ? props.category.budgetLimit : ''
+  );
+  const [budgetType, setBudgetType] = React.useState(
+    EDIT ? props.category.budgetType : BudgetType.MONTHLY
+  );
+  const [categoryGroup, setCategoryGroup] = React.useState(
+    EDIT
+      ? categoryGroups.find((group) =>
+          group.categories.includes(props.category)
+        ).name
+      : categoryGroups[0].name
+  );
+  const [keywords, setKeywords] = React.useState(
+    EDIT && props.category.conditionalFilter.length > 0
+      ? props.category.conditionalFilter.split('OR')
+      : []
+  );
   const [formatCorrect, setFormatCorrect] = React.useState(true);
   const [validCategoryName, setValidCategoryName] = React.useState(true);
   const existingCategoryNames = categoryGroups
@@ -101,6 +118,7 @@ export default function NewCategoryForm(props) {
           autoComplete=""
           value={categoryName}
           onChange={onChangeCategoryName}
+          disabled={EDIT}
         ></TextField>
       </Grid>
       <Grid item sx={{ py: 1 }} xs={2}>
