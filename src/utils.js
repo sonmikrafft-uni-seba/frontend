@@ -39,7 +39,9 @@ export const categoryIdSelection = (categories, remittanceInformation) => {
     .split(' ')
     .map((word) => word.toLowerCase());
 
-  const newCategory = categories.reverse().find((category) => {
+  const newCategory = categories.findLast((category) => {
+    if (category.conditionalFilter) {
+    }
     return (
       category.conditionalFilter &&
       category.conditionalFilter != '' &&
@@ -58,7 +60,8 @@ export const categoryIdSelection = (categories, remittanceInformation) => {
 export const transactionsToUpdateWithNewCategory = (
   categories,
   transactions,
-  defaultCategoryId = null
+  defaultCategoryId = null,
+  isReassignAfterDeletion = false
 ) => {
   let transactionsToUpdate = [];
 
@@ -71,10 +74,12 @@ export const transactionsToUpdateWithNewCategory = (
       categories,
       transaction.remittanceInformation
     );
-    // if categoryId is new push it to update list
+
+    // if transaction has no category, categoryId is new, or is to be reassigned after its category is deleted, push it to update list
     if (
       transaction.categoryID == null ||
-      (newCategoryId != null && newCategoryId != transaction.categoryID)
+      (newCategoryId != null && newCategoryId != transaction.categoryID) ||
+      isReassignAfterDeletion
     ) {
       transactionsToUpdate.push({
         ...transaction,

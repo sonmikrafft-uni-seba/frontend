@@ -4,6 +4,7 @@ import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { updateUser } from '../../store/user/user.actions';
 import { openSnackbar } from '../../store/snackbar/snackbar.actions';
+import { transactionsReassign } from '../../store/transaction/transaction.actions';
 
 const EditDeleteCategoryGroup = (props) => {
   const user = useSelector((state) => state.user.user);
@@ -23,6 +24,16 @@ const EditDeleteCategoryGroup = (props) => {
         userToUpdate,
       })
     );
+
+    const deletedCategories = categoryGroups.find(
+      (group) => group._id == props.group._id
+    ).categories;
+    props.dispatch(
+      transactionsReassign({
+        deletedCategoryIds: deletedCategories.map((cat) => cat._id),
+      })
+    );
+
     props.resetCategoryGroup(props.group.name);
 
     props.dispatch(

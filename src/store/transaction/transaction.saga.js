@@ -115,17 +115,40 @@ export function* reassignTransactionsSaga(action) {
   // all categories
   let categories = user.categoryGroups.map((group) => group.categories).flat();
 
+  let isReassignAfterDeletion = false;
+
   // if just one category should be checked
-  if (action.payload.hasOwnProperty('categoryId')) {
+  if (
+    typeof action.payload != undefined &&
+    action.payload.hasOwnProperty('categoryId')
+  ) {
     categories = [
       categories.find((cat) => cat._id == action.payload.categoryId),
     ];
   }
 
+  // if all categories except for deleted ones should be checked
+  if (
+    typeof action.payload != undefined &&
+    action.payload.hasOwnProperty('deletedCategoryIds')
+  ) {
+    isReassignAfterDeletion = true;
+    categories = categories.filter(
+      (cat) => !action.payload.deletedCategoryIds.includes(cat._id)
+    );
+  }
+
+  let defaultCategoryId = categories.find(
+    (category) => category.name == defaultCategoryName
+  );
+  defaultCategoryId = defaultCategoryId ? defaultCategoryId._id : null;
+
   // get transactions to update
   const transactionsToUpdate = transactionsToUpdateWithNewCategory(
     categories,
-    transactions
+    transactions,
+    defaultCategoryId,
+    isReassignAfterDeletion
   );
 
   var response = [];

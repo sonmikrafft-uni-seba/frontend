@@ -18,7 +18,7 @@ import {
   updateTransaction,
 } from '../../store/transaction/transaction.actions';
 
-const eurRegEx = /(^\d*\.{0,1}\d{0,2}$)/;
+const eurRegEx = /(^-?\d*\.{0,1}\d{0,2}$)/;
 import {
   defaultAccountName,
   defaultCategoryName,
@@ -159,7 +159,11 @@ const TransactionForm = (props) => {
                 style={{ minWidth: 240 }}
                 value={amount}
                 onChange={onChangeAmount}
-                helperText={errorMessage.includes('amount') ? errorMessage : ''}
+                helperText={
+                  errorMessage.includes('amount')
+                    ? errorMessage
+                    : 'e.g. 2.00, -5.00, -12.34'
+                }
                 error={errorMessage.includes('amount')}
               />
             </Grid>

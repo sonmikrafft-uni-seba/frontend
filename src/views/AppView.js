@@ -35,7 +35,7 @@ const AppView = (props) => {
         .find((category) => {
           return category._id == categoryId;
         });
-      return category.name;
+      return category != null ? category.name : '-';
     };
 
     const findAccountName = (accountId) => {
