@@ -104,6 +104,7 @@ const TransactionTable = (props) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   const date = new Date(row.valueDate);
+                  const month = date.getMonth() + 1;
                   return (
                     <TableRow
                       hover
@@ -122,7 +123,7 @@ const TransactionTable = (props) => {
                       >
                         {date.getDate() +
                           '.' +
-                          date.getMonth() +
+                          month +
                           '.' +
                           date.getFullYear()}
                       </TableCell>
