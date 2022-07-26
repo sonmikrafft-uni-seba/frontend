@@ -81,6 +81,10 @@ const AppView = (props) => {
       return category.name.toLowerCase() == categoryName;
     })[0];
 
+    if (!category) {
+      return { group: null, category: null };
+    }
+
     return category.budgetLimit
       ? {
           period: category.budgetType[0],
