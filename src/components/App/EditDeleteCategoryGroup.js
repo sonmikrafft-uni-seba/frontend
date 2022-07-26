@@ -62,10 +62,20 @@ const EditDeleteCategoryGroup = (props) => {
 
   return (
     <>
-      <IconButton edge="end" aria-label="edit" onClick={editCategoryGroup}>
+      <IconButton
+        sx={{ color: 'white' }}
+        edge="end"
+        aria-label="edit"
+        onClick={editCategoryGroup}
+      >
         <Edit />
       </IconButton>
-      <IconButton edge="end" aria-label="delete" onClick={deleteCategoryGroup}>
+      <IconButton
+        sx={{ color: 'white' }}
+        edge="end"
+        aria-label="delete"
+        onClick={deleteCategoryGroup}
+      >
         <Delete />
       </IconButton>
     </>
