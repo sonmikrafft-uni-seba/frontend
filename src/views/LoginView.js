@@ -26,7 +26,7 @@ function LoginView(props) {
       top={0}
       height="100%"
       width="100%"
-      bgcolor="primary.main"
+      bgcolor="background.main"
       display="flex"
       alignItems="center"
       justifyContent="center"
