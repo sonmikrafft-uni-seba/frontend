@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 import { TransactionCurrency } from '../../constants';
-
+import EditDeleteBankAccount from '../App/EditDeleteBankAccount';
 const BankAccountList = (props) => {
   return (
     <Box
@@ -68,7 +68,15 @@ const BankAccountList = (props) => {
                             }`;
 
                       return (
-                        <ListItem key={account._id}>
+                        <ListItem
+                          key={account._id}
+                          secondaryAction={
+                            <EditDeleteBankAccount
+                              account={account}
+                              bank={bank}
+                            />
+                          }
+                        >
                           <Divider />
                           <ListItemButton
                             sx={{ justifyContent: 'space-between' }}
