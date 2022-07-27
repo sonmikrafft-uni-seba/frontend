@@ -115,7 +115,11 @@ export function* reassignTransactionsSaga(action) {
   // all categories
   let categories = user.categoryGroups.map((group) => group.categories).flat();
 
-  let isReassignAfterDeletion = false;
+  let isReassignAfterEditDelete = false;
+
+  if (Object.entries(action.payload).length === 0) {
+    isReassignAfterEditDelete = true;
+  }
 
   // if just one category should be checked
   if (
@@ -132,7 +136,7 @@ export function* reassignTransactionsSaga(action) {
     typeof action.payload != undefined &&
     action.payload.hasOwnProperty('deletedCategoryIds')
   ) {
-    isReassignAfterDeletion = true;
+    isReassignAfterEditDelete = true;
     categories = categories.filter(
       (cat) => !action.payload.deletedCategoryIds.includes(cat._id)
     );
@@ -148,7 +152,7 @@ export function* reassignTransactionsSaga(action) {
     categories,
     transactions,
     defaultCategoryId,
-    isReassignAfterDeletion
+    isReassignAfterEditDelete
   );
 
   var response = [];

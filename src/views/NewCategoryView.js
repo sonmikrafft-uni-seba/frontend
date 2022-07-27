@@ -70,7 +70,11 @@ const NewCategoryView = (props) => {
           (category) => category.name == newCategoryIdentification.categoryName
         )._id;
 
-      props.dispatch(transactionsReassign({ categoryId: categoryId }));
+      if (EDIT) {
+        props.dispatch(transactionsReassign({}));
+      } else {
+        props.dispatch(transactionsReassign({ categoryId: categoryId }));
+      }
       props.onClosePopup();
     }
   }, [props.notifySave]);

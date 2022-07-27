@@ -1,4 +1,4 @@
-import { TransactionCurrency, TransactionType } from './constants';
+import { BudgetType, TransactionCurrency, TransactionType } from './constants';
 
 export const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -61,7 +61,7 @@ export const transactionsToUpdateWithNewCategory = (
   categories,
   transactions,
   defaultCategoryId = null,
-  isReassignAfterDeletion = false
+  isReassignAfterEditDelete = false
 ) => {
   let transactionsToUpdate = [];
 
@@ -79,7 +79,7 @@ export const transactionsToUpdateWithNewCategory = (
     if (
       transaction.categoryID == null ||
       (newCategoryId != null && newCategoryId != transaction.categoryID) ||
-      isReassignAfterDeletion
+      isReassignAfterEditDelete
     ) {
       transactionsToUpdate.push({
         ...transaction,
@@ -151,4 +151,66 @@ export const timeConverter = (UNIX_timestamp) => {
 
 export const formatMoney = (money) => {
   return ((money * 1.0) / 100).toFixed(2);
+};
+
+export const computeBudgetAlarmString = (
+  categories,
+  categoryId,
+  transactions,
+  additionalAmount
+) => {
+  const category = categories.find((cat) => cat._id == categoryId);
+  const budgetLimit = category.budgetLimit;
+  const budgetLimitString = budgetLimit ? '€ of ' + budgetLimit : '';
+  const budgetType =
+    category.budgetType == BudgetType.MONTHLY ? ' this month.' : ' this year.';
+  const budgetTypeString = budgetLimit ? budgetType : '';
+
+  const transactionsFilteredByCategory = transactions.filter(
+    (trans) => trans.categoryID == category._id
+  );
+
+  // filter categories by current month/ year according to budgetType
+  const today = new Date();
+  let transactionsFilteredByDate = [];
+  switch (category.budgetType[0]) {
+    case BudgetType.MONTHLY:
+      const month = today.getMonth();
+      transactionsFilteredByDate = transactionsFilteredByCategory.filter(
+        (trans) => new Date(trans.valueDate).getMonth() == month
+      );
+      break;
+    case BudgetType.YEARLY:
+      const year = today.getFullYear();
+      transactionsFilteredByDate = transactionsFilteredByCategory.filter(
+        (trans) => new Date(trans.valueDate).getFullYear() == year
+      );
+      break;
+    default:
+      transactionsFilteredByDate = transactionsFilteredByCategory;
+  }
+
+  let currentBudget = transactionsFilteredByDate
+    .map((trans) => trans.transactionAmount)
+    .reduce((acc, amount) => acc + amount, 0);
+
+  currentBudget = -(currentBudget + parseFloat(additionalAmount));
+
+  const warning =
+    currentBudget >= budgetLimit ? ' You have exceeded your limit!' : '';
+
+  const zeroString = 'You have your full budget left';
+  const nonZeroString =
+    'You have currently spent ' +
+    currentBudget +
+    budgetLimitString +
+    '€ for "' +
+    category.name +
+    '"' +
+    budgetTypeString +
+    warning;
+
+  const budgetAlarmstring = currentBudget > 0 ? nonZeroString : zeroString;
+
+  return budgetAlarmstring;
 };
