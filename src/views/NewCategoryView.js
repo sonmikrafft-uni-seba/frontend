@@ -6,17 +6,23 @@ import { useSelector, connect } from 'react-redux';
 import { updateUser } from '../store/user/user.actions';
 import CategoryGroupConfirmation from '../components/Popup/CategoryGroupConfirmation';
 import { changePopup } from '../store/popup/popup.actions';
-import { popupActionType } from '../constants';
+import { popupActionType, defaultCategoryGroup } from '../constants';
 import CategoryConfirmation from '../components/Popup/CategoryConfirmation';
 import { transactionsReassign } from '../store/transaction/transaction.actions';
 
 const NewCategoryView = (props) => {
-  const [selectedOption, setSelectedOption] = React.useState('category');
+  const [selectedOption, setSelectedOption] = React.useState(
+    props.contentObject && props.contentObject.hasOwnProperty('categories')
+      ? 'categoryGroup'
+      : 'category'
+  );
   const [isConfirmation, setIsConfirmation] = React.useState(false);
   const [newCategoryIdentification, setNewCategoryIdentification] =
     React.useState('');
   const user = useSelector((state) => state.user.user);
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
+
+  const EDIT = props.contentObject != null;
 
   const changeSelectedOption = (_, newOption) => {
     setSelectedOption(newOption);
@@ -26,13 +32,13 @@ const NewCategoryView = (props) => {
     if (selectedOption === 'category') {
       props.dispatch(
         changePopup({
-          title: 'Add Category',
+          title: EDIT ? 'Edit Category' : 'Add Category',
         })
       );
     } else {
       props.dispatch(
         changePopup({
-          title: 'Add Category Group',
+          title: EDIT ? 'Edit Category Group' : 'Add Category Group',
         })
       );
     }
@@ -64,7 +70,11 @@ const NewCategoryView = (props) => {
           (category) => category.name == newCategoryIdentification.categoryName
         )._id;
 
-      props.dispatch(transactionsReassign({ categoryId: categoryId }));
+      if (EDIT) {
+        props.dispatch(transactionsReassign({}));
+      } else {
+        props.dispatch(transactionsReassign({ categoryId: categoryId }));
+      }
       props.onClosePopup();
     }
   }, [props.notifySave]);
@@ -76,27 +86,100 @@ const NewCategoryView = (props) => {
     keywords,
     categoryGroup
   ) => {
-    const categoryToSave = {
-      name: categoryName,
-      conditionalFilter: keywords ? keywords.join(' OR ') : '',
-      budgetType: [budgetType],
-      budgetLimit: budgetLimit,
-    };
     const groupIndex = categoryGroups.findIndex(
       (group) => group.name === categoryGroup
     );
 
-    const userToUpdate = {
-      ...user,
-      categoryGroups: categoryGroups.map((item, i) =>
-        i !== groupIndex
-          ? item
-          : {
-              ...item,
-              categories: [...item.categories, categoryToSave],
-            }
-      ),
-    };
+    let userToUpdate = {};
+    if (EDIT) {
+      /**
+       * if category stays in its group, update category
+       * else remove category from previous group and add to new one
+       */
+      const conditionalFilter = keywords ? keywords.join(' OR ') : '';
+      let categoryToSave = categoryGroups
+        .map((group) => group.categories)
+        .flat()
+        .find((cat) => cat.name == categoryName);
+      categoryToSave = {
+        ...categoryToSave,
+        budgetLimit: budgetLimit,
+        budgetType: budgetType,
+        conditionalFilter: conditionalFilter,
+      };
+
+      const remainsInGroup = categoryGroups
+        .map(
+          (group, i) =>
+            i === groupIndex &&
+            group.categories.map((cat) => cat.name).includes(categoryName)
+        )
+        .includes(true);
+
+      if (remainsInGroup) {
+        const newGroups = categoryGroups.map((group, i) =>
+          i !== groupIndex
+            ? group
+            : {
+                ...group,
+                categories: group.categories.map((cat) =>
+                  cat.name == categoryName ? categoryToSave : cat
+                ),
+              }
+        );
+        userToUpdate = {
+          ...user,
+          categoryGroups: newGroups,
+        };
+      } else {
+        const groupsWithoutCategory = categoryGroups.map((group, i) =>
+          group.categories.map((cat) => cat.name).includes(categoryName)
+            ? {
+                ...group,
+                categories: group.categories.filter(
+                  (cat) => cat.name != categoryName
+                ),
+              }
+            : group
+        );
+
+        const newGroups = groupsWithoutCategory.map((group, i) =>
+          i !== groupIndex
+            ? group
+            : {
+                ...group,
+                categories: [...group.categories, categoryToSave],
+              }
+        );
+        userToUpdate = {
+          ...user,
+          categoryGroups: newGroups,
+        };
+      }
+    } else {
+      /**
+       * create new category with specified fields and add to specified category group
+       */
+      const categoryToSave = {
+        name: categoryName,
+        conditionalFilter: keywords ? keywords.join(' OR ') : '',
+        budgetType: [budgetType],
+        budgetLimit: budgetLimit,
+      };
+
+      userToUpdate = {
+        ...user,
+        categoryGroups: categoryGroups.map((group, i) =>
+          i !== groupIndex
+            ? group
+            : {
+                ...group,
+                categories: [...group.categories, categoryToSave],
+              }
+        ),
+      };
+    }
+
     props.dispatch(
       updateUser({
         userToUpdate,
@@ -116,31 +199,76 @@ const NewCategoryView = (props) => {
     budgetLimit,
     budgetType,
     includedCategories,
-    includedCategoryNames
+    includedCategoryNames,
+    excludedCategories
   ) => {
-    const categoryGroupToSave = {
-      name: categoryGroupName,
-      budgetLimit: budgetLimit,
-      budgetType: budgetType,
-      categories: includedCategories,
-    };
+    let userToUpdate = {};
 
-    const userToUpdate = {
-      ...user,
-      categoryGroups: categoryGroups
-        .map((group) => ({
-          ...group,
-          categories: group.categories.filter(
-            (category) => !includedCategoryNames.includes(category.name)
-          ),
-        }))
-        .concat([categoryGroupToSave]),
-    };
+    if (EDIT) {
+      /**
+       * update user by moving all excluded categories into default Category Group,
+       * adding all included categories,
+       * and filter all categories that have been moved from other groups
+       */
+
+      // move all excluded categories into default Category Group
+      const categoryGroupsExcludedInNoGroup = categoryGroups.map((group) =>
+        group.name == defaultCategoryGroup
+          ? {
+              ...group,
+              categories: [...group.categories, ...excludedCategories],
+            }
+          : group
+      );
+      userToUpdate = {
+        ...user,
+        categoryGroups: categoryGroupsExcludedInNoGroup.map((group) =>
+          group.name == categoryGroupName
+            ? {
+                ...group,
+                budgetLimit: budgetLimit,
+                budgetType: budgetType,
+                categories: includedCategories,
+              }
+            : {
+                ...group,
+                categories: group.categories.filter(
+                  (category) => !includedCategoryNames.includes(category.name)
+                ),
+              }
+        ),
+      };
+    } else {
+      /**
+       * craete new category group with specified fields
+       * and filter all categories that have been moved from other groups
+       */
+      const categoryGroupToSave = {
+        name: categoryGroupName,
+        budgetLimit: budgetLimit,
+        budgetType: budgetType,
+        categories: includedCategories,
+      };
+
+      userToUpdate = {
+        ...user,
+        categoryGroups: categoryGroups
+          .map((group) => ({
+            ...group,
+            categories: group.categories.filter(
+              (category) => !includedCategoryNames.includes(category.name)
+            ),
+          }))
+          .concat([categoryGroupToSave]),
+      };
+    }
+
     props.dispatch(
       updateUser({
         userToUpdate,
       })
     );
+
     setIsConfirmation(true);
   };
 
@@ -155,17 +283,19 @@ const NewCategoryView = (props) => {
           justifyContent="flex-start"
         >
           <Grid item py={2}>
-            <ToggleButtonGroup
-              color="primary"
-              value={selectedOption}
-              exclusive
-              onChange={changeSelectedOption}
-            >
-              <ToggleButton value="category">Add Category</ToggleButton>
-              <ToggleButton value="categoryGroup">
-                Add Category Group
-              </ToggleButton>
-            </ToggleButtonGroup>
+            {!EDIT && (
+              <ToggleButtonGroup
+                color="primary"
+                value={selectedOption}
+                exclusive
+                onChange={changeSelectedOption}
+              >
+                <ToggleButton value="category">Category</ToggleButton>
+                <ToggleButton value="categoryGroup">
+                  Category Group
+                </ToggleButton>
+              </ToggleButtonGroup>
+            )}
           </Grid>
           <Grid item>
             {selectedOption === 'category' ? (
@@ -173,12 +303,14 @@ const NewCategoryView = (props) => {
                 onSaveCategory={onSaveCategory}
                 notifySave={props.notifySave}
                 setSaveable={props.setSaveable}
+                category={props.contentObject}
               />
             ) : (
               <NewCategoryGroupForm
                 onSaveCategoryGroup={onSaveCategoryGroup}
                 notifySave={props.notifySave}
                 setSaveable={props.setSaveable}
+                categoryGroup={props.contentObject}
               />
             )}
           </Grid>
@@ -188,9 +320,9 @@ const NewCategoryView = (props) => {
       {/* Page 2 */}
       {isConfirmation &&
         (selectedOption === 'category' ? (
-          <CategoryConfirmation />
+          <CategoryConfirmation EDIT={EDIT} />
         ) : (
-          <CategoryGroupConfirmation />
+          <CategoryGroupConfirmation EDIT={EDIT} />
         ))}
     </>
   );

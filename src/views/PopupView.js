@@ -40,6 +40,19 @@ const PopupView = (props) => {
             notifySave={notifySave}
             setSaveable={setSaveable}
             onClosePopup={onClosePopup}
+            contentObject={null}
+          />
+        );
+
+      case popupContentType.EDIT_TRANSACTION:
+        return (
+          <TransactionForm
+            user={userState}
+            error={transactionErrorState}
+            notifySave={notifySave}
+            setSaveable={setSaveable}
+            onClosePopup={onClosePopup}
+            contentObject={popupState.popupContentObject}
           />
         );
 
@@ -50,8 +63,21 @@ const PopupView = (props) => {
             setNotifySave={setNotifySave}
             onClosePopup={onClosePopup}
             setSaveable={setSaveable}
+            contentObject={null}
           />
         );
+
+      case popupContentType.EDIT_CATEGORY:
+        return (
+          <NewCategoryView
+            notifySave={notifySave}
+            setNotifySave={setNotifySave}
+            onClosePopup={onClosePopup}
+            setSaveable={setSaveable}
+            contentObject={popupState.popupContentObject}
+          />
+        );
+
       case popupContentType.BANK_MANAGEMENT:
         return (
           <BankAccountView

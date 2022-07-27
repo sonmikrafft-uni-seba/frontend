@@ -13,14 +13,17 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { connect } from 'react-redux';
-import { createTransaction } from '../../store/transaction/transaction.actions';
+import {
+  createTransaction,
+  updateTransaction,
+} from '../../store/transaction/transaction.actions';
+
+const eurRegEx = /(^-?\d*\.{0,1}\d{0,2}$)/;
 import {
   defaultAccountName,
   defaultCategoryName,
   TransactionType,
 } from '../../constants';
-
-const eurRegEx = /(^-?\d*.\d{0,2}$)|(^-?\d*$)/;
 
 const TransactionForm = (props) => {
   const theme = useTheme();
@@ -32,13 +35,23 @@ const TransactionForm = (props) => {
     .map((userBank) => userBank.bankaccounts)
     .flat();
 
-  const [description, setDescription] = React.useState('');
-  const [amount, setAmount] = React.useState('0.00');
+  const EDIT = props.contentObject != null;
+
+  const [description, setDescription] = React.useState(
+    EDIT ? props.contentObject.remittanceInformation : ''
+  );
+  const [amount, setAmount] = React.useState(
+    EDIT ? '' + props.contentObject.transactionAmount : ''
+  );
   const [category, setCategory] = React.useState(
-    categories.find((category) => category.name == defaultCategoryName)._id
+    EDIT
+      ? props.contentObject.categoryID
+      : categories.find((cat) => cat.name === defaultCategoryName)._id
   );
   const [account, setAccount] = React.useState(
-    accounts.find((account) => account.name == defaultAccountName)._id
+    EDIT
+      ? props.contentObject.bankAccountID
+      : accounts.find((acc) => acc.name === defaultAccountName)._id
   );
   const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -82,16 +95,29 @@ const TransactionForm = (props) => {
   };
 
   const onSave = () => {
-    props.dispatch(
-      createTransaction({
-        valueDate: new Date().toISOString(),
-        remittanceInformation: description,
-        transactionAmount: amount,
-        transactionType: TransactionType.MANUAL,
-        bankAccountID: account.trim().length != 0 ? account : null,
-        categoryID: category,
-      })
-    );
+    if (EDIT) {
+      const transaction = props.contentObject;
+      props.dispatch(
+        updateTransaction({
+          ...transaction,
+          remittanceInformation: description,
+          transactionAmount: amount,
+          categoryID: category,
+          bankAccountID: account,
+        })
+      );
+    } else {
+      props.dispatch(
+        createTransaction({
+          valueDate: new Date().toISOString(),
+          remittanceInformation: description,
+          transactionAmount: amount,
+          transactionType: TransactionType.MANUAL,
+          bankAccountID: account.trim().length != 0 ? account : null,
+          categoryID: category,
+        })
+      );
+    }
     props.onClosePopup();
   };
 
@@ -133,7 +159,11 @@ const TransactionForm = (props) => {
                 style={{ minWidth: 240 }}
                 value={amount}
                 onChange={onChangeAmount}
-                helperText={errorMessage.includes('amount') ? errorMessage : ''}
+                helperText={
+                  errorMessage.includes('amount')
+                    ? errorMessage
+                    : 'e.g. 2.00, -5.00, -12.34'
+                }
                 error={errorMessage.includes('amount')}
               />
             </Grid>

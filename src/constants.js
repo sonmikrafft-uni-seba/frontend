@@ -1,6 +1,8 @@
 export const popupContentType = {
   NEW_TRANSACTION: 'NEW_TRANSACTION',
+  EDIT_TRANSACTION: 'EDIT_TRANSACTION',
   NEW_CATEGORY: 'NEW_CATEGORY',
+  EDIT_CATEGORY: 'EDIT_CATEGORY',
   BANK_MANAGEMENT: 'BANK_MANAGEMENT',
   PREMIUM_SUBSCRIPTION: 'PREMIUM_SUBSCRIPTION',
   STRIPE_CARD_ELEMENT: 'STRIPE_CARD_ELEMENT',
@@ -12,6 +14,8 @@ export const popupContentType = {
 
 export const baseUrl = 'http://localhost:3000';
 export const allAccountsConstant = 'allaccounts';
+export const allCategories = 'Overview';
+export const defaultCategoryGroup = 'No Group';
 export const defaultCategoryName = 'Uncategorized';
 export const defaultAccountName = 'Cash';
 

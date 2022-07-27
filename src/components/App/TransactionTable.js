@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import EnhancedTableHead from './EnhancedTableHead';
 import { descendingComparator, getComparator, stableSort } from '../../utils';
+import EditDeleteTransaction from './EditDeleteTransaction.js';
 
 const TransactionTable = (props) => {
   const [order, setOrder] = React.useState('asc');
@@ -103,6 +104,7 @@ const TransactionTable = (props) => {
                   const isItemSelected = isSelected(row._id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   const date = new Date(row.valueDate);
+                  const month = date.getMonth() + 1;
                   return (
                     <TableRow
                       hover
@@ -121,7 +123,7 @@ const TransactionTable = (props) => {
                       >
                         {date.getDate() +
                           '.' +
-                          date.getMonth() +
+                          month +
                           '.' +
                           date.getFullYear()}
                       </TableCell>
@@ -159,6 +161,9 @@ const TransactionTable = (props) => {
                             'aria-labelledby': labelId,
                           }}
                         />
+                      </TableCell>
+                      <TableCell>
+                        <EditDeleteTransaction transaction={row} />
                       </TableCell>
                     </TableRow>
                   );
