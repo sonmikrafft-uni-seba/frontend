@@ -23,7 +23,7 @@ const EditDeleteCategory = (props) => {
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
     );
-    props.setSelected(category.name);
+    props.setSelected(category.name.toLowerCase());
     props.handleCategoryClick(props.group.name, category.name);
   };
 
@@ -52,7 +52,7 @@ const EditDeleteCategory = (props) => {
     );
 
     props.resetCategory(category.name, props.groupName);
-    setSelected(props.groupName);
+    props.setSelected(props.groupName);
 
     props.dispatch(
       openSnackbar({
