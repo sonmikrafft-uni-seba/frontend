@@ -12,13 +12,26 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { BudgetType } from '../../constants';
+import { useNavigate } from 'react-router-dom';
+
 export default function NewCategoryGroupForm(props) {
-  const [categoryGroupName, setCategoryGroupName] = React.useState('');
-  const [budgetLimit, setBudgetlimit] = React.useState('');
-  const [budgetType, setBudgetType] = React.useState('MONTHLY');
+  const navigate = useNavigate();
+  const EDIT = props.categoryGroup != null;
+
+  const [categoryGroupName, setCategoryGroupName] = React.useState(
+    EDIT ? props.categoryGroup.name : ''
+  );
+  const [budgetLimit, setBudgetlimit] = React.useState(
+    EDIT ? props.categoryGroup.budgetLimit : ''
+  );
+  const [budgetType, setBudgetType] = React.useState(
+    EDIT ? props.categoryGroup.budgetType : BudgetType.MONTHLY
+  );
   const [formatCorrect, setFormatCorrect] = React.useState(true);
   const [validGroupName, setValidGroupName] = React.useState(true);
-  const [includedCategoryNames, setIncludedCategoryNames] = React.useState([]);
+  const [includedCategoryNames, setIncludedCategoryNames] = React.useState(
+    EDIT ? props.categoryGroup.categories.map((cat) => cat.name).flat() : []
+  );
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
   const existingCategoryGroupNames = categoryGroups
     .map((group) => group.name)
@@ -29,6 +42,7 @@ export default function NewCategoryGroupForm(props) {
     .filter(function (element) {
       return element !== 'Uncategorized';
     });
+  const initialCategories = EDIT ? props.categoryGroup.categories : [];
 
   // This regular expression only allows number with 2 digits
   const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
@@ -68,13 +82,20 @@ export default function NewCategoryGroupForm(props) {
       includedCategories.push(categories[index]);
     });
 
+    const excludedCategories = initialCategories.filter(
+      (cat) => !includedCategoryNames.includes(cat.name)
+    );
+
     props.onSaveCategoryGroup(
       categoryGroupName,
       budgetLimit,
       budgetType,
       includedCategories,
-      includedCategoryNames
+      includedCategoryNames,
+      excludedCategories
     );
+
+    navigate('/app/' + categoryGroupName.toLowerCase());
   };
 
   useEffect(() => {
@@ -106,6 +127,7 @@ export default function NewCategoryGroupForm(props) {
             autoComplete=""
             value={categoryGroupName}
             onChange={onChangeCategoryGroupName}
+            disabled={EDIT}
           ></TextField>
         </Grid>
         <Grid item sx={{ py: 1 }} xs={2}>

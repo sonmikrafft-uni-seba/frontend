@@ -4,6 +4,7 @@ const initialState = {
   visible: false,
   title: '',
   popupContentType: null,
+  popupContentObject: null,
   popupActionType: null,
 };
 
@@ -15,6 +16,7 @@ export const popup = (state = initialState, action) => {
         visible: true,
         title: action.payload.title || '',
         popupContentType: action.payload.popupContentType || null,
+        popupContentObject: action.payload.popupContentObject || null,
         popupActionType: action.payload.popupActionType || null,
       };
     case ACTION_TYPES.CLOSE_POPUP:
@@ -25,6 +27,8 @@ export const popup = (state = initialState, action) => {
         title: action.payload.title || state.title,
         popupContentType:
           action.payload.popupContentType || state.popupContentType,
+        popupContentObject:
+          action.payload.popupContentObject || state.popupContentObject,
         popupActionType:
           action.payload.popupActionType || state.popupActionType,
       };
