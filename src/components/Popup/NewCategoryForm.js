@@ -96,10 +96,6 @@ export default function NewCategoryForm(props) {
       keywords,
       categoryGroup
     );
-
-    navigate(
-      '/app/' + categoryGroup.toLowerCase() + '/' + categoryName.toLowerCase()
-    );
   };
 
   return (
