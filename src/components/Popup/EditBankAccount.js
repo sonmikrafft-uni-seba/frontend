@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Typography, Grid, TextField, Box } from '@mui/material';
 import { connect } from 'react-redux';
-
+import { openSnackbar } from '../../store/snackbar/snackbar.actions';
 import { updateUser } from '../../store/user/user.actions';
 
 const EditBankAccount = (props) => {
@@ -11,7 +11,13 @@ const EditBankAccount = (props) => {
   const currentAccount = accounts.find(
     (account) => account._id == props.contentObject.account._id
   );
-  const [accountName, setAccountName] = React.useState('');
+  const [accountName, setAccountName] = React.useState(
+    props.contentObject.account.name
+  );
+
+  useEffect(() => {
+    props.setSaveable(accountName.length != 0);
+  }, [accountName]);
 
   useEffect(() => {
     if (props.notifySave) {
@@ -27,19 +33,25 @@ const EditBankAccount = (props) => {
       name: accountName,
     };
     const userToUpdate = {
-      ...user,
-      userBanks: userBanks.map((userBank) =>
+      ...props.user,
+      userBanks: props.user.userBanks.map((userBank) =>
         userBank._id !== bankId
           ? userBank
           : {
               ...userBank,
-              bankAccounts: userBank.bankAccounts.map((account) =>
+              bankaccounts: userBank.bankaccounts.map((account) =>
                 account._id !== accountId ? account : bankAccountToUpdate
               ),
             }
       ),
     };
     props.dispatch(updateUser({ userToUpdate }));
+    props.onClosePopup();
+    props.dispatch(
+      openSnackbar({
+        message: 'Your account name has been successfully updated.',
+      })
+    );
   };
 
   const onChangeAccountName = (e) => {

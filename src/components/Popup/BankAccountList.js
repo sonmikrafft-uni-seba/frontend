@@ -71,10 +71,14 @@ const BankAccountList = (props) => {
                         <ListItem
                           key={account._id}
                           secondaryAction={
-                            <EditDeleteBankAccount
-                              account={account}
-                              bank={bank}
-                            />
+                            account.name === 'Cash' ? (
+                              <></>
+                            ) : (
+                              <EditDeleteBankAccount
+                                account={account}
+                                bank={bank}
+                              />
+                            )
                           }
                         >
                           <Divider />

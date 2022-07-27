@@ -4,8 +4,7 @@ import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { updateUser } from '../../store/user/user.actions';
 import { openPopup } from '../../store/popup/popup.actions';
-
-// import { openSnackbar } from '../../store/snackbar/snackbar.actions';
+import { openSnackbar } from '../../store/snackbar/snackbar.actions';
 import { popupActionType, popupContentType } from '../../constants';
 
 const EditDeleteBankAccount = (props) => {
@@ -23,26 +22,42 @@ const EditDeleteBankAccount = (props) => {
   };
 
   const deleteAccount = () => {
-    const userToUpdate = {
-      ...user,
-      userBanks: userBanks.map((userBank) => ({
-        ...userBank,
-        bankAccounts: userBank.bankAccounts.filter(
-          (bankAccount) => bankAccount._id != props.account._id
+    let userToUpdate;
+    console.log(props.bank._id);
+    if (props.bank.bankaccounts.length == 1) {
+      userToUpdate = {
+        ...user,
+        userBanks: user.userBanks.filter(
+          (userBank) => userBank._id !== props.bank._id
         ),
-      })),
-    };
+      };
+    } else {
+      userToUpdate = {
+        ...user,
+        userBanks: user.userBanks.map((userBank) =>
+          userBank._id !== props.bank._id
+            ? userBank
+            : {
+                ...userBank,
+                bankaccounts: userBank.bankaccounts.filter(
+                  (bankAccount) => bankAccount._id !== props.account._id
+                ),
+              }
+        ),
+      };
+    }
+
     props.dispatch(
       updateUser({
         userToUpdate,
       })
     );
 
-    // props.dispatch(
-    //   openSnackbar({
-    //     message: 'Your account name has been successfully deleted.',
-    //   })
-    // );
+    props.dispatch(
+      openSnackbar({
+        message: 'Your account name has been successfully deleted.',
+      })
+    );
   };
 
   return (

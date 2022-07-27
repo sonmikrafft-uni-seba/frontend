@@ -132,6 +132,7 @@ const PopupView = (props) => {
             contentObject={popupState.popupContentObject}
             onClosePopup={onClosePopup}
             user={userState}
+            setSaveable={setSaveable}
           />
         );
       default:
