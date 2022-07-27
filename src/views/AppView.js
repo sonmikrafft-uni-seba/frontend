@@ -67,7 +67,7 @@ const AppView = (props) => {
     })[0];
 
     if (!categoryName) {
-      return categoryGroup.budgetLimit
+      return categoryGroup?.budgetLimit
         ? {
             period: categoryGroup.budgetType[0],
             limit: categoryGroup.budgetLimit,
@@ -116,7 +116,7 @@ const AppView = (props) => {
 
     // filter by all categories in selected category group
     if (!categoryName) {
-      categoryIdsToFilter = categoryGroup.categories.map((category) => {
+      categoryIdsToFilter = categoryGroup?.categories.map((category) => {
         return category._id;
       });
     } else {
@@ -130,7 +130,9 @@ const AppView = (props) => {
 
     // apply cateogry filter
     return transactions.filter((transaction) => {
-      return categoryIdsToFilter.includes(transaction.categoryID);
+      return categoryIdsToFilter
+        ? categoryIdsToFilter.includes(transaction.categoryID)
+        : [];
     });
   };
 
