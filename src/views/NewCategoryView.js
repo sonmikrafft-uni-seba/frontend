@@ -6,7 +6,7 @@ import { useSelector, connect } from 'react-redux';
 import { updateUser } from '../store/user/user.actions';
 import CategoryGroupConfirmation from '../components/Popup/CategoryGroupConfirmation';
 import { changePopup } from '../store/popup/popup.actions';
-import { popupActionType } from '../constants';
+import { popupActionType, defaultCategoryGroup } from '../constants';
 import CategoryConfirmation from '../components/Popup/CategoryConfirmation';
 import { transactionsReassign } from '../store/transaction/transaction.actions';
 
@@ -88,6 +88,10 @@ const NewCategoryView = (props) => {
 
     let userToUpdate = {};
     if (EDIT) {
+      /**
+       * if category stays in its group, update category
+       * else remove category from previous group and add to new one
+       */
       const conditionalFilter = keywords ? keywords.join(' OR ') : '';
       let categoryToSave = categoryGroups
         .map((group) => group.categories)
@@ -149,6 +153,9 @@ const NewCategoryView = (props) => {
         };
       }
     } else {
+      /**
+       * create new category with specified fields and add to specified category group
+       */
       const categoryToSave = {
         name: categoryName,
         conditionalFilter: keywords ? keywords.join(' OR ') : '',
@@ -188,13 +195,30 @@ const NewCategoryView = (props) => {
     budgetLimit,
     budgetType,
     includedCategories,
-    includedCategoryNames
+    includedCategoryNames,
+    excludedCategories
   ) => {
     let userToUpdate = {};
+
     if (EDIT) {
+      /**
+       * update user by moving all excluded categories into default Category Group,
+       * adding all included categories,
+       * and filter all categories that have been moved from other groups
+       */
+
+      // move all excluded categories into default Category Group
+      const categoryGroupsExcludedInNoGroup = categoryGroups.map((group) =>
+        group.name == defaultCategoryGroup
+          ? {
+              ...group,
+              categories: [...group.categories, ...excludedCategories],
+            }
+          : group
+      );
       userToUpdate = {
         ...user,
-        categoryGroups: categoryGroups.map((group) =>
+        categoryGroups: categoryGroupsExcludedInNoGroup.map((group) =>
           group.name == categoryGroupName
             ? {
                 ...group,
@@ -211,6 +235,10 @@ const NewCategoryView = (props) => {
         ),
       };
     } else {
+      /**
+       * craete new category group with specified fields
+       * and filter all categories that have been moved from other groups
+       */
       const categoryGroupToSave = {
         name: categoryGroupName,
         budgetLimit: budgetLimit,
@@ -288,9 +316,9 @@ const NewCategoryView = (props) => {
       {/* Page 2 */}
       {isConfirmation &&
         (selectedOption === 'category' ? (
-          <CategoryConfirmation />
+          <CategoryConfirmation EDIT={EDIT} />
         ) : (
-          <CategoryGroupConfirmation />
+          <CategoryGroupConfirmation EDIT={EDIT} />
         ))}
     </>
   );

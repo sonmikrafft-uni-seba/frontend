@@ -180,6 +180,8 @@ const SideBar = (props) => {
                         <EditDeleteCategoryGroup
                           group={option}
                           resetCategoryGroup={resetCategoryGroup}
+                          setSelected={setSelected}
+                          handleCategoryGroupClick={handleCategoryGroupClick}
                         />
                         <IconButton
                           edge="end"
@@ -218,9 +220,11 @@ const SideBar = (props) => {
                           secondaryAction={
                             <EditDeleteCategory
                               category={category}
-                              groupID={option._id}
+                              group={option}
                               groupName={option.name}
                               resetCategory={resetCategory}
+                              setSelected={setSelected}
+                              handleCategoryClick={handleCategoryClick}
                             />
                           }
                           disablePadding
@@ -253,9 +257,11 @@ const SideBar = (props) => {
                 category.name !== 'Uncategorized' && (
                   <EditDeleteCategory
                     category={category}
-                    groupID={categoryGroups[0]._id}
+                    group={categoryGroups[0]}
                     groupName={categoryGroups[0].name}
                     resetCategory={resetCategory}
+                    setSelected={setSelected}
+                    handleCategoryClick={handleCategoryClick}
                   />
                 )
               }

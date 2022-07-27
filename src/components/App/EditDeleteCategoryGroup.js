@@ -11,7 +11,7 @@ import { popupActionType, popupContentType } from '../../constants';
 const EditDeleteCategoryGroup = (props) => {
   const user = useSelector((state) => state.user.user);
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
-  const deletedGroup = categoryGroups.find(
+  const selectedGroup = categoryGroups.find(
     (group) => group._id == props.group._id
   );
 
@@ -20,10 +20,12 @@ const EditDeleteCategoryGroup = (props) => {
       openPopup({
         title: 'Edit Category/ Category Group',
         popupContentType: popupContentType.EDIT_CATEGORY,
-        popupContentObject: deletedGroup,
+        popupContentObject: selectedGroup,
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
     );
+    props.setSelected(selectedGroup.name.toLowerCase());
+    props.handleCategoryGroupClick(selectedGroup.name.toLowerCase());
   };
 
   const deleteCategoryGroup = () => {

@@ -23,13 +23,15 @@ const EditDeleteCategory = (props) => {
         popupActionType: popupActionType.SAVE_OR_CANCEL,
       })
     );
+    props.setSelected(category.name);
+    props.handleCategoryClick(props.group.name, category.name);
   };
 
   const deleteCategory = () => {
     const userToUpdate = {
       ...user,
       categoryGroups: categoryGroups.map((group) =>
-        group._id !== props.groupID
+        group._id !== props.group._id
           ? group
           : {
               ...group,
@@ -50,6 +52,7 @@ const EditDeleteCategory = (props) => {
     );
 
     props.resetCategory(category.name, props.groupName);
+    setSelected(props.groupName);
 
     props.dispatch(
       openSnackbar({

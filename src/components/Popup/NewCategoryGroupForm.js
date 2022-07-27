@@ -12,8 +12,10 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { BudgetType } from '../../constants';
+import { useNavigate } from 'react-router-dom';
 
 export default function NewCategoryGroupForm(props) {
+  const navigate = useNavigate();
   const EDIT = props.categoryGroup != null;
 
   const [categoryGroupName, setCategoryGroupName] = React.useState(
@@ -40,6 +42,7 @@ export default function NewCategoryGroupForm(props) {
     .filter(function (element) {
       return element !== 'Uncategorized';
     });
+  const initialCategories = EDIT ? props.categoryGroup.categories : [];
 
   // This regular expression only allows number with 2 digits
   const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
@@ -79,13 +82,20 @@ export default function NewCategoryGroupForm(props) {
       includedCategories.push(categories[index]);
     });
 
+    const excludedCategories = initialCategories.filter(
+      (cat) => !includedCategoryNames.includes(cat.name)
+    );
+
     props.onSaveCategoryGroup(
       categoryGroupName,
       budgetLimit,
       budgetType,
       includedCategories,
-      includedCategoryNames
+      includedCategoryNames,
+      excludedCategories
     );
+
+    navigate('/app/' + categoryGroupName.toLowerCase());
   };
 
   useEffect(() => {

@@ -12,8 +12,10 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { BudgetType } from '../../constants';
+import { useNavigate } from 'react-router-dom';
 
 export default function NewCategoryForm(props) {
+  const navigate = useNavigate();
   const categoryGroups = useSelector((state) => state.user.user.categoryGroups);
 
   const EDIT = props.category != null;
@@ -93,6 +95,10 @@ export default function NewCategoryForm(props) {
       budgetType,
       keywords,
       categoryGroup
+    );
+
+    navigate(
+      '/app/' + categoryGroup.toLowerCase() + '/' + categoryName.toLowerCase()
     );
   };
 

@@ -13,6 +13,8 @@ export const popupContentType = {
 
 export const baseUrl = 'http://localhost:3000';
 export const allAccountsConstant = 'allaccounts';
+export const allCategories = 'Overview';
+export const defaultCategoryGroup = 'No Group';
 export const defaultCategoryName = 'Uncategorized';
 export const defaultAccountName = 'Cash';
 
