@@ -6,6 +6,8 @@ import { updateUser } from '../../store/user/user.actions';
 import { openPopup } from '../../store/popup/popup.actions';
 import { openSnackbar } from '../../store/snackbar/snackbar.actions';
 import { popupActionType, popupContentType } from '../../constants';
+import { setBankAccount } from '../../store/root.actions';
+import { allAccountsConstant } from '../../constants.js';
 
 const EditDeleteBankAccount = (props) => {
   const user = useSelector((state) => state.user.user);
@@ -23,7 +25,6 @@ const EditDeleteBankAccount = (props) => {
 
   const deleteAccount = () => {
     let userToUpdate;
-    console.log(props.bank._id);
     if (props.bank.bankaccounts.length == 1) {
       userToUpdate = {
         ...user,
@@ -58,6 +59,7 @@ const EditDeleteBankAccount = (props) => {
         message: 'Your account name has been successfully deleted.',
       })
     );
+    props.dispatch(setBankAccount(allAccountsConstant));
   };
 
   return (
