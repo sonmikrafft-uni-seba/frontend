@@ -34,6 +34,7 @@ const SnackbarView = (props) => {
       onClose={onCloseSnackbar}
       message={snackbarState.message}
       action={action}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
     />
   );
 };
