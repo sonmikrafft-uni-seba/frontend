@@ -16,7 +16,7 @@ export const allAccountsConstant = 'allaccounts';
 export const allCategories = 'Overview';
 export const defaultCategoryGroup = 'No Group';
 export const defaultCategoryName = 'Uncategorized';
-export const defaultAccountName = 'Cash';
+export const defaultAccountName = 'Default Account';
 
 export const popupActionType = {
   SAVE_OR_CANCEL: 'SAVE_OR_CANCEL',
@@ -45,7 +45,7 @@ export const SubscriptionPlan = {
 };
 
 export const TransactionCurrency = {
-  EUR: 'EURO',
+  EUR: 'EUR',
   DOL: 'DOLLAR',
 };
 

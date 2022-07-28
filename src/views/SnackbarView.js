@@ -35,6 +35,7 @@ const SnackbarView = (props) => {
       message={snackbarState.message}
       action={action}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transitionDuration={{ enter: 1000 }}
     />
   );
 };

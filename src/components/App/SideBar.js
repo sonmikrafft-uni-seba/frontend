@@ -44,7 +44,7 @@ const SideBar = (props) => {
   const categoryGroups = userState.categoryGroups;
 
   const { categoryGroupName, categoryName } = useParams();
-  const [selected, setSelected] = React.useState('overview');
+  const [selected, setSelected] = React.useState(allCategories);
   const [categoryGroup, setCategoryGroup] = React.useState(categoryGroupName);
   const [category, setCategory] = React.useState(categoryName);
 
@@ -256,7 +256,7 @@ const SideBar = (props) => {
               )}
             />
           ))}
-        {/* No Group Categories */}
+        {/* Default Category Group Categories */}
         {categoryGroups[0].categories
           .slice(0)
           .reverse()

@@ -48,7 +48,7 @@ const PlanComparison = (props) => {
     <Container
       maxWidth="md"
       style={{
-        padding: 32,
+        padding: 12,
         backgroundColor: '#e6ecfd',
       }}
     >

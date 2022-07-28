@@ -64,7 +64,7 @@ export default function NewCategoryForm(props) {
     }
   }, [props.notifySave]);
 
-  // I prohibit category being called "Uncategorized"
+  // I prohibit category being called defaultCategoryName
   const onChangeCategoryName = (e) => {
     setCategoryName(e.target.value);
     if (

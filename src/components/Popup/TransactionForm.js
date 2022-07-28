@@ -124,16 +124,21 @@ const TransactionForm = (props) => {
     }
     props.onClosePopup();
 
-    props.dispatch(
-      openSnackbar({
-        message: computeBudgetAlarmString(
-          categories,
-          category,
-          transactions,
-          EDIT ? amount - props.contentObject.transactionAmount : amount
-        ),
-      })
-    );
+    const defaultcategoryId = categories.find(
+      (cat) => cat.name == defaultCategoryName
+    )._id;
+    if (defaultcategoryId !== category) {
+      props.dispatch(
+        openSnackbar({
+          message: computeBudgetAlarmString(
+            categories,
+            category,
+            transactions,
+            EDIT ? amount - props.contentObject.transactionAmount : amount
+          ),
+        })
+      );
+    }
   };
 
   return (
@@ -177,7 +182,7 @@ const TransactionForm = (props) => {
                 helperText={
                   errorMessage.includes('amount')
                     ? errorMessage
-                    : 'e.g. 2.00, -5.00, -12.34'
+                    : 'e.g. incomings: 40 / outgoings: -1.99'
                 }
                 error={errorMessage.includes('amount')}
               />

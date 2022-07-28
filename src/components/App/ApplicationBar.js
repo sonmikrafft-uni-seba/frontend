@@ -20,7 +20,6 @@ import {
 import { openPopup } from '../../store/popup/popup.actions.js';
 import { popupContentType, popupActionType } from '../../constants';
 import { connect } from 'react-redux';
-import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
 import { reset } from '../../store/subscription/subscription.actions';
 import { logoutUser } from '../../store/root.actions';
 
@@ -115,7 +114,7 @@ const ApplicationBar = (props) => {
                   onClick={() => {
                     props.dispatch(
                       openPopup({
-                        title: 'Overview of Premium features',
+                        title: 'Overview of Premium Features',
                         popupContentType: popupContentType.PREMIUM_SUBSCRIPTION,
                         popupActionType: popupActionType.EMPTY,
                       })
