@@ -52,10 +52,7 @@ const BankAccountSelector = (props) => {
 
   if (allAccountsHaveName(props.accounts)) {
     return (
-      <List
-        dense
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-      >
+      <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
         {props.accounts.map((account) => {
           const labelId = `checkbox-list-${account.id}`;
           return (
@@ -72,7 +69,11 @@ const BankAccountSelector = (props) => {
               disablePadding
             >
               <ListItemButton>
-                <ListItemText id={labelId} primary={`IBAN: ${account.iban}`} />
+                <ListItemText
+                  id={labelId}
+                  primary={`IBAN: ${account.iban}`}
+                  secondary={account.name}
+                />
               </ListItemButton>
             </ListItem>
           );

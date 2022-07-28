@@ -47,6 +47,11 @@ const BankAccountList = (props) => {
                     </ListItemAvatar>
                     <ListItemText
                       sx={{ marginLeft: '10px' }}
+                      primaryTypographyProps={{
+                        fontSize: '20px',
+                        fontWeight: 'bold',
+                        color: 'black',
+                      }}
                       primary={bank.name}
                     />
                   </ListItem>
@@ -56,7 +61,7 @@ const BankAccountList = (props) => {
                   component="div"
                   disablePadding
                 >
-                  <List sx={{ width: '100%', marginLeft: '40px' }}>
+                  <List sx={{ width: '100%' }}>
                     {bank.bankaccounts.map((account) => {
                       const accountDetails =
                         account.metaData.iban != '-'
@@ -76,6 +81,7 @@ const BankAccountList = (props) => {
                             <ListItemText
                               primary={`${account.name} - ${account.metaData.product}`}
                               secondary={accountDetails}
+                              sx={{ marginLeft: '56px' }}
                             />
                             <ListItemText
                               sx={{ textAlign: 'right' }}
