@@ -33,6 +33,7 @@ import {
 import { getAllTransactions } from '../../services/banking.service.js';
 import { transactionsToUpdateWithNewCategory } from '../../utils.js';
 import { defaultCategoryName, TransactionType } from '../../constants.js';
+import { openSnackbar } from '../root.actions.js';
 
 export const getToken = (state) => state.auth.token;
 export const getUserId = (state) => state.user.user._id;
@@ -259,6 +260,10 @@ export function* transactionsPullBankingSaga(action) {
   }
 }
 
+export function* notifyNewTransactions(action) {
+  yield put(openSnackbar({ message: 'Your remote transactions are pulled!' }));
+}
+
 export default function* root() {
   yield all([
     takeLatest(ACTION_TYPES.TRANSACTION_CREATE_REQUEST, createTransactionSaga),
@@ -277,5 +282,9 @@ export default function* root() {
     takeLatest(ACTION_TYPES.TRANSACTIONS_LOAD_REQUEST, loadTransactionsSaga),
     takeLatest(ACTION_TYPES.TRANSACTION_UPDATE_REQUEST, updateTransactionSaga),
     takeLatest(ACTION_TYPES.TRANSACTION_DELETE_REQUEST, deleteTransactionSaga),
+    takeLatest(
+      ACTION_TYPES.TRANSACTIONS_CREATE_MANY_SUCCESS,
+      notifyNewTransactions
+    ),
   ]);
 }

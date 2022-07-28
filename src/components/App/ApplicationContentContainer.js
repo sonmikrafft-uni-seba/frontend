@@ -23,11 +23,6 @@ const ApplicationContentContainer = (props) => {
 
   const onFetchRemoteTransactions = () => {
     props.dispatch(transactionsPullBanking());
-    props.dispatch(
-      openSnackbar({
-        message: 'Your remote transactions are pulled!',
-      })
-    );
   };
 
   return (
@@ -55,14 +50,16 @@ const ApplicationContentContainer = (props) => {
           >
             New Transaction
           </Button>
-          <Tooltip title="Pull Remote Transactions">
-            <Button
-              sx={{ marginLeft: '2px' }}
-              onClick={onFetchRemoteTransactions}
-            >
-              <CachedIcon />
-            </Button>
-          </Tooltip>
+          {props.isPremium && (
+            <Tooltip title="Pull Remote Transactions">
+              <Button
+                sx={{ marginLeft: '2px' }}
+                onClick={onFetchRemoteTransactions}
+              >
+                <CachedIcon />
+              </Button>
+            </Tooltip>
+          )}
         </Box>
         <Charts
           context={props.viewedBudget}

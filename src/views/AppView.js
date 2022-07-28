@@ -155,6 +155,7 @@ const AppView = (props) => {
       <ApplicationBar isPremium={isPremium} user={user} />
       <SideBar />
       <ApplicationContentContainer
+        isPremium={isPremium}
         viewedBudget={viewedBudget}
         updateTransaction={updateATransaction}
         transactions={enhanceTransactionInformation(

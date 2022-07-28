@@ -30,7 +30,7 @@ const SnackbarView = (props) => {
   return (
     <Snackbar
       open={snackbarState.open}
-      autoHideDuration={3000}
+      autoHideDuration={5000}
       onClose={onCloseSnackbar}
       message={snackbarState.message}
       action={action}

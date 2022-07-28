@@ -198,6 +198,9 @@ const SideBar = (props) => {
                           edge="end"
                           onClick={() => xprops.setOpen(!xprops.open)}
                           aria-label="expand"
+                          sx={{
+                            color: 'white',
+                          }}
                         >
                           {xprops.open ? <ExpandLess /> : <ExpandMore />}
                         </IconButton>
