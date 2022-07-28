@@ -20,6 +20,9 @@ export default function SignUpCard(props) {
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [validEmail, setValidEmail] = React.useState(true);
+
+  const emailRegEx = /(^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$)/;
 
   useEffect(() => {
     if (props.hasOwnProperty('error') && props.error != null) {
@@ -34,6 +37,15 @@ export default function SignUpCard(props) {
       setErrorMessage('');
     }
   }, [password, password2]);
+
+  useEffect(() => {
+    if (email.match(emailRegEx)) {
+      setValidEmail(true);
+      setErrorMessage('');
+    } else {
+      setValidEmail(false);
+    }
+  }, [email]);
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -56,8 +68,12 @@ export default function SignUpCard(props) {
   };
 
   const onSignUp = (e) => {
-    e.preventDefault();
-    props.onSignUp(email, password, firstName, lastName);
+    if (validEmail) {
+      e.preventDefault();
+      props.onSignUp(email, password, firstName, lastName);
+    } else {
+      setErrorMessage('Enter a valid mail address');
+    }
   };
 
   return (

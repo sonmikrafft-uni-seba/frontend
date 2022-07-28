@@ -5,6 +5,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 import TransactionTable from './TransactionTable';
 import { connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
+import { openSnackbar } from '../../store/root.actions';
 import { popupContentType, popupActionType } from '../../constants';
 import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
 import Charts from './Charts.js';
@@ -22,6 +23,11 @@ const ApplicationContentContainer = (props) => {
 
   const onFetchRemoteTransactions = () => {
     props.dispatch(transactionsPullBanking());
+    props.dispatch(
+      openSnackbar({
+        message: 'Your remote transactions are pulled!',
+      })
+    );
   };
 
   return (
