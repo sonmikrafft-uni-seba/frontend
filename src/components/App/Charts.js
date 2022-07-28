@@ -157,11 +157,13 @@ const Charts = (props) => {
 
     return (
       <Item>
-        <Pie
-          style={{ maxHeight: '200px', width: '100%' }}
-          options={options}
-          data={data}
-        />
+        <Box>
+          <Pie
+            style={{ maxHeight: '200px', width: '100%' }}
+            options={options}
+            data={data}
+          />
+        </Box>
       </Item>
     );
   };
@@ -253,7 +255,13 @@ const Charts = (props) => {
         </Box>
         <Divider />
         {charts && props.transactions.length != 0 && (
-          <Stack direction="row" spacing={2}>
+          <Stack
+            direction="row"
+            spacing={2}
+            align="center"
+            alignItems="center"
+            justifyContent="center"
+          >
             {context.category != null && renderCategoryCharts()}
             {context.category == null &&
               context.group != null &&
