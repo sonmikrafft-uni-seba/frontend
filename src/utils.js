@@ -1,4 +1,4 @@
-import { TransactionCurrency, TransactionType } from './constants';
+import { BudgetType, TransactionCurrency, TransactionType } from './constants';
 
 export const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -39,7 +39,9 @@ export const categoryIdSelection = (categories, remittanceInformation) => {
     .split(' ')
     .map((word) => word.toLowerCase());
 
-  const newCategory = categories.reverse().find((category) => {
+  const newCategory = categories.findLast((category) => {
+    if (category.conditionalFilter) {
+    }
     return (
       category.conditionalFilter &&
       category.conditionalFilter != '' &&
@@ -58,7 +60,8 @@ export const categoryIdSelection = (categories, remittanceInformation) => {
 export const transactionsToUpdateWithNewCategory = (
   categories,
   transactions,
-  defaultCategoryId = null
+  defaultCategoryId = null,
+  isReassignAfterEditDelete = false
 ) => {
   let transactionsToUpdate = [];
 
@@ -71,10 +74,12 @@ export const transactionsToUpdateWithNewCategory = (
       categories,
       transaction.remittanceInformation
     );
-    // if categoryId is new push it to update list
+
+    // if transaction has no category, categoryId is new, or is to be reassigned after its category is deleted, push it to update list
     if (
       transaction.categoryID == null ||
-      (newCategoryId != null && newCategoryId != transaction.categoryID)
+      (newCategoryId != null && newCategoryId != transaction.categoryID) ||
+      isReassignAfterEditDelete
     ) {
       transactionsToUpdate.push({
         ...transaction,
@@ -146,4 +151,66 @@ export const timeConverter = (UNIX_timestamp) => {
 
 export const formatMoney = (money) => {
   return ((money * 1.0) / 100).toFixed(2);
+};
+
+export const computeBudgetAlarmString = (
+  categories,
+  categoryId,
+  transactions,
+  additionalAmount
+) => {
+  const category = categories.find((cat) => cat._id == categoryId);
+  const budgetLimit = category.budgetLimit;
+  const budgetLimitString = budgetLimit ? '€ of ' + budgetLimit : '';
+  const budgetType =
+    category.budgetType == BudgetType.MONTHLY ? ' this month.' : ' this year.';
+  const budgetTypeString = budgetLimit ? budgetType : '';
+
+  const transactionsFilteredByCategory = transactions.filter(
+    (trans) => trans.categoryID == category._id
+  );
+
+  // filter categories by current month/ year according to budgetType
+  const today = new Date();
+  let transactionsFilteredByDate = [];
+  switch (category.budgetType[0]) {
+    case BudgetType.MONTHLY:
+      const month = today.getMonth();
+      transactionsFilteredByDate = transactionsFilteredByCategory.filter(
+        (trans) => new Date(trans.valueDate).getMonth() == month
+      );
+      break;
+    case BudgetType.YEARLY:
+      const year = today.getFullYear();
+      transactionsFilteredByDate = transactionsFilteredByCategory.filter(
+        (trans) => new Date(trans.valueDate).getFullYear() == year
+      );
+      break;
+    default:
+      transactionsFilteredByDate = transactionsFilteredByCategory;
+  }
+
+  let currentBudget = transactionsFilteredByDate
+    .map((trans) => trans.transactionAmount)
+    .reduce((acc, amount) => acc + amount, 0);
+
+  currentBudget = -(currentBudget + parseFloat(additionalAmount));
+
+  const warning =
+    currentBudget >= budgetLimit ? ' You have exceeded your limit!' : '';
+
+  const zeroString = 'You have your full budget left';
+  const nonZeroString =
+    'You have currently spent ' +
+    currentBudget +
+    budgetLimitString +
+    '€ for "' +
+    category.name +
+    '"' +
+    budgetTypeString +
+    warning;
+
+  const budgetAlarmstring = currentBudget > 0 ? nonZeroString : zeroString;
+
+  return budgetAlarmstring;
 };

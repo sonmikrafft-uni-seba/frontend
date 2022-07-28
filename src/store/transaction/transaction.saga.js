@@ -19,6 +19,8 @@ import {
   updateTransactionFail,
   loadTransactionsFail,
   loadTransactionsSuccess,
+  deleteTransactionSuccess,
+  deleteTransactionFail,
 } from './transaction.actions.js';
 import {
   createManyTransactionsRequest,
@@ -26,6 +28,7 @@ import {
   createTransactionRequest,
   updateTransactionRequest,
   getTransactionsRequest,
+  deleteTransactionRequest,
 } from '../../services/transaction.service.js';
 import { getAllTransactions } from '../../services/banking.service.js';
 import { transactionsToUpdateWithNewCategory } from '../../utils.js';
@@ -112,17 +115,44 @@ export function* reassignTransactionsSaga(action) {
   // all categories
   let categories = user.categoryGroups.map((group) => group.categories).flat();
 
+  let isReassignAfterEditDelete = false;
+
+  if (Object.entries(action.payload).length === 0) {
+    isReassignAfterEditDelete = true;
+  }
+
   // if just one category should be checked
-  if (action.payload.hasOwnProperty('categoryId')) {
+  if (
+    typeof action.payload != undefined &&
+    action.payload.hasOwnProperty('categoryId')
+  ) {
     categories = [
       categories.find((cat) => cat._id == action.payload.categoryId),
     ];
   }
 
+  // if all categories except for deleted ones should be checked
+  if (
+    typeof action.payload != undefined &&
+    action.payload.hasOwnProperty('deletedCategoryIds')
+  ) {
+    isReassignAfterEditDelete = true;
+    categories = categories.filter(
+      (cat) => !action.payload.deletedCategoryIds.includes(cat._id)
+    );
+  }
+
+  let defaultCategoryId = categories.find(
+    (category) => category.name == defaultCategoryName
+  );
+  defaultCategoryId = defaultCategoryId ? defaultCategoryId._id : null;
+
   // get transactions to update
   const transactionsToUpdate = transactionsToUpdateWithNewCategory(
     categories,
-    transactions
+    transactions,
+    defaultCategoryId,
+    isReassignAfterEditDelete
   );
 
   var response = [];
@@ -162,6 +192,28 @@ export function* loadTransactionsSaga(action) {
     );
   } else {
     yield put(loadTransactionsSuccess(response));
+  }
+}
+
+export function* deleteTransactionSaga(action) {
+  const token = yield select(getToken);
+  const userId = yield select(getUserId);
+  const response = yield call(
+    deleteTransactionRequest,
+    token,
+    userId,
+    action.payload
+  );
+
+  if (response.hasOwnProperty('error')) {
+    yield put(
+      deleteTransactionFail({
+        error: response.error,
+        message: response.message,
+      })
+    );
+  } else {
+    yield put(deleteTransactionSuccess(response));
   }
 }
 
@@ -224,5 +276,6 @@ export default function* root() {
     ),
     takeLatest(ACTION_TYPES.TRANSACTIONS_LOAD_REQUEST, loadTransactionsSaga),
     takeLatest(ACTION_TYPES.TRANSACTION_UPDATE_REQUEST, updateTransactionSaga),
+    takeLatest(ACTION_TYPES.TRANSACTION_DELETE_REQUEST, deleteTransactionSaga),
   ]);
 }

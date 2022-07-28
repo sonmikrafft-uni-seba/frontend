@@ -11,6 +11,7 @@ import {
   updateTransaction,
 } from '../store/transaction/transaction.actions';
 import { allAccountsConstant } from '../constants';
+import SnackbarView from './SnackbarView';
 import { transactionsPullBanking } from '../store/transaction/transaction.actions';
 
 const AppView = (props) => {
@@ -34,7 +35,7 @@ const AppView = (props) => {
         .find((category) => {
           return category._id == categoryId;
         });
-      return category.name;
+      return category != null ? category.name : '-';
     };
 
     const findAccountName = (accountId) => {
@@ -79,6 +80,10 @@ const AppView = (props) => {
     const category = categoryGroup.categories.filter((category) => {
       return category.name.toLowerCase() == categoryName;
     })[0];
+
+    if (!category) {
+      return { group: null, category: null };
+    }
 
     return category.budgetLimit
       ? {
@@ -146,6 +151,7 @@ const AppView = (props) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PopupView />
+      <SnackbarView />
       <ApplicationBar isPremium={isPremium} />
       <SideBar />
       <ApplicationContentContainer

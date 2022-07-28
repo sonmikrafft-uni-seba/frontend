@@ -27,11 +27,10 @@ const ApplicationContentContainer = (props) => {
   };
 
   return (
-    <Container>
+    <Container sx={{ m: 0, ml: 40 }}>
       <Box
         sx={{
           display: 'flex',
-          pl: 30,
           flexDirection: 'column',
         }}
       >
