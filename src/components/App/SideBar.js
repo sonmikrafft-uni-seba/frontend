@@ -52,20 +52,23 @@ const SideBar = (props) => {
     setCategory(name.toLowerCase());
   };
 
-  const resetCategoryGroup = (groupName) => {
-    if (selected === groupName.toLowerCase()) {
-      setSelected('overview');
-      setCategoryGroup('overview');
+  const resetCategoryGroup = (groupName, deletedCategoryNames) => {
+    if (
+      selected === groupName.toLowerCase() ||
+      deletedCategoryNames.includes(selected)
+    ) {
+      setCategoryGroup(null);
+      setCategory('');
     }
   };
 
   const resetCategory = (catName, groupName) => {
-    if (groupName === 'No Group') {
-      groupName = 'overview';
-    }
     if (selected === catName.toLowerCase()) {
-      setSelected(groupName.toLowerCase());
-      setCategoryGroup(groupName.toLowerCase());
+      if (groupName === 'no group') {
+        setCategoryGroup(null);
+      } else {
+        setCategoryGroup(groupName.toLowerCase());
+      }
       setCategory('');
     }
   };
@@ -75,7 +78,7 @@ const SideBar = (props) => {
 
     // change url to either /overview or the selected category group
     path = path.concat(
-      typeof categoryGroup !== 'undefined'
+      typeof categoryGroup !== 'undefined' && categoryGroup !== null
         ? categoryGroup.toLowerCase()
         : 'overview'
     );
@@ -85,7 +88,7 @@ const SideBar = (props) => {
       path = path.concat('/' + category);
       // select category in sidebar
       setSelected(category);
-    } else if (typeof categoryGroup !== 'undefined') {
+    } else if (typeof categoryGroup !== 'undefined' && categoryGroup !== null) {
       // select category in sidebar
       setSelected(categoryGroup);
     } else {

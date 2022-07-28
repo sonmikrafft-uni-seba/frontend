@@ -12,10 +12,8 @@ import {
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { BudgetType } from '../../constants';
-import { useNavigate } from 'react-router-dom';
 
 export default function NewCategoryGroupForm(props) {
-  const navigate = useNavigate();
   const EDIT = props.categoryGroup != null;
 
   const [categoryGroupName, setCategoryGroupName] = React.useState(
@@ -94,8 +92,6 @@ export default function NewCategoryGroupForm(props) {
       includedCategoryNames,
       excludedCategories
     );
-
-    navigate('/app/' + categoryGroupName.toLowerCase());
   };
 
   useEffect(() => {
