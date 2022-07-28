@@ -25,7 +25,13 @@ import AccountSelector from './AccountSelector';
 import { useTheme } from '@mui/material/styles';
 import { useSelector, connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
-import { popupActionType, popupContentType } from '../../constants';
+import {
+  allCategories,
+  defaultCategoryGroup,
+  defaultCategoryName,
+  popupActionType,
+  popupContentType,
+} from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import EditDeleteCategory from './EditDeleteCategory';
@@ -64,7 +70,7 @@ const SideBar = (props) => {
 
   const resetCategory = (catName, groupName) => {
     if (selected === catName.toLowerCase()) {
-      if (groupName === 'no group') {
+      if (groupName === defaultCategoryGroup.toLowerCase()) {
         setCategoryGroup(null);
       } else {
         setCategoryGroup(groupName.toLowerCase());
@@ -80,7 +86,7 @@ const SideBar = (props) => {
     path = path.concat(
       typeof categoryGroup !== 'undefined' && categoryGroup !== null
         ? categoryGroup.toLowerCase()
-        : 'overview'
+        : allCategories.toLowerCase()
     );
 
     // add category to url
@@ -93,7 +99,7 @@ const SideBar = (props) => {
       setSelected(categoryGroup);
     } else {
       // fall back to overview
-      setSelected('overview');
+      setSelected(allCategories.toLowerCase());
     }
 
     navigate(path);
@@ -151,8 +157,10 @@ const SideBar = (props) => {
         {/* Overview */}
         <ListItem key="Overview" disablePadding>
           <ListItemButton
-            selected={selected === 'overview'}
-            onClick={(event) => handleCategoryGroupClick('overview')}
+            selected={selected === allCategories.toLowerCase()}
+            onClick={(event) =>
+              handleCategoryGroupClick(allCategories.toLocaleLowerCase())
+            }
           >
             <ListItemIcon>
               {
@@ -171,7 +179,7 @@ const SideBar = (props) => {
         {categoryGroups
           .slice(0)
           .reverse()
-          .filter((group) => group.name !== 'No Group')
+          .filter((group) => group.name !== defaultCategoryGroup)
           .map((option) => (
             <ExpandableItem
               key={option._id}
@@ -257,7 +265,7 @@ const SideBar = (props) => {
               button
               key={category._id}
               secondaryAction={
-                category.name !== 'Uncategorized' && (
+                category.name !== defaultCategoryName && (
                   <EditDeleteCategory
                     category={category}
                     group={categoryGroups[0]}

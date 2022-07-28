@@ -10,7 +10,7 @@ import {
   loadTransactions,
   updateTransaction,
 } from '../store/transaction/transaction.actions';
-import { allAccountsConstant } from '../constants';
+import { allAccountsConstant, allCategories } from '../constants';
 import SnackbarView from './SnackbarView';
 import { transactionsPullBanking } from '../store/transaction/transaction.actions';
 
@@ -58,7 +58,7 @@ const AppView = (props) => {
   };
 
   const viewedBudget = () => {
-    if (categoryGroupName == 'overview') {
+    if (categoryGroupName == allCategories.toLocaleLowerCase()) {
       return { group: null, category: null };
     }
 
@@ -104,7 +104,7 @@ const AppView = (props) => {
     }
 
     // all categories
-    if (categoryGroupName == 'overview') {
+    if (categoryGroupName == allCategories.toLocaleLowerCase()) {
       return transactions;
     }
 

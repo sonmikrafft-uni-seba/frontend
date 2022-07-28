@@ -11,7 +11,7 @@ import {
   InputLabel,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { BudgetType } from '../../constants';
+import { BudgetType, defaultCategoryName } from '../../constants';
 
 export default function NewCategoryGroupForm(props) {
   const EDIT = props.categoryGroup != null;
@@ -38,7 +38,7 @@ export default function NewCategoryGroupForm(props) {
   let categoryNames = categories
     .map((item) => item.name)
     .filter(function (element) {
-      return element !== 'Uncategorized';
+      return element !== defaultCategoryName;
     });
   const initialCategories = EDIT ? props.categoryGroup.categories : [];
 
