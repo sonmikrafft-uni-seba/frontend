@@ -92,7 +92,25 @@ const ApplicationBar = (props) => {
               open={Boolean(anchorEl)}
               onClose={closeDropdownMenu}
             >
-              {props.isPremium ? (
+              {props.user.subscriptionCancelDate ? (
+                <MenuItem
+                  onClick={() => {
+                    props.dispatch(
+                      openPopup({
+                        title: 'Cancel Confirmation',
+                        popupContentType:
+                          popupContentType.CANCEL_SUBSCRIPTION_CONFIRMATION,
+                        popupActionType: popupActionType.EMPTY,
+                      })
+                    );
+                  }}
+                >
+                  <ListItemIcon>
+                    <Star />
+                  </ListItemIcon>
+                  <ListItemText primary="My Budgetly Premium" />
+                </MenuItem>
+              ) : props.isPremium ? (
                 <MenuItem
                   onClick={() => {
                     props.dispatch(

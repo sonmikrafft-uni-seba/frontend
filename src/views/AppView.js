@@ -152,7 +152,7 @@ const AppView = (props) => {
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PopupView />
       <SnackbarView />
-      <ApplicationBar isPremium={isPremium} />
+      <ApplicationBar isPremium={isPremium} user={user} />
       <SideBar />
       <ApplicationContentContainer
         viewedBudget={viewedBudget}
