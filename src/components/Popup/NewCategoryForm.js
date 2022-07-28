@@ -47,6 +47,7 @@ export default function NewCategoryForm(props) {
     .map((group) => group.categories)
     .flat()
     .map((category) => category.name);
+  const existingCategoryGroupNames = categoryGroups.map((group) => group.name);
 
   // This regular expression only allows number with 2 digits
   const eurRegEx = /(^[0-9]+\.{0,1}[0-9]{0,2}$)/;
@@ -66,7 +67,10 @@ export default function NewCategoryForm(props) {
   // I prohibit category being called "Uncategorized"
   const onChangeCategoryName = (e) => {
     setCategoryName(e.target.value);
-    if (existingCategoryNames.includes(e.target.value)) {
+    if (
+      existingCategoryNames.includes(e.target.value) ||
+      existingCategoryGroupNames.includes(e.target.value)
+    ) {
       setValidCategoryName(false);
     } else {
       setValidCategoryName(true);
@@ -120,6 +124,7 @@ export default function NewCategoryForm(props) {
         <TextField
           variant="outlined"
           required
+          error={!validCategoryName}
           id="categoryName"
           label="Category Name"
           name="categoryName"
@@ -127,6 +132,7 @@ export default function NewCategoryForm(props) {
           value={categoryName}
           onChange={onChangeCategoryName}
           disabled={EDIT}
+          helperText={validCategoryName ? '' : 'Choose a unique Name!'}
         ></TextField>
       </Grid>
       <Grid item sx={{ py: 1 }} xs={2}>
