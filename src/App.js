@@ -10,6 +10,7 @@ import SignUpView from './views/SignUpView';
 import LoadingView from './views/LoadingView';
 import AppView from './views/AppView';
 import { loadState, saveState } from './store/localStorage';
+import LandingPageView from './views/LandingPageView.js';
 
 const persistedState = loadState();
 const store = configureStore(persistedState);
@@ -47,6 +48,7 @@ function App() {
                 path="/app/:categoryGroupName/:categoryName"
                 element={<AppView />}
               />
+              <Route path="/about-us" element={<LandingPageView />} />
             </Routes>
           </>
         </ThemeProvider>
