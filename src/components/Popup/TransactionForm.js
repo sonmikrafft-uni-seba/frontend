@@ -12,11 +12,13 @@ import {
   FormControl,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import {
   createTransaction,
   updateTransaction,
 } from '../../store/transaction/transaction.actions';
+import { openSnackbar } from '../../store/snackbar/snackbar.actions';
+import { computeBudgetAlarmString } from '../../utils';
 
 const eurRegEx = /(^-?\d*\.{0,1}\d{0,2}$)/;
 import {
@@ -34,6 +36,8 @@ const TransactionForm = (props) => {
   const accounts = props.user.userBanks
     .map((userBank) => userBank.bankaccounts)
     .flat();
+
+  const transactions = useSelector((state) => state.transaction.transactions);
 
   const EDIT = props.contentObject != null;
 
@@ -119,6 +123,17 @@ const TransactionForm = (props) => {
       );
     }
     props.onClosePopup();
+
+    props.dispatch(
+      openSnackbar({
+        message: computeBudgetAlarmString(
+          categories,
+          category,
+          transactions,
+          EDIT ? amount - props.contentObject.transactionAmount : amount
+        ),
+      })
+    );
   };
 
   return (
