@@ -16,10 +16,10 @@ export const BANKING_ENDPOINT_API = BACKEND_URL + '/banking';
 export const USER_ENDPOINT_API = BACKEND_URL + '/user';
 export const AUTH_ENDPOINT_API = BACKEND_URL + '/auth';
 export const SUBSCRIPTION_ENDPOINT_API = (userId) => {
-  return USER_ENDPOINT_API + userId + '/subscription';
+  return USER_ENDPOINT_API + '/' + userId + '/subscription';
 };
 export const TRANSACTION_ENDPOINT_API = (userId) => {
-  return USER_ENDPOINT_API + userId + '/transaction';
+  return USER_ENDPOINT_API + '/' + userId + '/transaction';
 };
 
 export const baseUrl = 'http://localhost:3000';
