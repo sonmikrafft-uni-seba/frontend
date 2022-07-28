@@ -1,7 +1,7 @@
-import { USER_ENDPOINT_API } from '../constants';
+import { AUTH_ENDPOINT_API } from '../constants';
 
 export const loginRequest = async (credentials) => {
-  const response = await fetch(USER_ENDPOINT_API + '/login', {
+  const response = await fetch(AUTH_ENDPOINT_API + '/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

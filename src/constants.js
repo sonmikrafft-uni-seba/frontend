@@ -13,7 +13,8 @@ export const popupContentType = {
 
 export const BACKEND_URL = 'http://localhost:3001';
 export const BANKING_ENDPOINT_API = BACKEND_URL + '/banking';
-export const USER_ENDPOINT_API = BACKEND_URL + '/auth';
+export const USER_ENDPOINT_API = BACKEND_URL;
+export const AUTH_ENDPOINT_API = BACKEND_URL + '/auth';
 export const SUBSCRIPTION_ENDPOINT_API = (userId) => {
   return USER_ENDPOINT_API + userId + '/subscription';
 };
