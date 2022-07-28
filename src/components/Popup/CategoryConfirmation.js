@@ -15,7 +15,8 @@ const CategoryGroupConfirmation = (props) => {
       </Typography>
       <Box padding={2}>
         <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-          Shall all previous transactions get updated?
+          Shall all previous transactions matching the selected keywords get
+          updated?
         </Typography>
       </Box>
     </Container>

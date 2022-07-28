@@ -33,7 +33,6 @@ const CheckoutForm = (props) => {
       result.paymentIntent &&
       result.paymentIntent.status === 'succeeded'
     ) {
-      console.log(result);
       props.confirmPayment(result);
       props.onPaymentSuccess();
     }

@@ -69,10 +69,20 @@ const EditDeleteCategory = (props) => {
   return (
     <>
       <IconButton edge="end" aria-label="edit" onClick={editCategory}>
-        <Edit />
+        <Edit
+          sx={{
+            color: 'white',
+            borderRadius: '50%',
+          }}
+        />
       </IconButton>
       <IconButton edge="end" aria-label="delete" onClick={deleteCategory}>
-        <Delete />
+        <Delete
+          sx={{
+            color: 'white',
+            borderRadius: '50%',
+          }}
+        />
       </IconButton>
     </>
   );
