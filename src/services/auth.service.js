@@ -1,4 +1,4 @@
-export const USER_ENDPOINT_API = 'http://localhost:3001/auth';
+import { USER_ENDPOINT_API } from '../constants';
 
 export const loginRequest = async (credentials) => {
   const response = await fetch(USER_ENDPOINT_API + '/login', {
