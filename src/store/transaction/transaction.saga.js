@@ -285,6 +285,15 @@ export function* transactionsPullBankingSaga(action) {
     defaultCategoryId
   );
 
+  const newTransactionsWithCategoriesAndVerified =
+    newTransactionsWithCategories.map((transaction) => {
+      if (transaction.categoryID != defaultCategoryId) {
+        transaction.verified = true;
+      }
+
+      return transaction;
+    });
+
   if (newTransactionsWithCategories.length > 0) {
     yield put(transactionsCreateMany(newTransactionsWithCategories));
   }
