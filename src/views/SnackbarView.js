@@ -27,17 +27,18 @@ const SnackbarView = (props) => {
     </React.Fragment>
   );
 
-  return (
-    <Snackbar
-      open={snackbarState.open}
-      autoHideDuration={5000}
-      onClose={onCloseSnackbar}
-      message={snackbarState.message}
-      action={action}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transitionDuration={{ enter: 1000 }}
-    />
-  );
+  if (snackbarState.open)
+    return (
+      <Snackbar
+        open={snackbarState.open}
+        autoHideDuration={5000}
+        onClose={onCloseSnackbar}
+        message={snackbarState.message}
+        action={action}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transitionDuration={{ enter: 1000 }}
+      />
+    );
 };
 
 export default connect()(SnackbarView);
