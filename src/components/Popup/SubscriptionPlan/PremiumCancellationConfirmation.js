@@ -14,7 +14,6 @@ const PremiumSubscriptionCancellation = (props) => {
       maxWidth="md"
       style={{
         padding: 32,
-        backgroundColor: theme.palette.secondary.main,
       }}
       align="center"
       justifyContent="center"

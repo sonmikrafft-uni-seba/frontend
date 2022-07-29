@@ -11,11 +11,9 @@ import {
   InputLabel,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { BudgetType } from '../../constants';
-import { useNavigate } from 'react-router-dom';
+import { BudgetType, defaultCategoryName } from '../../constants';
 
 export default function NewCategoryGroupForm(props) {
-  const navigate = useNavigate();
   const EDIT = props.categoryGroup != null;
 
   const [categoryGroupName, setCategoryGroupName] = React.useState(
@@ -37,10 +35,14 @@ export default function NewCategoryGroupForm(props) {
     .map((group) => group.name)
     .flat();
   const categories = categoryGroups.map((group) => group.categories).flat();
+  const existingCategoryNames = categoryGroups
+    .map((group) => group.categories)
+    .flat()
+    .map((category) => category.name);
   let categoryNames = categories
     .map((item) => item.name)
     .filter(function (element) {
-      return element !== 'Uncategorized';
+      return element !== defaultCategoryName;
     });
   const initialCategories = EDIT ? props.categoryGroup.categories : [];
 
@@ -56,7 +58,10 @@ export default function NewCategoryGroupForm(props) {
   // Prohbit duplicate group names
   const onChangeCategoryGroupName = (e) => {
     setCategoryGroupName(e.target.value);
-    if (existingCategoryGroupNames.includes(e.target.value)) {
+    if (
+      existingCategoryGroupNames.includes(e.target.value) ||
+      existingCategoryNames.includes(e.target.value)
+    ) {
       setValidGroupName(false);
     } else {
       setValidGroupName(true);
@@ -94,8 +99,6 @@ export default function NewCategoryGroupForm(props) {
       includedCategoryNames,
       excludedCategories
     );
-
-    navigate('/app/' + categoryGroupName.toLowerCase());
   };
 
   useEffect(() => {
@@ -121,6 +124,7 @@ export default function NewCategoryGroupForm(props) {
           <TextField
             variant="outlined"
             required
+            error={!validGroupName}
             id="categoryName"
             label="Category group name"
             name="categoryGroupName"
@@ -128,6 +132,7 @@ export default function NewCategoryGroupForm(props) {
             value={categoryGroupName}
             onChange={onChangeCategoryGroupName}
             disabled={EDIT}
+            helperText={validGroupName ? '' : 'Choose a unique Name!'}
           ></TextField>
         </Grid>
         <Grid item sx={{ py: 1 }} xs={2}>

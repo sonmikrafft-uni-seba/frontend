@@ -44,13 +44,17 @@ const EditDeleteCategoryGroup = (props) => {
     const deletedCategories = categoryGroups.find(
       (group) => group._id == props.group._id
     ).categories;
+
     props.dispatch(
       transactionsReassign({
         deletedCategoryIds: deletedCategories.map((cat) => cat._id),
       })
     );
 
-    props.resetCategoryGroup(props.group.name);
+    const deletedCategoryNames = deletedCategories.map((cat) =>
+      cat.name.toLowerCase()
+    );
+    props.resetCategoryGroup(props.group.name, deletedCategoryNames);
 
     props.dispatch(
       openSnackbar({

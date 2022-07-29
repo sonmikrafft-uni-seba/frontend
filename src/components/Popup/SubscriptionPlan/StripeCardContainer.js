@@ -20,7 +20,7 @@ const StripeCardContainer = (props) => {
   const onPaymentSuccess = () => {
     props.dispatch(
       changePopup({
-        title: 'Payment confirmation',
+        title: 'Payment Confirmation',
         popupContentType: popupContentType.PREMIUM_SUBSCRIPTION_CONFIRMATION,
         popupActionType: popupActionType.EMPTY,
       })

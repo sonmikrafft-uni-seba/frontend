@@ -10,7 +10,7 @@ import {
   loadTransactions,
   updateTransaction,
 } from '../store/transaction/transaction.actions';
-import { allAccountsConstant } from '../constants';
+import { allAccountsConstant, allCategories } from '../constants';
 import SnackbarView from './SnackbarView';
 import { transactionsPullBanking } from '../store/transaction/transaction.actions';
 
@@ -58,7 +58,7 @@ const AppView = (props) => {
   };
 
   const viewedBudget = () => {
-    if (categoryGroupName == 'overview') {
+    if (categoryGroupName == allCategories.toLocaleLowerCase()) {
       return { group: null, category: null };
     }
 
@@ -67,7 +67,7 @@ const AppView = (props) => {
     })[0];
 
     if (!categoryName) {
-      return categoryGroup.budgetLimit
+      return categoryGroup?.budgetLimit
         ? {
             period: categoryGroup.budgetType[0],
             limit: categoryGroup.budgetLimit,
@@ -104,7 +104,7 @@ const AppView = (props) => {
     }
 
     // all categories
-    if (categoryGroupName == 'overview') {
+    if (categoryGroupName == allCategories.toLocaleLowerCase()) {
       return transactions;
     }
 
@@ -116,7 +116,7 @@ const AppView = (props) => {
 
     // filter by all categories in selected category group
     if (!categoryName) {
-      categoryIdsToFilter = categoryGroup.categories.map((category) => {
+      categoryIdsToFilter = categoryGroup?.categories.map((category) => {
         return category._id;
       });
     } else {
@@ -130,7 +130,9 @@ const AppView = (props) => {
 
     // apply cateogry filter
     return transactions.filter((transaction) => {
-      return categoryIdsToFilter.includes(transaction.categoryID);
+      return categoryIdsToFilter
+        ? categoryIdsToFilter.includes(transaction.categoryID)
+        : [];
     });
   };
 
@@ -152,9 +154,10 @@ const AppView = (props) => {
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PopupView />
       <SnackbarView />
-      <ApplicationBar isPremium={isPremium} />
+      <ApplicationBar isPremium={isPremium} user={user} />
       <SideBar />
       <ApplicationContentContainer
+        isPremium={isPremium}
         viewedBudget={viewedBudget}
         updateTransaction={updateATransaction}
         transactions={enhanceTransactionInformation(

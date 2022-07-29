@@ -1,6 +1,4 @@
-export const TRANSACTION_ENDPOINT_API = (userId) => {
-  return 'http://localhost:3001/user/' + userId + '/transaction';
-};
+import { TRANSACTION_ENDPOINT_API } from '../constants';
 
 export const createTransactionRequest = async (token, userId, transaction) => {
   const response = await fetch(TRANSACTION_ENDPOINT_API(userId), {
@@ -80,6 +78,22 @@ export const deleteTransactionRequest = async (token, userId, transaction) => {
       Authorization: 'jwt ' + token,
     },
     body: JSON.stringify(transaction),
+  });
+  return await response.json();
+};
+
+export const deleteManyTransactionsRequest = async (
+  token,
+  userId,
+  accountId
+) => {
+  const response = await fetch(TRANSACTION_ENDPOINT_API(userId) + '/many', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token,
+    },
+    body: JSON.stringify({ accountId: accountId }),
   });
   return await response.json();
 };

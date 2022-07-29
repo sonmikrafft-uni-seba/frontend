@@ -13,6 +13,8 @@ import PlanCancellation from '../components/Popup/SubscriptionPlan/PlanCancellat
 import StripeCardContainer from '../components/Popup/SubscriptionPlan/StripeCardContainer';
 import PremiumSubscriptionConfirmation from '../components/Popup/SubscriptionPlan/PremiumSubscriptionConfirmation';
 import PremiumSubscriptionCancellation from '../components/Popup/SubscriptionPlan/PremiumCancellationConfirmation';
+import EditBankAccount from '../components/Popup/EditBankAccount';
+
 const PopupView = (props) => {
   const theme = useTheme();
   const popupState = useSelector((state) => state.popup);
@@ -121,6 +123,16 @@ const PopupView = (props) => {
             onClosePopup={onClosePopup}
             user={userState}
             auth={authState}
+          />
+        );
+      case popupContentType.EDIT_BANK_ACCOUNT:
+        return (
+          <EditBankAccount
+            notifySave={notifySave}
+            contentObject={popupState.popupContentObject}
+            onClosePopup={onClosePopup}
+            user={userState}
+            setSaveable={setSaveable}
           />
         );
       default:

@@ -20,6 +20,9 @@ export const ACTION_TYPES = {
   TRANSACTIONS_LOAD_REQUEST: 'TRANSACTIONS_LOAD_REQUEST',
   TRANSACTIONS_LOAD_SUCCESS: 'TRANSACTIONS_LOAD_SUCCESS',
   TRANSACTIONS_LOAD_FAIL: 'TRANSACTIONS_LOAD_FAIL',
+  TRANSACTION_DELETE_MANY_REQUEST: 'TRANSACTION_DELETE_MANY_REQUEST',
+  TRANSACTION_DELETE_MANY_SUCCESS: 'TRANSACTION_DETELE_MANY_SUCCESS',
+  TRANSACTION_DELETE_MANY_FAIL: 'TRANSACTION_DETELE_MANY_FAIL',
 };
 
 export const createTransaction = createAction(
@@ -79,4 +82,14 @@ export const deleteTransactionSuccess = createAction(
 );
 export const deleteTransactionFail = createAction(
   ACTION_TYPES.TRANSACTION_DELETE_FAIL
+);
+
+export const deleteManyTransaction = createAction(
+  ACTION_TYPES.TRANSACTION_DELETE_MANY_REQUEST
+);
+export const deleteManyTransactionSuccess = createAction(
+  ACTION_TYPES.TRANSACTION_DELETE_MANY_SUCCESS
+);
+export const deleteManyTransactionFail = createAction(
+  ACTION_TYPES.TRANSACTION_DELETE_MANY_FAIL
 );

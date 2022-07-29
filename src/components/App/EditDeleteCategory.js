@@ -51,8 +51,10 @@ const EditDeleteCategory = (props) => {
       transactionsReassign({ deletedCategoryIds: [category._id] })
     );
 
-    props.resetCategory(category.name, props.groupName);
-    props.setSelected(props.groupName);
+    props.resetCategory(
+      category.name.toLowerCase(),
+      props.groupName.toLowerCase()
+    );
 
     props.dispatch(
       openSnackbar({
@@ -67,10 +69,20 @@ const EditDeleteCategory = (props) => {
   return (
     <>
       <IconButton edge="end" aria-label="edit" onClick={editCategory}>
-        <Edit />
+        <Edit
+          sx={{
+            color: 'white',
+            borderRadius: '50%',
+          }}
+        />
       </IconButton>
       <IconButton edge="end" aria-label="delete" onClick={deleteCategory}>
-        <Delete />
+        <Delete
+          sx={{
+            color: 'white',
+            borderRadius: '50%',
+          }}
+        />
       </IconButton>
     </>
   );

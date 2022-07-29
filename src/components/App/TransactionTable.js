@@ -13,10 +13,11 @@ import {
 import EnhancedTableHead from './EnhancedTableHead';
 import { descendingComparator, getComparator, stableSort } from '../../utils';
 import EditDeleteTransaction from './EditDeleteTransaction.js';
+import { TransactionCurrency } from '../../constants';
 
 const TransactionTable = (props) => {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('amount');
+  const [orderBy, setOrderBy] = React.useState('date');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -140,7 +141,7 @@ const TransactionTable = (props) => {
                         {row.remittanceInformation}
                       </TableCell>
                       <TableCell
-                        align="left"
+                        align="center"
                         sx={
                           row.transactionAmount < 0
                             ? { color: 'red' }
@@ -148,9 +149,11 @@ const TransactionTable = (props) => {
                         }
                       >
                         {row.transactionAmount +
-                          (row.transactionCurrency[0] == 'EURO' ? '€' : '$')}
+                          (row.transactionCurrency[0] == TransactionCurrency.EUR
+                            ? '€'
+                            : '$')}
                       </TableCell>
-                      <TableCell padding="none">
+                      <TableCell>
                         <Checkbox
                           color="primary"
                           checked={row.verified}
@@ -162,7 +165,7 @@ const TransactionTable = (props) => {
                           }}
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell padding="none" sx={{ minWidth: 100 }}>
                         <EditDeleteTransaction transaction={row} />
                       </TableCell>
                     </TableRow>

@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 import { TransactionCurrency } from '../../constants';
-
+import EditDeleteBankAccount from '../App/EditDeleteBankAccount';
 const BankAccountList = (props) => {
   return (
     <Box
@@ -47,6 +47,11 @@ const BankAccountList = (props) => {
                     </ListItemAvatar>
                     <ListItemText
                       sx={{ marginLeft: '10px' }}
+                      primaryTypographyProps={{
+                        fontSize: '20px',
+                        fontWeight: 'bold',
+                        color: 'black',
+                      }}
                       primary={bank.name}
                     />
                   </ListItem>
@@ -56,7 +61,7 @@ const BankAccountList = (props) => {
                   component="div"
                   disablePadding
                 >
-                  <List sx={{ width: '100%', marginLeft: '40px' }}>
+                  <List sx={{ width: '100%' }}>
                     {bank.bankaccounts.map((account) => {
                       const accountDetails =
                         account.metaData.iban != '-'
@@ -68,7 +73,19 @@ const BankAccountList = (props) => {
                             }`;
 
                       return (
-                        <ListItem key={account._id}>
+                        <ListItem
+                          key={account._id}
+                          secondaryAction={
+                            account.name === 'Default Account' ? (
+                              <></>
+                            ) : (
+                              <EditDeleteBankAccount
+                                account={account}
+                                bank={bank}
+                              />
+                            )
+                          }
+                        >
                           <Divider />
                           <ListItemButton
                             sx={{ justifyContent: 'space-between' }}
@@ -76,6 +93,7 @@ const BankAccountList = (props) => {
                             <ListItemText
                               primary={`${account.name} - ${account.metaData.product}`}
                               secondary={accountDetails}
+                              sx={{ marginLeft: '56px' }}
                             />
                             <ListItemText
                               sx={{ textAlign: 'right' }}

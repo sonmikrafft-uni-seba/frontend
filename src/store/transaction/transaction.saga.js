@@ -21,6 +21,8 @@ import {
   loadTransactionsSuccess,
   deleteTransactionSuccess,
   deleteTransactionFail,
+  deleteManyTransactionSuccess,
+  deleteManyTransactionFail,
 } from './transaction.actions.js';
 import {
   createManyTransactionsRequest,
@@ -29,10 +31,12 @@ import {
   updateTransactionRequest,
   getTransactionsRequest,
   deleteTransactionRequest,
+  deleteManyTransactionsRequest,
 } from '../../services/transaction.service.js';
 import { getAllTransactions } from '../../services/banking.service.js';
 import { transactionsToUpdateWithNewCategory } from '../../utils.js';
 import { defaultCategoryName, TransactionType } from '../../constants.js';
+import { openSnackbar } from '../root.actions.js';
 
 export const getToken = (state) => state.auth.token;
 export const getUserId = (state) => state.user.user._id;
@@ -217,6 +221,26 @@ export function* deleteTransactionSaga(action) {
   }
 }
 
+export function* deleteManyTransactionsSaga(action) {
+  const token = yield select(getToken);
+  const userId = yield select(getUserId);
+  const response = yield call(
+    deleteManyTransactionsRequest,
+    token,
+    userId,
+    action.payload
+  );
+
+  if (response.hasOwnProperty('error')) {
+    deleteManyTransactionFail({
+      error: response.error,
+      message: response.message,
+    });
+  } else {
+    yield put(deleteManyTransactionSuccess(action.payload));
+  }
+}
+
 export function* transactionsPullBankingSaga(action) {
   const token = yield select(getToken);
   const bankingToken = yield select(getBankingAccessToken);
@@ -237,6 +261,13 @@ export function* transactionsPullBankingSaga(action) {
     user.userBanks
   );
 
+  if (
+    !allTransactions ||
+    (allTransactions.length == 1 && allTransactions[0] == undefined)
+  ) {
+    return;
+  }
+
   const newTransactions = allTransactions.filter((remoteTransaction) => {
     // return all transactions that couldn't be found in current transaction list
     return !transactions.find((existingTransaction) => {
@@ -254,9 +285,26 @@ export function* transactionsPullBankingSaga(action) {
     defaultCategoryId
   );
 
+  const newTransactionsWithCategoriesAndVerified =
+    newTransactionsWithCategories.map((transaction) => {
+      if (transaction.categoryID != defaultCategoryId) {
+        transaction.verified = true;
+      }
+
+      return transaction;
+    });
+
   if (newTransactionsWithCategories.length > 0) {
     yield put(transactionsCreateMany(newTransactionsWithCategories));
   }
+}
+
+export function* notifyNewTransactions(action) {
+  yield put(
+    openSnackbar({
+      message: 'New transactions from your bank account are available now!',
+    })
+  );
 }
 
 export default function* root() {
@@ -274,8 +322,16 @@ export default function* root() {
       ACTION_TYPES.TRANSACTIONS_CREATE_MANY_REQUEST,
       createManyTransactionsSaga
     ),
+    takeLatest(
+      ACTION_TYPES.TRANSACTION_DELETE_MANY_REQUEST,
+      deleteManyTransactionsSaga
+    ),
     takeLatest(ACTION_TYPES.TRANSACTIONS_LOAD_REQUEST, loadTransactionsSaga),
     takeLatest(ACTION_TYPES.TRANSACTION_UPDATE_REQUEST, updateTransactionSaga),
     takeLatest(ACTION_TYPES.TRANSACTION_DELETE_REQUEST, deleteTransactionSaga),
+    takeLatest(
+      ACTION_TYPES.TRANSACTIONS_CREATE_MANY_SUCCESS,
+      notifyNewTransactions
+    ),
   ]);
 }

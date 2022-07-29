@@ -15,7 +15,7 @@ const SubscriptionPlanCard = (props) => {
     <Paper elevation={2}>
       <Box
         sx={{
-          minHeight: 550,
+          minHeight: 520,
           pl: 1,
           pr: 1,
           display: 'flex',
@@ -41,7 +41,7 @@ const SubscriptionPlanCard = (props) => {
 
         <Box
           sx={{
-            height: 64,
+            height: 32,
           }}
         >
           <Typography>{props.description}</Typography>{' '}
