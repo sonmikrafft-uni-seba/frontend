@@ -291,7 +291,11 @@ export function* transactionsPullBankingSaga(action) {
 }
 
 export function* notifyNewTransactions(action) {
-  yield put(openSnackbar({ message: 'Your remote transactions are pulled!' }));
+  yield put(
+    openSnackbar({
+      message: 'New transactions from your bank account are available now!',
+    })
+  );
 }
 
 export default function* root() {
