@@ -81,7 +81,6 @@ export const deleteTransactionRequest = async (token, userId, transaction) => {
     },
     body: JSON.stringify(transaction),
   });
-  console.log(response);
   return await response.json();
 };
 
@@ -98,6 +97,5 @@ export const deleteManyTransactionsRequest = async (
     },
     body: JSON.stringify({ accountId: accountId }),
   });
-  console.log(response);
   return await response.json();
 };

@@ -229,15 +229,14 @@ export function* deleteManyTransactionsSaga(action) {
     userId,
     action.payload
   );
-  if (response.status == 200) {
-    yield put(deleteManyTransactionSuccess(action.payload));
+
+  if (response.hasOwnProperty('error')) {
+    deleteManyTransactionFail({
+      error: response.error,
+      message: response.message,
+    });
   } else {
-    yield put(
-      deleteManyTransactionFail({
-        error: response.error,
-        message: response.message,
-      })
-    );
+    yield put(deleteManyTransactionSuccess(action.payload));
   }
 }
 
@@ -260,6 +259,13 @@ export function* transactionsPullBankingSaga(action) {
     bankingToken,
     user.userBanks
   );
+
+  if (
+    !allTransactions ||
+    (allTransactions.length == 1 && allTransactions[0] == undefined)
+  ) {
+    return;
+  }
 
   const newTransactions = allTransactions.filter((remoteTransaction) => {
     // return all transactions that couldn't be found in current transaction list

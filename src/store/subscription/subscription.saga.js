@@ -42,7 +42,6 @@ export function* createSubscriptionSaga() {
     userId,
     priceId
   );
-  console.log(createdSubscription);
   if (createdSubscription.hasOwnProperty('subscriptionId')) {
     yield put(createSubscriptionSuccess(createdSubscription));
   } else {
@@ -61,10 +60,8 @@ export function* cancelSubscriptionSaga() {
     subscriptionId
   );
   if (result.hasOwnProperty('error')) {
-    console.log(result);
     yield put(cancelSubscriptionFail(result));
   } else {
-    console.log(result);
     yield put(cancelSubscriptionSuccess(result));
   }
 }
