@@ -1,0 +1,151 @@
+import { createAction } from '@reduxjs/toolkit';
+
+/* Banking Flow
+
+ REMOTE_BANKING_TOKEN_REQUEST -> Backend (uses secret) -> Token request Nordigen -> Return token
+ REMOTE_BANKING_LIST_BANK_REQUEST -> Backend (Backend auth + Nordigen token) -> Get Banks for selected country @ Nordigen -> Return List of Banks
+ REMOTE_BANKING_EUA_REQUEST -> Backend -> Create End User Agreement (Selected Bank + how long bank account can be accessed) -> Return EUA Result + ID
+ REMOTE_BANKING_AUTH_REQUEST -> Backend -> Build Link for Bank Auth (EUA + Redirect URI) @ Nordigen -> Return Bank Auth link
+ REMOTE_BANKING_LIST_BANK_REQUEST -> Backend -> Get all accounts attached to EUA @ Nordigen -> Return List of Account Ids
+ REMOTE_BANKING_ACCOUNT_DETAILS_REQUEST -> Backend -> Get all details of Accounts @ Nordigen -> Return Account Details
+
+ REMOTE_BANKING_ACCOUNT_TRANSACTIONS_REQUEST -> Backend -> Get transactions for account (account access token) @ Nordigen -> Return List of Transactions
+
+ REMOTE_BANKING_REFRESH_TOKEN_REQUEST -> Backend -> Use refresh token to get new access token @ Nordigen
+*/
+
+export const ACTION_TYPES = {
+  REMOTE_BANKING_LIST_BANK_REQUEST: 'REMOTE_BANKING_LIST_BANK_REQUEST',
+  REMOTE_BANKING_LIST_BANK_SUCCESS: 'REMOTE_BANKING_LIST_BANK_SUCCESS',
+  REMOTE_BANKING_LIST_BANK_FAIL: 'REMOTE_BANKING_LIST_BANK_FAIL',
+  REMOTE_BANKING_TOKEN_REQUEST: 'REMOTE_BANKING_TOKEN_REQUEST',
+  REMOTE_BANKING_TOKEN_SUCCESS: 'REMOTE_BANKING_TOKEN_SUCCESS',
+  REMOTE_BANKING_TOKEN_FAIL: 'REMOTE_BANKING_TOKEN_FAIL',
+  REMOTE_BANKING_EUA_REQUEST: 'REMOTE_BANKING_EUA_REQUEST',
+  REMOTE_BANKING_EUA_SUCCESS: 'REMOTE_BANKING_EUA_SUCCESS',
+  REMOTE_BANKING_EUA_FAIL: 'REMOTE_BANKING_EUA_FAIL',
+  REMOTE_BANKING_AUTH_REQUEST: 'REMOTE_BANKING_AUTH_REQUEST',
+  REMOTE_BANKING_AUTH_SUCCESS: 'REMOTE_BANKING_AUTH_SUCCESS',
+  REMOTE_BANKING_AUTH_FAIL: 'REMOTE_BANKING_AUTH_FAIL',
+  REMOTE_BANKING_ACCOUNTS_REQUEST: 'REMOTE_BANKING_ACCOUNTS_REQUEST',
+  REMOTE_BANKING_ACCOUNTS_SUCCESS: 'REMOTE_BANKING_ACCOUNTS_SUCCESS',
+  REMOTE_BANKING_ACCOUNTS_FAIL: 'REMOTE_BANKING_ACCOUNTS_FAIL',
+  REMOTE_BANKING_ACCOUNT_DETAILS_REQUEST:
+    'REMOTE_BANKING_ACCOUNT_DETAILS_REQUEST',
+  REMOTE_BANKING_ACCOUNT_DETAILS_SUCCESS:
+    'REMOTE_BANKING_ACCOUNT_DETAILS_SUCCESS',
+  REMOTE_BANKING_ACCOUNT_DETAILS_FAIL: 'REMOTE_BANKING_ACCOUNT_DETAILS_FAIL',
+  REMOTE_BANKING_ACCOUNT_TRANSACTIONS_REQUEST:
+    'REMOTE_BANKING_ACCOUNT_TRANSACTIONS_REQUEST',
+  REMOTE_BANKING_ACCOUNT_TRANSACTIONS_SUCCESS:
+    'REMOTE_BANKING_ACCOUNT_TRANSACTIONS_SUCCESS',
+  REMOTE_BANKING_ACCOUNT_TRANSACTIONS_FAIL:
+    'REMOTE_BANKING_ACCOUNT_TRANSACTIONS_FAIL',
+  REMOTE_BANKING_REFRESH_TOKEN_REQUEST: 'REMOTE_BANKING_REFRESH_TOKEN_REQUEST',
+  REMOTE_BANKING_REFRESH_TOKEN_SUCCESS: 'REMOTE_BANKING_REFRESH_TOKEN_SUCCESS',
+  REMOTE_BANKING_REFRESH_TOKEN_FAIL: 'REMOTE_BANKING_REFRESH_TOKEN_FAIL',
+  SET_BANK_FOR_ONBOARDING: 'SET_BANK_FOR_ONBOARDING',
+  SET_EUA_FOR_ONBOARDING: 'SET_EUA_FOR_ONBOARDING',
+  SET_REQ_FOR_ONBOARDING: 'SET_REQ_FOR_ONBOARDING',
+  SET_BANKING_ACCOUNT_ONBOARDING_STATE: 'SET_BANKING_ACCOUNT_ONBOARDING_STATE',
+  RESET_BANKING_ACCOUNT_ONBOARDING: 'RESET_BANKING_ACCOUNT_ONBOARDING',
+};
+
+export const remoteBankingListBankRequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_LIST_BANK_REQUEST
+);
+export const remoteBankingListBankSuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_LIST_BANK_SUCCESS
+);
+export const remoteBankingListBankFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_LIST_BANK_FAIL
+);
+export const remoteBankingTokenRequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_TOKEN_REQUEST
+);
+export const remoteBankingTokenSuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_TOKEN_SUCCESS
+);
+export const remoteBankingTokenFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_TOKEN_FAIL
+);
+export const remoteBankingEUARequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_EUA_REQUEST
+);
+export const remoteBankingEUASuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_EUA_SUCCESS
+);
+export const remoteBankingEUAFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_EUA_FAIL
+);
+export const remoteBankingAuthRequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_AUTH_REQUEST
+);
+export const remoteBankingAuthSuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_AUTH_SUCCESS
+);
+export const remoteBankingAuthFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_AUTH_FAIL
+);
+export const remoteBankingAccountsRequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNTS_REQUEST
+);
+export const remoteBankingAccountsSuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNTS_SUCCESS
+);
+export const remoteBankingAccountsFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNTS_FAIL
+);
+
+export const remoteBankingRefreshTokenRequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_REFRESH_TOKEN_REQUEST
+);
+export const remoteBankingRefreshTokenSuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_REFRESH_TOKEN_SUCCESS
+);
+export const remoteBankingRefreshTokenFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_REFRESH_TOKEN_FAIL
+);
+
+export const remoteBankingAccountDetailsRequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNT_DETAILS_REQUEST
+);
+
+export const remoteBankingAccountDetailsFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNT_DETAILS_FAIL
+);
+
+export const remoteBankingAccountDetailsSuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNT_DETAILS_SUCCESS
+);
+
+export const remoteBankingAccountTransactionsRequest = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNT_TRANSACTIONS_REQUEST
+);
+
+export const remoteBankingAccountTransactionsFail = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNT_TRANSACTIONS_FAIL
+);
+
+export const remoteBankingAccountTransactionsSuccess = createAction(
+  ACTION_TYPES.REMOTE_BANKING_ACCOUNT_TRANSACTIONS_SUCCESS
+);
+
+export const setBankForOnboarding = createAction(
+  ACTION_TYPES.SET_BANK_FOR_ONBOARDING
+);
+
+export const setEuaForOnboarding = createAction(
+  ACTION_TYPES.SET_EUA_FOR_ONBOARDING
+);
+
+export const setReqForOnboarding = createAction(
+  ACTION_TYPES.SET_REQ_FOR_ONBOARDING
+);
+export const setAccountOnboardingState = createAction(
+  ACTION_TYPES.SET_BANKING_ACCOUNT_ONBOARDING_STATE
+);
+
+export const resetBankingAccountOnboarding = createAction(
+  ACTION_TYPES.RESET_BANKING_ACCOUNT_ONBOARDING
+);
