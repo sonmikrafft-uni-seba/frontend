@@ -8,10 +8,11 @@ import { openSnackbar } from '../../store/snackbar/snackbar.actions';
 import { popupActionType, popupContentType } from '../../constants';
 import { setBankAccount } from '../../store/root.actions';
 import { allAccountsConstant } from '../../constants.js';
+import { deleteManyTransaction } from '../../store/root.actions';
 
 const EditDeleteBankAccount = (props) => {
   const user = useSelector((state) => state.user.user);
-
+  const transactions = useSelector((state) => state.transaction.transactions);
   const editAccount = () => {
     props.dispatch(
       openPopup({
@@ -26,6 +27,7 @@ const EditDeleteBankAccount = (props) => {
   const deleteAccount = () => {
     let userToUpdate;
     if (props.bank.bankaccounts.length == 1) {
+      // Delete the whole bank if only one account left
       userToUpdate = {
         ...user,
         userBanks: user.userBanks.filter(
@@ -33,6 +35,7 @@ const EditDeleteBankAccount = (props) => {
         ),
       };
     } else {
+      // Delete the account from the userbank accounts
       userToUpdate = {
         ...user,
         userBanks: user.userBanks.map((userBank) =>
@@ -56,10 +59,13 @@ const EditDeleteBankAccount = (props) => {
 
     props.dispatch(
       openSnackbar({
-        message: 'Your account name has been successfully deleted.',
+        message: 'Your account has been successfully deleted.',
       })
     );
+    // set Account back to all accounts
     props.dispatch(setBankAccount(allAccountsConstant));
+
+    props.dispatch(deleteManyTransaction(props.account._id));
   };
 
   return (

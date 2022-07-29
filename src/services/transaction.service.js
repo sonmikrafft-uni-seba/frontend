@@ -81,5 +81,23 @@ export const deleteTransactionRequest = async (token, userId, transaction) => {
     },
     body: JSON.stringify(transaction),
   });
+  console.log(response);
+  return await response.json();
+};
+
+export const deleteManyTransactionsRequest = async (
+  token,
+  userId,
+  accountId
+) => {
+  const response = await fetch(TRANSACTION_ENDPOINT_API(userId) + '/many', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'jwt ' + token,
+    },
+    body: JSON.stringify({ accountId: accountId }),
+  });
+  console.log(response);
   return await response.json();
 };

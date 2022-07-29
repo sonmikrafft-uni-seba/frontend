@@ -71,7 +71,7 @@ const BankAccountList = (props) => {
                         <ListItem
                           key={account._id}
                           secondaryAction={
-                            account.name === 'Cash' ? (
+                            account.name === 'Default Account' ? (
                               <></>
                             ) : (
                               <EditDeleteBankAccount

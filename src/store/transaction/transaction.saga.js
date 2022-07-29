@@ -21,6 +21,8 @@ import {
   loadTransactionsSuccess,
   deleteTransactionSuccess,
   deleteTransactionFail,
+  deleteManyTransactionSuccess,
+  deleteManyTransactionFail,
 } from './transaction.actions.js';
 import {
   createManyTransactionsRequest,
@@ -29,6 +31,7 @@ import {
   updateTransactionRequest,
   getTransactionsRequest,
   deleteTransactionRequest,
+  deleteManyTransactionsRequest,
 } from '../../services/transaction.service.js';
 import { getAllTransactions } from '../../services/banking.service.js';
 import { transactionsToUpdateWithNewCategory } from '../../utils.js';
@@ -217,6 +220,27 @@ export function* deleteTransactionSaga(action) {
   }
 }
 
+export function* deleteManyTransactionsSaga(action) {
+  const token = yield select(getToken);
+  const userId = yield select(getUserId);
+  const response = yield call(
+    deleteManyTransactionsRequest,
+    token,
+    userId,
+    action.payload
+  );
+  if (response.status == 200) {
+    yield put(deleteManyTransactionSuccess(action.payload));
+  } else {
+    yield put(
+      deleteManyTransactionFail({
+        error: response.error,
+        message: response.message,
+      })
+    );
+  }
+}
+
 export function* transactionsPullBankingSaga(action) {
   const token = yield select(getToken);
   const bankingToken = yield select(getBankingAccessToken);
@@ -273,6 +297,10 @@ export default function* root() {
     takeLatest(
       ACTION_TYPES.TRANSACTIONS_CREATE_MANY_REQUEST,
       createManyTransactionsSaga
+    ),
+    takeLatest(
+      ACTION_TYPES.TRANSACTION_DELETE_MANY_REQUEST,
+      deleteManyTransactionsSaga
     ),
     takeLatest(ACTION_TYPES.TRANSACTIONS_LOAD_REQUEST, loadTransactionsSaga),
     takeLatest(ACTION_TYPES.TRANSACTION_UPDATE_REQUEST, updateTransactionSaga),
