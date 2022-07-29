@@ -30,10 +30,12 @@ const SnackbarView = (props) => {
   return (
     <Snackbar
       open={snackbarState.open}
-      autoHideDuration={3000}
+      autoHideDuration={5000}
       onClose={onCloseSnackbar}
       message={snackbarState.message}
       action={action}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transitionDuration={{ enter: 1000 }}
     />
   );
 };

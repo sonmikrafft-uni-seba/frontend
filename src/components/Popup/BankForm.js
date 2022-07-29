@@ -70,7 +70,12 @@ const BankForm = (props) => {
                     }}
                   >
                     <ListItemText primary={bank.name} />
-                    <img src={bank.logo} style={{ height: '150px' }} />
+                    <Box>
+                      <img
+                        src={bank.logo}
+                        style={{ maxWidth: 48, maxHeight: 48 }}
+                      />
+                    </Box>
                   </ListItemButton>
                 </ListItem>
               );

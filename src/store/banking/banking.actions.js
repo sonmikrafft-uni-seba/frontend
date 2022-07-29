@@ -1,5 +1,19 @@
 import { createAction } from '@reduxjs/toolkit';
 
+/* Banking Flow
+
+ REMOTE_BANKING_TOKEN_REQUEST -> Backend (uses secret) -> Token request Nordigen -> Return token
+ REMOTE_BANKING_LIST_BANK_REQUEST -> Backend (Backend auth + Nordigen token) -> Get Banks for selected country @ Nordigen -> Return List of Banks
+ REMOTE_BANKING_EUA_REQUEST -> Backend -> Create End User Agreement (Selected Bank + how long bank account can be accessed) -> Return EUA Result + ID
+ REMOTE_BANKING_AUTH_REQUEST -> Backend -> Build Link for Bank Auth (EUA + Redirect URI) @ Nordigen -> Return Bank Auth link
+ REMOTE_BANKING_LIST_BANK_REQUEST -> Backend -> Get all accounts attached to EUA @ Nordigen -> Return List of Account Ids
+ REMOTE_BANKING_ACCOUNT_DETAILS_REQUEST -> Backend -> Get all details of Accounts @ Nordigen -> Return Account Details
+
+ REMOTE_BANKING_ACCOUNT_TRANSACTIONS_REQUEST -> Backend -> Get transactions for account (account access token) @ Nordigen -> Return List of Transactions
+
+ REMOTE_BANKING_REFRESH_TOKEN_REQUEST -> Backend -> Use refresh token to get new access token @ Nordigen
+*/
+
 export const ACTION_TYPES = {
   REMOTE_BANKING_LIST_BANK_REQUEST: 'REMOTE_BANKING_LIST_BANK_REQUEST',
   REMOTE_BANKING_LIST_BANK_SUCCESS: 'REMOTE_BANKING_LIST_BANK_SUCCESS',

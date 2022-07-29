@@ -25,7 +25,13 @@ import AccountSelector from './AccountSelector';
 import { useTheme } from '@mui/material/styles';
 import { useSelector, connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
-import { popupActionType, popupContentType } from '../../constants';
+import {
+  allCategories,
+  defaultCategoryGroup,
+  defaultCategoryName,
+  popupActionType,
+  popupContentType,
+} from '../../constants';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import EditDeleteCategory from './EditDeleteCategory';
@@ -38,7 +44,7 @@ const SideBar = (props) => {
   const categoryGroups = userState.categoryGroups;
 
   const { categoryGroupName, categoryName } = useParams();
-  const [selected, setSelected] = React.useState('overview');
+  const [selected, setSelected] = React.useState(allCategories);
   const [categoryGroup, setCategoryGroup] = React.useState(categoryGroupName);
   const [category, setCategory] = React.useState(categoryName);
 
@@ -52,20 +58,23 @@ const SideBar = (props) => {
     setCategory(name.toLowerCase());
   };
 
-  const resetCategoryGroup = (groupName) => {
-    if (selected === groupName.toLowerCase()) {
-      setSelected('overview');
-      setCategoryGroup('overview');
+  const resetCategoryGroup = (groupName, deletedCategoryNames) => {
+    if (
+      selected === groupName.toLowerCase() ||
+      deletedCategoryNames.includes(selected)
+    ) {
+      setCategoryGroup(null);
+      setCategory('');
     }
   };
 
   const resetCategory = (catName, groupName) => {
-    if (groupName === 'No Group') {
-      groupName = 'overview';
-    }
     if (selected === catName.toLowerCase()) {
-      setSelected(groupName.toLowerCase());
-      setCategoryGroup(groupName.toLowerCase());
+      if (groupName === defaultCategoryGroup.toLowerCase()) {
+        setCategoryGroup(null);
+      } else {
+        setCategoryGroup(groupName.toLowerCase());
+      }
       setCategory('');
     }
   };
@@ -75,9 +84,9 @@ const SideBar = (props) => {
 
     // change url to either /overview or the selected category group
     path = path.concat(
-      typeof categoryGroup !== 'undefined'
+      typeof categoryGroup !== 'undefined' && categoryGroup !== null
         ? categoryGroup.toLowerCase()
-        : 'overview'
+        : allCategories.toLowerCase()
     );
 
     // add category to url
@@ -85,12 +94,12 @@ const SideBar = (props) => {
       path = path.concat('/' + category);
       // select category in sidebar
       setSelected(category);
-    } else if (typeof categoryGroup !== 'undefined') {
+    } else if (typeof categoryGroup !== 'undefined' && categoryGroup !== null) {
       // select category in sidebar
       setSelected(categoryGroup);
     } else {
       // fall back to overview
-      setSelected('overview');
+      setSelected(allCategories.toLowerCase());
     }
 
     navigate(path);
@@ -148,8 +157,10 @@ const SideBar = (props) => {
         {/* Overview */}
         <ListItem key="Overview" disablePadding>
           <ListItemButton
-            selected={selected === 'overview'}
-            onClick={(event) => handleCategoryGroupClick('overview')}
+            selected={selected === allCategories.toLowerCase()}
+            onClick={(event) =>
+              handleCategoryGroupClick(allCategories.toLocaleLowerCase())
+            }
           >
             <ListItemIcon>
               {
@@ -168,7 +179,7 @@ const SideBar = (props) => {
         {categoryGroups
           .slice(0)
           .reverse()
-          .filter((group) => group.name !== 'No Group')
+          .filter((group) => group.name !== defaultCategoryGroup)
           .map((option) => (
             <ExpandableItem
               key={option._id}
@@ -187,6 +198,9 @@ const SideBar = (props) => {
                           edge="end"
                           onClick={() => xprops.setOpen(!xprops.open)}
                           aria-label="expand"
+                          sx={{
+                            color: 'white',
+                          }}
                         >
                           {xprops.open ? <ExpandLess /> : <ExpandMore />}
                         </IconButton>
@@ -245,7 +259,7 @@ const SideBar = (props) => {
               )}
             />
           ))}
-        {/* No Group Categories */}
+        {/* Default Category Group Categories */}
         {categoryGroups[0].categories
           .slice(0)
           .reverse()
@@ -254,7 +268,7 @@ const SideBar = (props) => {
               button
               key={category._id}
               secondaryAction={
-                category.name !== 'Uncategorized' && (
+                category.name !== defaultCategoryName && (
                   <EditDeleteCategory
                     category={category}
                     group={categoryGroups[0]}

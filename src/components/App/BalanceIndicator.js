@@ -21,7 +21,7 @@ const BalanceIndicator = (props) => {
       return sum + transaction.transactionAmount;
     }, 0);
 
-    const overBudget = Number(budget.limit) + transactionSum < 0;
+    const underBudget = Number(budget.limit) + transactionSum > 0;
 
     return (
       <Box
@@ -32,11 +32,25 @@ const BalanceIndicator = (props) => {
         }}
       >
         <Typography sx={{ paddingRight: '10px' }}>
-          Balance:
+          Overall Balance:
           <span
-            style={{ color: overBudget ? 'red' : 'green', paddingLeft: '5px' }}
+            style={{
+              color: transactionSum >= 0 ? 'green' : 'red',
+              paddingLeft: '5px',
+            }}
           >
-            {transactionSum}€
+            {transactionSum.toFixed(2)}€
+          </span>
+        </Typography>
+        <Typography sx={{ paddingRight: '10px' }}>
+          Available Balance:
+          <span
+            style={{
+              color: underBudget ? 'green' : 'red',
+              paddingLeft: '5px',
+            }}
+          >
+            {(parseFloat(budget.limit) + transactionSum).toFixed(2)}€
           </span>
         </Typography>
         <Typography>

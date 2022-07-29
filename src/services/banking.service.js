@@ -1,6 +1,5 @@
-import { KeyboardReturnTwoTone } from '@mui/icons-material';
 import { bankingTransactionToDBtransaction } from '../utils.js';
-export const BANKING_ENDPOINT_API = 'http://localhost:3001/banking';
+import { BANKING_ENDPOINT_API } from '../constants.js';
 
 // get new auth token
 export const getNewTokenRequest = async (token) => {

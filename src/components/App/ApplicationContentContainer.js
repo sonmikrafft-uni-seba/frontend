@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { Container, Box, Button } from '@mui/material';
+import { Container, Box, Button, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CachedIcon from '@mui/icons-material/Cached';
 import TransactionTable from './TransactionTable';
 import { connect } from 'react-redux';
 import { openPopup } from '../../store/popup/popup.actions';
+import { openSnackbar } from '../../store/root.actions';
 import { popupContentType, popupActionType } from '../../constants';
 import { transactionsPullBanking } from '../../store/transaction/transaction.actions';
-import BalanceIndicator from './BalanceIndicator';
-import VisualisationToggle from './VisualisationToggle';
 import Charts from './Charts.js';
 
 const ApplicationContentContainer = (props) => {
@@ -27,11 +26,12 @@ const ApplicationContentContainer = (props) => {
   };
 
   return (
-    <Container sx={{ m: 0, ml: 40 }}>
+    <Container>
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          pl: 25,
         }}
       >
         <Box
@@ -50,12 +50,16 @@ const ApplicationContentContainer = (props) => {
           >
             New Transaction
           </Button>
-          <Button
-            sx={{ marginLeft: '2px' }}
-            onClick={onFetchRemoteTransactions}
-          >
-            <CachedIcon />
-          </Button>
+          {props.isPremium && (
+            <Tooltip title="Pull Remote Transactions">
+              <Button
+                sx={{ marginLeft: '2px' }}
+                onClick={onFetchRemoteTransactions}
+              >
+                <CachedIcon />
+              </Button>
+            </Tooltip>
+          )}
         </Box>
         <Charts
           context={props.viewedBudget}

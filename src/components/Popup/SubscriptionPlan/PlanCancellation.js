@@ -22,7 +22,7 @@ const PlanCancellation = (props) => {
     if (props.subscription.cancelledSubscriptionId) {
       props.dispatch(
         changePopup({
-          title: 'Cancel confirmation',
+          title: 'Cancel Confirmation',
           popupContentType: popupContentType.CANCEL_SUBSCRIPTION_CONFIRMATION,
           popupActionType: popupActionType.EMPTY,
         })
@@ -34,7 +34,7 @@ const PlanCancellation = (props) => {
     <Container
       maxWidth="md"
       style={{
-        padding: 32,
+        padding: 12,
         backgroundColor: '#e6ecfd',
       }}
       align="center"

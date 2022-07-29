@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest, select } from 'redux-saga/effects';
+import { all, call, put, takeLatest, select, delay } from 'redux-saga/effects';
 import {
   ACTION_TYPES,
   createSubscriptionSuccess,
@@ -13,6 +13,7 @@ import {
   cancelSubscriptionRequest,
   getConfig,
 } from '../../services/subscription.service.js';
+import { openSnackbar } from '../snackbar/snackbar.actions';
 
 export const getToken = (state) => state.auth.token;
 export const getUserId = (state) => state.user.user._id;
@@ -66,6 +67,16 @@ export function* cancelSubscriptionSaga() {
   }
 }
 
+export function* notifyUserOfPremiumFeatures(action) {
+  yield delay(10000);
+  yield put(
+    openSnackbar({
+      message:
+        'Make use of your new premium features and add your first bank account now!',
+    })
+  );
+}
+
 export default function* root() {
   yield all([
     takeLatest(ACTION_TYPES.SUBSCRIPTION_GET_CONFIG_REQUEST, getConfigSaga),
@@ -76,6 +87,10 @@ export default function* root() {
     takeLatest(
       ACTION_TYPES.SUBSCRIPTION_CANCEL_REQUEST,
       cancelSubscriptionSaga
+    ),
+    takeLatest(
+      ACTION_TYPES.PAYMENT_INTENT_CONFIRM,
+      notifyUserOfPremiumFeatures
     ),
   ]);
 }

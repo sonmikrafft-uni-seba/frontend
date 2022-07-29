@@ -157,14 +157,13 @@ export const computeBudgetAlarmString = (
   categories,
   categoryId,
   transactions,
-  additionalAmount
+  additionalAmount = 0
 ) => {
   const category = categories.find((cat) => cat._id == categoryId);
   const budgetLimit = category.budgetLimit;
   const budgetLimitString = budgetLimit ? '€ of ' + budgetLimit : '';
   const budgetType =
     category.budgetType == BudgetType.MONTHLY ? ' this month.' : ' this year.';
-  const budgetTypeString = budgetLimit ? budgetType : '';
 
   const transactionsFilteredByCategory = transactions.filter(
     (trans) => trans.categoryID == category._id
@@ -197,7 +196,9 @@ export const computeBudgetAlarmString = (
   currentBudget = -(currentBudget + parseFloat(additionalAmount));
 
   const warning =
-    currentBudget >= budgetLimit ? ' You have exceeded your limit!' : '';
+    budgetLimit && currentBudget >= budgetLimit
+      ? ' You have exceeded your limit!'
+      : '';
 
   const zeroString = 'You have your full budget left';
   const nonZeroString =
@@ -207,7 +208,7 @@ export const computeBudgetAlarmString = (
     '€ for "' +
     category.name +
     '"' +
-    budgetTypeString +
+    budgetType +
     warning;
 
   const budgetAlarmstring = currentBudget > 0 ? nonZeroString : zeroString;

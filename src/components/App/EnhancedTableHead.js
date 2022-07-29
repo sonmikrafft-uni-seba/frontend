@@ -47,7 +47,7 @@ const headCells = [
   },
   {
     id: 'amount',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Amount',
   },

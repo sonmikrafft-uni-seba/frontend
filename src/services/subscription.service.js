@@ -1,8 +1,5 @@
-import { loadStripe } from '@stripe/stripe-js'; // import not used
-
-export const SUBSCRIPTION_ENDPOINT_API = (userId) => {
-  return 'http://localhost:3001/user/' + userId + '/subscription';
-};
+import { loadStripe } from '@stripe/stripe-js';
+import { SUBSCRIPTION_ENDPOINT_API } from '../constants';
 
 export const createSubscriptionRequest = async (token, userId, priceId) => {
   const response = await fetch(SUBSCRIPTION_ENDPOINT_API(userId), {
